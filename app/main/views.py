@@ -1,8 +1,9 @@
 from flask import render_template
 
-from . import main
+from . import main_bp
 
 
-@main.route('/')
+@main_bp.route('/')
+@main_bp.route('/', subdomain='www')
 def index():
-    return render_template('index.html')
+    return render_template('main/index.html')
