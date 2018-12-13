@@ -13,6 +13,7 @@ def create_app(config_name=None):
 
     from .main import main_bp
     app.register_blueprint(main_bp)
+    app.register_blueprint(main_bp, subdomain='www')
 
     from .goods import goods_bp
     app.register_blueprint(goods_bp, subdomain='goods')

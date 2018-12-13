@@ -1,11 +1,11 @@
 
 
 class Config:
-    SECURE_KEY = 'this is a key.'
+    SECRET_KEY = 'secret_key'
 
 
 class DevelopmentConfig(Config):
-    SERVER_NAME = 'lanting.com'
+    SERVER_NAME = 'lanting.com'  # 用于配置子域名以及url_for生成完整的URL
 
 
 class ProductionConfig(Config):
@@ -13,7 +13,6 @@ class ProductionConfig(Config):
 
 
 config = {
-    'default': DevelopmentConfig,
     'development': DevelopmentConfig,
     'production': ProductionConfig
 }
