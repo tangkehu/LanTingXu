@@ -1,42 +1,6 @@
 {% extends "goods/base.html" %}
 
-{% block body %}
-    <nav class="navbar navbar-expand-sm navbar-dark bg-info shadow fixed-top">
-      <a class="navbar-brand" href="#">
-          <img src="{{ url_for('static', filename='img/lantinglogo.gif') }}" width="30" height="30" class="d-inline-block align-top" alt="lanting.live">
-          兰亭续
-      </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-          <a class="nav-item nav-link" href="#">Features</a>
-          <a class="nav-item nav-link" href="#">Pricing</a>
-          <a class="nav-item nav-link disabled" href="#">Disabled</a>
-        </div>
-      </div>
-    </nav>
-
-    <main role="main" class="container-fluid">
-      <div class="jumbotron">
-        <h1>Navbar example</h1>
-        <p class="lead">This example is a quick exercise to illustrate how fixed to top navbar works. As you scroll, it will remain fixed to the top of your browser's viewport.</p>
-        <a class="btn btn-lg btn-primary" href="../../components/navbar/" role="button">View navbar docs &raquo;</a>
-      </div>
-    <div class="row justify-content-end fixed-bottom">
-        <a href="#" class="btn btn-info rounded-circle">Add</a>
-    </div>
-    </main>
-
-    <nav class="navbar fixed-bottom navbar-light bg-light">
-        <div class="navbar-brand"></div>
-        <form class="form-inline">
-            <button class="btn btn-success mr-1" type="button" onclick="location = '#top'">Add</button>
-            <button class="btn btn-secondary" type="button" onclick="location = '{{ url_for('main_bp.index') }}'">Top</button>
-        </form>
-    </nav>
-
-
+{% block content %}
+    <h1>Hello World!</h1>
 {% endblock %}
+
