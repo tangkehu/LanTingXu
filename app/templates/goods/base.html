@@ -9,10 +9,12 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.1.3/css/bootstrap.css') }}">
 {#    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">#}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+
     {% block css %}{% endblock %}
     <title>兰亭续文创工作室</title>
 </head>
-<body style="padding-top: 4.5rem;">
+<body style="padding-top: 4.5rem; padding-bottom: 4.5rem;">
     <!-- 顶部导航条 -->
     <nav class="navbar navbar-expand-sm navbar-dark bg-info shadow fixed-top">
       <a class="navbar-brand" href="#">
@@ -40,7 +42,7 @@
         <div class="row fixed-bottom">
             <div class="col">
                 {% block handle_btn %}
-                    <a href="#" class="btn btn-secondary float-right mb-2 mr-1">Top</a>
+                    <a href="#" class="btn btn-secondary float-right mb-2 mr-3">Top</a>
                     <a href="#" class="btn btn-info float-right mb-2 mr-1">Add</a>
                 {% endblock %}
             </div>
