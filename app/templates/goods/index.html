@@ -1,0 +1,26 @@
+{% extends "goods/base.html" %}
+
+{% block content %}
+    <div class="row">
+    {% set goos_li %}
+    <div class="col">
+        <a href="#">
+            <figure class="figure mt-4" style="width: 10rem; height: 10rem;">
+                <img src="{{ url_for('static', filename='img_goods/FS01.jpg') }}"
+                     class="figure-img img-fluid rounded" alt="齐胸襦裙" style="max-width: 100%; max-height: 100%;">
+                <figcaption class="figure-caption" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    <em>￥100</em>&nbsp;齐胸襦裙仙鹤魏晋风
+                </figcaption>
+            </figure>
+        </a>
+    </div>
+    {% endset %}
+    {% for item in range(50) %}{{ goos_li }}{% endfor %}
+
+    </div>
+{% endblock %}
+
+{% block handle_btn %}
+    <a href="#" class="btn btn-secondary mr-3 mb-2 float-right rounded-circle"><i class="fas fa-arrow-up"></i> </a>
+    <a href="{{ url_for('.update_goods') }}" class="btn btn-info mr-1 mb-2 float-right rounded-circle"><i class="fas fa-plus"></i> </a>
+{% endblock %}

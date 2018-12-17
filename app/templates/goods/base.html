@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.1.3/css/bootstrap.css') }}">
+{#    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">#}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+
+    {% block css %}{% endblock %}
+    <title>兰亭续文创工作室</title>
+</head>
+<body style="padding-top: 4.5rem; padding-bottom: 4.5rem;">
+    <!-- 顶部导航条 -->
+    <nav class="navbar navbar-expand-sm navbar-dark bg-info shadow fixed-top">
+      <a class="navbar-brand" href="#">
+          <img src="{{ url_for('static', filename='img/lantinglogo.gif') }}" width="30" height="30" class="d-inline-block align-top" alt="lanting.live">
+          兰亭续
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <!-- 导航条超链接 -->
+          <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-item nav-link" href="#">Features</a>
+
+        </div>
+      </div>
+    </nav>
+
+    <!-- 页面主体部分 -->
+    <main role="main" class="container-fluid">
+        {% block content %}{% endblock %}
+
+        <!-- 页面右下角操作区按钮 -->
+        <div class="row fixed-bottom">
+            <div class="col">
+                {% block handle_btn %}
+                    <a href="#" class="btn btn-secondary float-right mb-2 mr-3">Top</a>
+                    <a href="#" class="btn btn-info float-right mb-2 mr-1">Add</a>
+                {% endblock %}
+            </div>
+        </div>
+    </main>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="{{ url_for('static', filename='jquery-3.3.1/jquery-3.3.1.js') }}"></script>
+{#    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>#}
+    <script src="{{ url_for('static', filename='bootstrap-4.1.3/js/bootstrap.bundle.js') }}"></script>
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>#}
+{#    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>#}
+    {% block script %}{% endblock %}
+</body>
+</html>
