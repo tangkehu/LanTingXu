@@ -1,6 +1,7 @@
 # Profile setting
 .idea/
 nohup.out
+app/static/img_goods/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

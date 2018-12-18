@@ -1,7 +1,9 @@
+import os
 
 
 class Config:
     SECRET_KEY = 'secret_key'
+    GOODS_IMG_PATH = os.path.join(os.getcwd(), 'app'+os.sep+'static'+os.sep+'img_goods')
 
 
 class DevelopmentConfig(Config):
