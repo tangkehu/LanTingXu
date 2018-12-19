@@ -3,17 +3,14 @@
 {% block content %}
     <div class="row">
     {% for item in goods_list %}
-    <div class="col">
-        <a href="#">
-            <figure class="figure mt-4" style="width: 8rem; height: 8rem; overflow: hidden;">
-                <img src="{{ url_for('static', filename='img_goods/'+item) }}"
-                     class="figure-img img-fluid rounded" alt="齐胸襦裙" style="min-width: 100%; min-height: 100%;">
-                <figcaption class="figure-caption" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                    <em>￥100</em>&nbsp;齐胸襦裙仙鹤魏晋风
-                </figcaption>
-            </figure>
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-4">
+        <a href="{{ url_for('.update_goods', goods_id=1) }}">
+            <div style="padding-bottom: 100%; height: 0; background-size: cover; background-position: center;
+                    background-image: url('{{ url_for('static', filename='img_goods/'+item) }}')" class="rounded">
+            </div>
+            <p class="text-truncate text-dark"><small><em>￥100</em>&nbsp;兰亭续文创工作室汉服出租</small></p>
         </a>
-    </div>
+        </div>
     {% endfor %}
     </div>
 {% endblock %}
