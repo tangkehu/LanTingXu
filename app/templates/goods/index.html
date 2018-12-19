@@ -2,21 +2,16 @@
 
 {% block content %}
     <div class="row">
-    {% set goos_li %}
-    <div class="col">
-        <a href="#">
-            <figure class="figure mt-4" style="width: 10rem; height: 10rem;">
-                <img src="{{ url_for('static', filename='img_goods/FS01.jpg') }}"
-                     class="figure-img img-fluid rounded" alt="齐胸襦裙" style="max-width: 100%; max-height: 100%;">
-                <figcaption class="figure-caption" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                    <em>￥100</em>&nbsp;齐胸襦裙仙鹤魏晋风
-                </figcaption>
-            </figure>
+    {% for item in goods_list %}
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-4">
+        <a href="{{ url_for('.update_goods', goods_id=1) }}">
+            <div style="padding-bottom: 100%; height: 0; background-size: cover; background-position: center;
+                    background-image: url('{{ url_for('static', filename='img_goods/'+item) }}')" class="rounded">
+            </div>
+            <p class="text-truncate text-dark"><small><em>￥100</em>&nbsp;兰亭续文创工作室汉服出租</small></p>
         </a>
-    </div>
-    {% endset %}
-    {% for item in range(50) %}{{ goos_li }}{% endfor %}
-
+        </div>
+    {% endfor %}
     </div>
 {% endblock %}
 
