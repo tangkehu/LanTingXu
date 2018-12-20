@@ -4,11 +4,11 @@
     <div class="row">
     {% for item in goods_list %}
         <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-4">
-        <a href="{{ url_for('.update_goods', goods_id=1) }}">
+        <a href="{{ url_for('.update_goods', goods_id=item.id) }}">
             <div style="padding-bottom: 100%; height: 0; background-size: cover; background-position: center;
-                    background-image: url('{{ url_for('static', filename='img_goods/'+item) }}')" class="rounded">
+                    background-image: url('{{ url_for('static', filename='img_goods/'+item.img.first().filename) }}')" class="rounded">
             </div>
-            <p class="text-truncate text-dark"><small><em>￥100</em>&nbsp;兰亭续文创工作室汉服出租</small></p>
+            <p class="text-truncate text-dark"><small><em>￥{{ item.rent }}</em>&nbsp;{{ item.name }}</small></p>
         </a>
         </div>
     {% endfor %}
