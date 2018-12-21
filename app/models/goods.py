@@ -38,6 +38,12 @@ class Goods(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def delete(self):
+        for item in self.img.all():
+            item.delete()
+        db.session.delete(self)
+        db.session.commit()
+
 
 class GoodsImg(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -67,4 +73,9 @@ class GoodsImg(db.Model):
     def alter_status(self):
         self.status = True if self.status is False else False
         db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        os.remove(os.path.join(current_app.config['GOODS_IMG_PATH'], self.filename))
+        db.session.delete(self)
         db.session.commit()
