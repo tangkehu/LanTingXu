@@ -8,7 +8,7 @@ from app.models import GoodsImg, Goods
 
 @goods_bp.route('/')
 def index():
-    goods_list = Goods.query.all()
+    goods_list = Goods.query.order_by(Goods.create_time.desc()).all()
     return render_template('goods/index.html', goods_list=goods_list)
 
 
