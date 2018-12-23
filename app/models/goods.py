@@ -7,20 +7,14 @@ from app import db
 from app.utils import random_filename
 
 
-# 典型的多对多关系案例
-relation_goods_img = db.Table(
-    'relation_goods_img',
-    db.Column('goods_id', db.Integer, db.ForeignKey('goods.id')),
-    db.Column('img_id', db.Integer, db.ForeignKey('goods_img.id'))
-)
-
-
 class Goods(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
     rent = db.Column(db.Integer)
     create_time = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    img = db.relationship('GoodsImg', backref='goods', lazy='dynamic')
 
     def add(self, name, rent, user=current_user):
         self.name = name
@@ -38,17 +32,19 @@ class Goods(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def delete(self):
+        for item in self.img.all():
+            item.delete()
+        db.session.delete(self)
+        db.session.commit()
+
 
 class GoodsImg(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(128), unique=True, nullable=False)
     status = db.Column(db.Boolean, default=False)  # 0 未与商品关联，1 已与商品关联
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    goods = db.relationship('Goods',
-                            secondary=relation_goods_img,
-                            backref=db.backref('img', lazy='dynamic'),
-                            lazy='dynamic')
+    goods_id = db.Column(db.Integer, db.ForeignKey('goods.id'))
 
     def add(self, file_object, status=False, user=current_user, user_id=None):
         from . import User
@@ -67,4 +63,9 @@ class GoodsImg(db.Model):
     def alter_status(self):
         self.status = True if self.status is False else False
         db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        os.remove(os.path.join(current_app.config['GOODS_IMG_PATH'], self.filename))
+        db.session.delete(self)
         db.session.commit()
