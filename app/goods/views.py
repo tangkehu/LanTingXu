@@ -25,7 +25,7 @@ def update_goods(goods_id=None):
             Goods().add(form.name.data, form.rent.data)
         else:
             goods.edit(form.name.data, form.rent.data)
-        return redirect(url_for('.index'))
+        return redirect(url_for('.index') if not goods else url_for('.index')+'#{}'.format(goods_id))
 
     if goods is not None and request.method == 'GET':
         # 商品编辑时的表单内容注入
@@ -57,4 +57,6 @@ def img_goods():
 def delete_goods(goods_id):
     goods_ = Goods.query.get_or_404(goods_id)
     goods_.delete()
-    return redirect(url_for('.index'))
+    next_obj = Goods.query.filter(Goods.id > goods_id).order_by(Goods.id.asc()).first()
+    next_id = next_obj.id if next_obj else ''
+    return redirect(url_for('.index')+'#{}'.format(next_id))

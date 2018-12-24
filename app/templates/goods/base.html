@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
-{% block body_tag %}style="padding-top: 4.5rem; padding-bottom: 4.5rem;"{% endblock %}
+{% block body_tag %}style="padding-bottom: 4.5rem;"{% endblock %}
 
 {% block body %}
     <!-- 顶部导航条 -->
-    <nav class="navbar navbar-expand-sm navbar-dark bg-info shadow fixed-top">
-      <a class="navbar-brand" href="#">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-info shadow">
+      <a class="navbar-brand" href="{{ url_for('goods_bp.index') }}">
           <img src="{{ url_for('static', filename='img/lantinglogo.gif') }}" width="30" height="30" class="d-inline-block align-top" alt="lanting.live">
           兰亭续文创工作室
       </a>
@@ -23,7 +23,7 @@
     </nav>
 
     <!-- 页面主体部分 -->
-    <main role="main" class="container-fluid">
+    <main role="main" class="container-fluid mt-4">
         {% block content %}{% endblock %}
 
         <!-- 页面右下角操作区按钮 -->

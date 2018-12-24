@@ -16,7 +16,7 @@ class DevelopmentConfig(Config):
 
 class ProductionConfig(Config):
     SERVER_NAME = 'lanting.live'
-    SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:zylT#1013@127.0.0.1/lanting_test'
+    SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:zylT#1013@127.0.0.1/lanting'
 
 
 config = {
