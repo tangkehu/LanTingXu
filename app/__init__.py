@@ -2,7 +2,7 @@ import os
 import click
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+from flask_migrate import Migrate, upgrade
 from flask_login import LoginManager
 
 from config import config
@@ -27,13 +27,12 @@ def create_app(config_name=None):
     login_manager.init_app(app)
 
     @app.cli.command()
-    def reset_db():
-        """ 重置数据库 """
+    def deploy():
+        """ 部署，部署前请创建数据库迁移脚本flask db migrate """
         from .models import User
-        db.drop_all()
-        db.create_all()
+        upgrade()
         User.insert_basic()
-        click.echo(u'数据库重置成功。')
+        click.echo(u'本次部署初始化成功')
 
     from .main import main_bp
     app.register_blueprint(main_bp)
