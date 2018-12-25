@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container">
+    <div class="row my-3 ml-1">
+        <img src="{{ url_for('static', filename='img/lantinglogo.gif') }}" alt="lanting.live" width="60" height="60">
+        <h3 class="mt-2 ml-2">兰亭续文创工作室</h3>
+    </div>
+
+    <div class="row justify-content-center">
+    <div class="col-sm-10 col-md-8 col-lg-6 col-xl-4">
+        <h3>{{ goods.name }}</h3>
+        <p class="text-danger">￥{{ goods.rent }}</p>
+        {% for item in goods.img.all() %}
+            <img src="{{ url_for('static', filename='img_goods/'+item.filename) }}" class="img-fluid rounded mb-2">
+        {% endfor %}
+    </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <p class="text-muted">
+            &copy; 兰亭续文创工作室 | <a href="{{ url_for('goods_bp.index') }}" class="text-muted">兰亭集市</a>
+        </p>
+    </div>
+    </div>
+{% endblock %}

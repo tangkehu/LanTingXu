@@ -11,24 +11,35 @@ class Goods(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
     rent = db.Column(db.Integer)
+    cash_pledge = db.Column(db.Integer)
+    brand = db.Column(db.String(64))
+    details = db.Column(db.Text)
     create_time = db.Column(db.DateTime, default=datetime.utcnow)
+    updata_time = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     img = db.relationship('GoodsImg', backref='goods', lazy='dynamic')
 
-    def add(self, name, rent, user=current_user):
+    def add(self, name, rent, user=current_user, **kwargs):
         self.name = name
         self.rent = rent
-        self.user = current_user
+        self.cash_pledge = kwargs.get('cash_pledge')
+        self.brand = kwargs.get('brand')
+        self.details = kwargs.get('details')
+        self.user = user
         self.img = GoodsImg.query.filter_by(status=False, user_id=user.id).all()
         db.session.add(self)
         db.session.commit()
         for item in GoodsImg.query.filter_by(status=False, user_id=user.id).all():
             item.alter_status()
 
-    def edit(self, name, rent):
+    def edit(self, name, rent, **kwargs):
         self.name = name
         self.rent = rent
+        self.cash_pledge = kwargs.get('cash_pledge')
+        self.brand = kwargs.get('brand')
+        self.details = kwargs.get('details')
+        self.updata_time = datetime.utcnow()
         db.session.add(self)
         db.session.commit()
 
