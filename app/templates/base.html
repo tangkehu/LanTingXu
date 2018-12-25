@@ -15,6 +15,26 @@
     <title>{% block title %}兰亭续文创工作室{% endblock %}</title>
 </head>
 <body {% block body_tag %}{% endblock %}>
+    <!-- Flash Modal -->
+    <div class="modal fade" id="flash-modal" tabindex="-1" role="dialog" aria-labelledby="flash-modal-label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-info" id="flash-modal-label">提示消息</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            {% for item in get_flashed_messages() %}{{ item }}<br>{% endfor %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-info" data-dismiss="modal">好的</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     {% block body %}{% endblock %}
 
     <script src="{{ url_for('static', filename='jquery-3.3.1/jquery-3.3.1.js') }}"></script>
@@ -25,5 +45,11 @@
 {#    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>#}
 
     {% block script %}{% endblock %}
+
+    <script type="text/javascript">
+        {% for item in get_flashed_messages() %}
+            $("#flash-modal").modal('show');
+        {% endfor %}
+    </script>
 </body>
 </html>

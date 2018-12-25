@@ -13,6 +13,8 @@
         <small class="text-danger">￥{{ item.rent }}</small>
         <p class="text-truncate text-dark"><small>{{ item.name }}</small></p>
     </div>
+    {% else %}
+        <p>当天暂无商品图。</p>
     {% endfor %}
     </div>
 {% endblock %}
