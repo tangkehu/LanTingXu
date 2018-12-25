@@ -1,32 +1,11 @@
-{#<!DOCTYPE html>#}
-{#<html lang="en" style="width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;">#}
-{#<head>#}
-{#    <meta charset="UTF-8">#}
-{#    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">#}
-{#    <title>兰亭续文创工作室</title>#}
-{#</head>#}
-{#<body style="width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;">#}
-{#    <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; text-align: center;">#}
-{#      <img src="{{ url_for('static', filename="lantinglogo.gif") }}" style="width: 40%;">#}
-{#      <h4>www.lanting.live</h4>#}
-{#      <h3>兰亭续文创工作室</h3>#}
-{#      <h5 style="color: #afabab">敬请期待...</h5>#}
-{#    </div>#}
-{#</body>#}
-{#</html>#}
-{% extends 'base.html' %}
+{% extends 'main/base.html' %}
 
-{% block body %}
-    <div class="container">
-    <div class="row my-3 ml-1">
-        <img src="{{ url_for('static', filename='img/lantinglogo.gif') }}" alt="lanting.live" width="60" height="60">
-        <h3 class="mt-2 ml-2">兰亭续文创工作室</h3>
-    </div>
+{% block content %}
 
     <div class="row">
         {% for item in goods_list %}
             <div id="{{ item.id }}" class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
-                <a href="{{ url_for('.show', goods_id=item.id) }}">
+                <a href="{{ url_for('.goods_show', goods_id=item.id) }}">
                 <div style="padding-bottom: 100%; height: 0; background-size: cover; background-position: center;
                         background-image: url('{{ url_for('static', filename='img_goods/'+item.img.first().filename_m) }}')" class="rounded">
                     <span class="badge badge-pill badge-secondary">{{ item.id }}</span>
@@ -35,13 +14,9 @@
                 <small class="text-danger">￥{{ item.rent }}</small>
                 <p class="text-truncate text-dark"><small>{{ item.name }}</small></p>
             </div>
+        {% else %}
+            <p>当天暂无商品图。</p>
         {% endfor %}
     </div>
 
-    <div class="row justify-content-center">
-        <p class="text-muted">
-            &copy; 兰亭续文创工作室 | <a href="{{ url_for('goods_bp.index') }}" class="text-muted">兰亭集市</a>
-        </p>
-    </div>
-    </div>
 {% endblock %}

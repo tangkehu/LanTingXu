@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <!-- 顶部导航条 -->
+    <nav class="navbar navbar-expand-sm navbar-dark bg-info shadow">
+      <a class="navbar-brand" href="{{ url_for('.index') }}">
+          <img src="{{ url_for('static', filename='img/lantinglogo.gif') }}" width="30" height="30" class="d-inline-block align-top" alt="lanting.live">
+          兰亭续文创工作室
+      </a>
+{#      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">#}
+{#        <span class="navbar-toggler-icon"></span>#}
+{#      </button>#}
+{#      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">#}
+{#        <div class="navbar-nav">#}
+{#          <!-- 导航条超链接 -->#}
+{#          <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>#}
+{#          <a class="nav-item nav-link" href="#">Features</a>#}
+{##}
+{#        </div>#}
+{#      </div>#}
+    </nav>
+
+    <!-- 页面主体部分 -->
+    <main role="main" class="container-fluid mt-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="text-center">
+        <p>
+            &copy; 2018 兰亭续文创工作室 <br>
+            <a href="http://www.miitbeian.gov.cn/" class="text-secondary"><small>蜀ICP备18036635号</small></a>
+        </p>
+    </footer>
+{% endblock %}
