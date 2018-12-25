@@ -27,8 +27,24 @@
                 {{ form.rent(class="form-control", type="number") }}
                 {% for item in form.rent.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
             </div>
+            <div class="form-group">
+                {{ form.cash_pledge.label() }}
+                {{ form.cash_pledge(class="form-control", type="number") }}
+                {% for item in form.cash_pledge.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.brand.label() }}
+                {{ form.brand(class="form-control") }}
+                {% for item in form.brand.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.details.label() }}
+                {{ form.details(class="form-control") }}
+                {% for item in form.details.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
+            </div>
             {% if goods %}
                 <button class="btn btn-info" type="submit">提交修改</button>
+                <button class="btn btn-secondary" type="reset">取消修改</button>
             {% else %}
                 <button class="btn btn-info" type="submit">添加</button>
             {% endif %}

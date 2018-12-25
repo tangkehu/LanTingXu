@@ -21,27 +21,28 @@ def update_goods(goods_id=None):
     delete_form = GoodsDeleteForm()
     goods = Goods.query.get_or_404(goods_id) if goods_id else None
 
-    if request.method == 'GET':
-        for item in GoodsImg.query.filter_by(status=False, user_id=current_user.id).all():
-            # 清理未关联的商品图
-            item.delete()
-        if goods is not None:
-            # 商品编辑时的表单内容注入
-            form.set_data(goods.name, goods.rent)
-            delete_form.goods_id.data = goods_id
+    if request.method == 'GET' and goods is not None:
+        # 商品编辑时的表单内容注入
+        form.set_data(goods)
+        delete_form.goods_id.data = goods_id
 
     if form.validate_on_submit():
+        kwargs = {'cash_pledge': form.cash_pledge.data, 'brand': form.brand.data, 'details': form.details.data}
         if goods is None:
             if GoodsImg.query.filter_by(status=False, user_id=current_user.id).first():
-                Goods().add(form.name.data, form.rent.data)
+                Goods().add(form.name.data, form.rent.data, **kwargs)
                 flash('商品添加成功。')
                 return redirect(url_for('.index'))
             else:
                 flash('请添加商品图。')
         else:
-            goods.edit(form.name.data, form.rent.data)
+            goods.edit(form.name.data, form.rent.data, **kwargs)
             flash('商品修改成功。')
             return redirect(url_for('.index')+'#{}'.format(goods_id))
+
+    for item in GoodsImg.query.filter_by(status=False, user_id=current_user.id).all():
+        # 清理未关联的商品图
+        item.delete()
 
     return render_template('goods/update.html', form=form, delete_form=delete_form, goods=goods)
 
