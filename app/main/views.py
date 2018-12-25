@@ -10,7 +10,7 @@ def index():
     return render_template('main/index.html', goods_list=goods_list)
 
 
-@main_bp.route('/show/<int:goods_id>')
-def show(goods_id):
+@main_bp.route('/goods_show/<int:goods_id>')
+def goods_show(goods_id):
     goods = Goods.query.get_or_404(goods_id)
-    return render_template('main/show.html', goods=goods)
+    return render_template('main/goods_show.html', goods=goods)
