@@ -10,11 +10,11 @@
             <span class="badge badge-pill badge-secondary">{{ item.id }}</span>
         </div>
         </a>
-        <small class="text-danger">￥{{ item.rent }}</small>
+        <small class="text-danger">&yen;{{ item.rent }}</small>
         <p class="text-truncate text-dark"><small>{{ item.name }}</small></p>
     </div>
     {% else %}
-        <p>当天暂无商品图。</p>
+        <p>当前暂无商品图。</p>
     {% endfor %}
     </div>
 {% endblock %}

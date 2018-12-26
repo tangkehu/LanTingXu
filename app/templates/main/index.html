@@ -1,7 +1,6 @@
 {% extends 'main/base.html' %}
 
 {% block content %}
-
     <div class="row">
         {% for item in goods_list %}
             <div id="{{ item.id }}" class="col-6 col-sm-4 col-md-3 col-lg-2 mb-2">
@@ -11,12 +10,15 @@
                     <span class="badge badge-pill badge-secondary">{{ item.id }}</span>
                 </div>
                 </a>
-                <small class="text-danger">￥{{ item.rent }}</small>
+                <small class="text-danger">&yen;{{ item.rent }}</small>
                 <p class="text-truncate text-dark"><small>{{ item.name }}</small></p>
             </div>
         {% else %}
-            <p>当天暂无商品图。</p>
+            <p>当前暂无商品图。</p>
         {% endfor %}
     </div>
+{% endblock %}
 
+{% block handle_btn %}
+    <a href="#" class="btn btn-info float-right mb-2 mr-3"><i class="fas fa-long-arrow-alt-up"></i> </a>
 {% endblock %}

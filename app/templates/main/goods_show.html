@@ -2,18 +2,23 @@
 
 {% block content %}
     <div class="row justify-content-center">
-{#    <a href="{{ url_for('.index') }}#{{ goods.id }}" class="text-secondary"><i class="fas fa-arrow-left"></i> 返回</a>#}
     <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5">
-        <h3>{{ goods.name }}</h3>
-        <p class="text-danger">
-            ￥{{ goods.rent }} <br>
-            <small class="text-secondary">押金：{{ goods.cash_pledge }}</small>
+        <p class="h4">{{ goods.name }}</p>
+        <p>
+            <span class="lead text-danger font-weight-bold">&yen;{{ goods.rent }}</span>
+            {% if goods.cash_pledge %}<small class="text-muted font-weight-light">&nbsp;押金&yen;{{ goods.cash_pledge }}</small>{% endif %}
         </p>
-        <p>{{ goods.brand }}</p>
-        <p>{{ goods.details }}</p>
+        <p>
+            {% if goods.brand %}{{ goods.brand }} <br>{% endif %}
+            {% if goods.details %}{{ goods.details }}{% endif %}
+        </p>
         {% for item in goods.img.all() %}
             <img src="{{ url_for('static', filename='img_goods/'+item.filename) }}" class="img-fluid rounded mb-2">
         {% endfor %}
     </div>
     </div>
+{% endblock %}
+
+{% block handle_btn %}
+    <a href="{{ url_for('.index') }}#{{ goods.id }}" class="btn btn-info float-right mb-2 mr-3"><i class="fas fa-long-arrow-alt-left"></i></a>
 {% endblock %}

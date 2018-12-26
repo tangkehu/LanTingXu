@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 
+{% block html_tag %}style="position: relative; min-height: 100%;"{% endblock %}
+{% block body_tag %}style="margin-bottom: 120px;"{% endblock %}
+
 {% block body %}
     <!-- 顶部导航条 -->
     <nav class="navbar navbar-expand-sm navbar-dark bg-info shadow">
@@ -23,12 +26,22 @@
     <!-- 页面主体部分 -->
     <main role="main" class="container-fluid mt-4">
         {% block content %}{% endblock %}
+
+        <!-- 页面右下角操作区按钮 -->
+        <div class="row fixed-bottom">
+            <div class="col">
+                {% block handle_btn %}
+                    <a href="#" class="btn btn-secondary float-right mb-2 mr-3">Top</a>
+                    <a href="#" class="btn btn-info float-right mb-2 mr-1">Add</a>
+                {% endblock %}
+            </div>
+        </div>
     </main>
 
-    <footer class="text-center">
-        <p>
-            &copy; 2018 兰亭续文创工作室 <br>
-            <a href="http://www.miitbeian.gov.cn/" class="text-secondary"><small>蜀ICP备18036635号</small></a>
-        </p>
+    <footer style="position: absolute; bottom: 0; width: 100%; height: 90px;">
+      <p class="text-center text-muted">
+        &copy; 2018 兰亭续文创工作室 <br>
+        <a href="http://www.miitbeian.gov.cn/" class="text-black-50"><small>蜀ICP备18036635号</small></a>
+      </p>
     </footer>
 {% endblock %}
