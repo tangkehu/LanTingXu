@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, request, flash
+from flask import render_template, redirect, url_for, request, flash, jsonify
 from flask_login import login_required, current_user
 
 from . import goods_bp
@@ -47,17 +47,37 @@ def update_goods(goods_id=None):
     return render_template('goods/update.html', form=form, delete_form=delete_form, goods=goods)
 
 
-@goods_bp.route('/img_goods', methods=['POST'])
+@goods_bp.route('/img_goods_show')
+@goods_bp.route('/img_goods_show/<int:goods_id>')
 @login_required
-def img_goods():
-    img_up = request.files.get('file')
-    if img_up:
-        result = GoodsImg().add(img_up)
+def img_goods_show(goods_id=None):
+    records = []
+    if goods_id is not None:
+        for item in GoodsImg.query.filter_by(goods_id=goods_id).all():
+            records.append((item.id, item.filename_s))
+    else:
+        for item in GoodsImg.query.filter_by(status=False, user_id=current_user.id).all():
+            records.append((item.id, item.filename_s))
+    return jsonify(records)
+
+
+@goods_bp.route('/img_goods_upload', methods=['POST'])
+@login_required
+def img_goods_upload():
+    fail_msg = ''
+    success_msg = ''
+    for item in request.files.getlist('file'):  # 处理多文件上传的典型案例
+        result = GoodsImg().add(item)
         if result['status'] is True:
-            return result['msg'], 200
+            success_msg = result['msg']
         else:
-            return result['msg'], 400
-    return ''
+            fail_msg = result['msg']
+    return fail_msg if fail_msg else success_msg
+
+
+@goods_bp.route('/img_goods_delete/<img_id>')
+def img_goods_delete(img_id):
+    return img_id
 
 
 @goods_bp.route('/delete_goods', methods=['POST'])

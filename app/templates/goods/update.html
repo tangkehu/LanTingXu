@@ -7,13 +7,15 @@
 {% block content %}
     <div class="row justify-content-center">
     <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5">
-        {% if not goods %}
-            <form action="{{ url_for('.img_goods') }}" class="dropzone mb-4" method="POST" enctype="multipart/form-data">
-              <div class="fallback">
-                <input name="file" type="file" multiple />
-              </div>
-            </form>
-        {% endif %}
+
+        <div id="manageGoodsImg" class="row">
+{#            <div class="col-4 col-sm-3"><div style="padding-bottom: 100%; height: 0; background-size: cover; background-position: center; background-image: url('{{ url_for("static", filename='img_goods/') }}')" class="rounded"><a href="{{ url_for(".img_goods_delete", img_id='') }}"><span class="badge badge-pill badge-danger">&times;</span></a></div></div>#}
+        </div>
+
+        <form id="uploadGoodsImg" enctype="multipart/form-data">
+            <input type="file" name="file" multiple accept="image/png,image/jpeg,image/gif">
+            <button id="uploadReset" type="reset" class="d-none">reset</button>
+        </form>
 
         <form method="post" class="mb-2">
             {{ form.hidden_tag() }}
@@ -94,5 +96,40 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{{ url_for('static', filename='dropzone/dropzone.js') }}"></script>
+    <script type="text/javascript">
+
+    $(document).ready(function () {
+
+        function manageGoodsImg() {
+            $.ajax({
+                url: "{% if goods %}{{ url_for('.img_goods_show', goods_id=goods.id) }}{% else %}{{ url_for('.img_goods_show') }}{% endif %}",
+                type: "get",
+                success: function (data) {
+                    for (i in data){
+                        $("#manageGoodsImg").append('<div class="col-4 col-sm-3 mb-2"><div style="padding-bottom: 100%; height: 0; background-size: cover; background-position: center; background-image: url(\'{{ url_for('static', filename='img_goods/') }}'+data[i][1]+'\')" class="rounded"><a href="{{ url_for(".img_goods_delete", img_id="") }}'+data[i][0]+'"><span class="badge badge-pill badge-danger">&times;</span></a></div></div>')
+                    }
+                }
+            })
+        }
+
+        manageGoodsImg();
+
+        $("#uploadGoodsImg").change(function () {
+            $.ajax({
+                url: "{{ url_for('.img_goods_upload') }}",
+                type: "post",
+                cache: false,
+                data: new FormData(document.getElementById("uploadGoodsImg")),
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    alert(data);
+                    manageGoodsImg();
+                    $("#uploadReset").click();
+                }
+            });
+        })
+    });
+
+    </script>
 {% endblock %}
