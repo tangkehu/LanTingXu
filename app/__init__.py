@@ -29,12 +29,12 @@ def create_app(config_name=None):
     @app.cli.command()
     def deploy():
         """ 部署，部署前请创建数据库迁移脚本flask db migrate """
-        from .models import User, Goods
+        from .models import Goods
         from datetime import datetime
         upgrade()
-        User.insert_basic()
 
         for item in Goods.query.all():
+            # TODO: 运行一次后就可删除了
             if not item.updata_time:
                 item.updata_time = datetime.utcnow()
 

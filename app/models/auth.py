@@ -1,6 +1,5 @@
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import current_app
 from flask_login import AnonymousUserMixin
 
 from app import db, login_manager
@@ -48,13 +47,6 @@ class User(db.Model):
 
     def get_id(self):
         return str(self.id)
-
-    @staticmethod
-    def insert_basic():
-        if not User.query.filter_by(email=current_app.config['ADMIN_EMAIL']).first():
-            db.session.add(User(email=current_app.config['ADMIN_EMAIL'],
-                                password=current_app.config['ADMIN_PASSWORD']))
-            db.session.commit()
 
     # 密码处理
     @property    # 为方法添加只读属性（使方法可以像类属性一样读取）装饰器
