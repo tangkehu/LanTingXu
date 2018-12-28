@@ -1,9 +1,5 @@
 {% extends 'goods/base.html' %}
 
-{% block css %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='dropzone/dropzone.css') }}">
-{% endblock %}
-
 {% block content %}
     <div class="row justify-content-center">
     <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5">
@@ -127,11 +123,10 @@
             type: "post",
             data: {"img_id": img_id},
             success: function (data) {
-                {#alert(data);#}
                 $("#"+img_id.toString()).remove();
             },
             error: function () {
-                alert('该图片已被删除。');
+                showMsg('该图片已被删除。');
                 $("#"+img_id.toString()).remove();
             }
         })
@@ -152,7 +147,7 @@
                 success: function (result) {
                     $("#uploadReset").click();
                     imgAppend(result.img);
-                    {#alert(result.msg);#}
+                    {#showMsg(result.msg);#}
                 }
             });
         });

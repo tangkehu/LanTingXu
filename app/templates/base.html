@@ -29,7 +29,6 @@
             </button>
           </div>
           <div class="modal-body">
-            {% for item in get_flashed_messages() %}{{ item }}<br>{% endfor %}
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-info" data-dismiss="modal">好的</button>
@@ -50,9 +49,27 @@
     {% block script %}{% endblock %}
 
     <script type="text/javascript">
-        {% for item in get_flashed_messages() %}
-            $("#flash-modal").modal('show');
-        {% endfor %}
+
+    var flashMsg;
+
+    $("#flash-modal").on("show.bs.modal", function () {
+        let modal = $(this);
+        modal.find(".modal-body").html(flashMsg);
+    });
+
+    // flash 消息闪现
+    {% for item in get_flashed_messages() %}
+        flashMsg = "{{ item }}";
+    {% endfor %}
+    if (flashMsg !== undefined){
+        $("#flash-modal").modal("show");
+    }
+
+    function showMsg(msg) {
+        flashMsg = msg;
+        $("#flash-modal").modal("show");
+    }
+
     </script>
 </body>
 </html>
