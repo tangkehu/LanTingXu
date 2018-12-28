@@ -7,7 +7,7 @@ class GoodsForm(FlaskForm):
     name = StringField('商品名', validators=[DataRequired('请输入商品名'), Length(1, 64, '商品名不超过64个字符')])
     rent = IntegerField('租金', validators=[DataRequired('请输入租金')])
     cash_pledge = IntegerField('押金', validators=[Optional()])
-    brand = StringField('品牌', validators=[Length(-1, 64, '品牌名不超过64个字符')])
+    brand = StringField('尺码', validators=[Length(-1, 64, '品牌名不超过64个字符')])
     details = TextAreaField('详情', validators=[Length(-1, 500, '详情描述不超过500个字符')])
 
     def set_data(self, goods_obj):
