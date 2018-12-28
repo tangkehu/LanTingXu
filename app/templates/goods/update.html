@@ -8,8 +8,7 @@
     <div class="row justify-content-center">
     <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5">
 
-        <div id="manageGoodsImg" class="row">
-{#            <div class="col-4 col-sm-3"><div style="padding-bottom: 100%; height: 0; background-size: cover; background-position: center; background-image: url('{{ url_for("static", filename='img_goods/') }}')" class="rounded"><a href="{{ url_for(".img_goods_delete", img_id='') }}"><span class="badge badge-pill badge-danger">&times;</span></a></div></div>#}
+        <div id="showGoodsImg" class="row">
         </div>
 
         <form id="uploadGoodsImg" enctype="multipart/form-data">
@@ -51,12 +50,6 @@
                 <button class="btn btn-info" type="submit">添加</button>
             {% endif %}
         </form>
-
-        {% if goods %}
-            {% for item in goods.img.all() %}
-                <img src="{{ url_for('static', filename='img_goods/'+item.filename) }}" class="img-fluid rounded mb-2">
-            {% endfor %}
-        {% endif %}
     </div>
     </div>
 
@@ -98,38 +91,67 @@
 {% block script %}
     <script type="text/javascript">
 
+    function imgAppend(data) {
+        for (i in data){
+            $("#showGoodsImg").append(
+                '<div id="'+data[i][0]+'" class="col-4 col-sm-3 mb-4">' +
+                  '<div style="padding-bottom: 100%; height: 0; background-size: cover; background-position: center; ' +
+                      'background-image: url(\'{{ url_for('static', filename='img_goods/') }}'+data[i][1]+'\')" class="rounded">' +
+                    '<button class="btn btn-info" onclick="deleteGoodsImg('+data[i][0]+')">' +
+                      '<span aria-hidden="true">&times;</span>' +
+                    '</button>' +
+                  '</div>' +
+                '</div>'
+            )
+        }
+    }
+
+    function showGoodsImg() {
+        $.ajax({
+            url: "{% if goods %}{{ url_for('.img_goods_show', goods_id=goods.id) }}{% else %}{{ url_for('.img_goods_show') }}{% endif %}",
+            type: "get",
+            success: function (data) {
+                imgAppend(data);
+            }
+        })
+    }
+
+    function deleteGoodsImg(img_id) {
+        $.ajax({
+            url: "{{ url_for('.img_goods_delete') }}",
+            type: "post",
+            data: {"img_id": img_id},
+            success: function (data) {
+                {#alert(data);#}
+                $("#"+img_id.toString()).remove();
+            },
+            error: function () {
+                alert('该图片已被删除。');
+                $("#"+img_id.toString()).remove();
+            }
+        })
+    }
+
     $(document).ready(function () {
 
-        function manageGoodsImg() {
-            $.ajax({
-                url: "{% if goods %}{{ url_for('.img_goods_show', goods_id=goods.id) }}{% else %}{{ url_for('.img_goods_show') }}{% endif %}",
-                type: "get",
-                success: function (data) {
-                    for (i in data){
-                        $("#manageGoodsImg").append('<div class="col-4 col-sm-3 mb-2"><div style="padding-bottom: 100%; height: 0; background-size: cover; background-position: center; background-image: url(\'{{ url_for('static', filename='img_goods/') }}'+data[i][1]+'\')" class="rounded"><a href="{{ url_for(".img_goods_delete", img_id="") }}'+data[i][0]+'"><span class="badge badge-pill badge-danger">&times;</span></a></div></div>')
-                    }
-                }
-            })
-        }
-
-        manageGoodsImg();
+        showGoodsImg();
 
         $("#uploadGoodsImg").change(function () {
             $.ajax({
-                url: "{{ url_for('.img_goods_upload') }}",
+                url: "{% if goods %}{{ url_for('.img_goods_upload', goods_id=goods.id) }}{% else %}{{ url_for('.img_goods_upload') }}{% endif %}",
                 type: "post",
                 cache: false,
                 data: new FormData(document.getElementById("uploadGoodsImg")),
                 processData: false,
                 contentType: false,
-                success: function (data) {
-                    alert(data);
-                    manageGoodsImg();
+                success: function (result) {
                     $("#uploadReset").click();
+                    imgAppend(result.img);
+                    {#alert(result.msg);#}
                 }
             });
-        })
-    });
+        });
 
+    });
     </script>
 {% endblock %}
