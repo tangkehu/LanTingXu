@@ -122,13 +122,15 @@
             url: "{{ url_for('.img_goods_delete') }}",
             type: "post",
             data: {"img_id": img_id},
+            beforeSend: showLoading(),
             success: function (data) {
                 $("#"+img_id.toString()).remove();
             },
             error: function () {
                 showMsg('该图片已被删除。');
                 $("#"+img_id.toString()).remove();
-            }
+            },
+            complete: hideLoading()
         })
     }
 
@@ -144,11 +146,13 @@
                 data: new FormData(document.getElementById("uploadGoodsImg")),
                 processData: false,
                 contentType: false,
+                beforeSend: showLoading(),
                 success: function (result) {
                     $("#uploadReset").click();
                     imgAppend(result.img);
                     {#showMsg(result.msg);#}
-                }
+                },
+                complete: hideLoading()
             });
         });
 
