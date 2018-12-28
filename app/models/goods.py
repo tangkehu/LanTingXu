@@ -59,7 +59,7 @@ class GoodsImg(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     goods_id = db.Column(db.Integer, db.ForeignKey('goods.id'))
 
-    def add(self, file_object, status=False, user=current_user, user_id=None):
+    def add(self, file_object, goods_id=None, status=False, user=current_user, user_id=None):
         from . import User
         img_allow = ['.jpg', '.jpeg', '.png', '.gif']
         if os.path.splitext(file_object.filename)[1] not in img_allow:
@@ -73,9 +73,12 @@ class GoodsImg(db.Model):
         self.filename_s = filename_s
         self.status = status
         self.user = user if user_id is None else User.query.get_or_404(int(user_id))
+        if goods_id:
+            self.goods = Goods.query.get_or_404(int(goods_id))
+            self.status = True
         db.session.add(self)
         db.session.commit()
-        return {'status': True, 'msg': '添加成功'}
+        return {'status': True, 'msg': '添加成功', 'img_obj': self}
 
     def alter_status(self):
         self.status = True if self.status is False else False

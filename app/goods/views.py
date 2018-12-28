@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, request, flash
+from flask import render_template, redirect, url_for, request, flash, jsonify
 from flask_login import login_required, current_user
 
 from . import goods_bp
@@ -21,10 +21,14 @@ def update_goods(goods_id=None):
     delete_form = GoodsDeleteForm()
     goods = Goods.query.get_or_404(goods_id) if goods_id else None
 
-    if request.method == 'GET' and goods is not None:
-        # 商品编辑时的表单内容注入
-        form.set_data(goods)
-        delete_form.goods_id.data = goods_id
+    if request.method == 'GET':
+        for item in GoodsImg.query.filter_by(status=False, user_id=current_user.id).all():
+            # 清理未关联的商品图
+            item.delete()
+        if goods is not None:
+            # 商品编辑时的表单内容注入
+            form.set_data(goods)
+            delete_form.goods_id.data = goods_id
 
     if form.validate_on_submit():
         kwargs = {'cash_pledge': form.cash_pledge.data, 'brand': form.brand.data, 'details': form.details.data}
@@ -40,24 +44,46 @@ def update_goods(goods_id=None):
             flash('商品修改成功。')
             return redirect(url_for('.index')+'#{}'.format(goods_id))
 
-    for item in GoodsImg.query.filter_by(status=False, user_id=current_user.id).all():
-        # 清理未关联的商品图
-        item.delete()
-
     return render_template('goods/update.html', form=form, delete_form=delete_form, goods=goods)
 
 
-@goods_bp.route('/img_goods', methods=['POST'])
+@goods_bp.route('/img_goods_show')
+@goods_bp.route('/img_goods_show/<int:goods_id>')
 @login_required
-def img_goods():
-    img_up = request.files.get('file')
-    if img_up:
-        result = GoodsImg().add(img_up)
+def img_goods_show(goods_id=None):
+    records = []
+    if goods_id is not None:
+        for item in GoodsImg.query.filter_by(goods_id=goods_id).all():
+            records.append((item.id, item.filename_s))
+    else:
+        for item in GoodsImg.query.filter_by(status=False, user_id=current_user.id).all():
+            records.append((item.id, item.filename_s))
+    return jsonify(records)
+
+
+@goods_bp.route('/img_goods_upload', methods=['POST'])
+@goods_bp.route('/img_goods_upload/<int:goods_id>', methods=['POST'])
+@login_required
+def img_goods_upload(goods_id=None):
+    fail_msg = ''
+    success_msg = ''
+    img = []
+    for item in request.files.getlist('file'):  # 处理多文件上传的典型案例
+        result = GoodsImg().add(item, goods_id=goods_id)
         if result['status'] is True:
-            return result['msg'], 200
+            success_msg = result['msg']
+            img.append((result['img_obj'].id, result['img_obj'].filename_s))
         else:
-            return result['msg'], 400
-    return ''
+            fail_msg = result['msg']
+    result = {'msg': fail_msg if fail_msg else success_msg, 'img': img}
+    return jsonify(result)
+
+
+@goods_bp.route('/img_goods_delete', methods=["POST"])
+@login_required
+def img_goods_delete():
+    GoodsImg.query.get_or_404(int(request.form.get('img_id'))).delete()
+    return '删除成功。'
 
 
 @goods_bp.route('/delete_goods', methods=['POST'])
