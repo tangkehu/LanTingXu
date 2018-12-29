@@ -7,6 +7,7 @@ from app.models import GoodsImg, Goods
 
 
 @goods_bp.route('/')
+@login_required
 def index():
     goods_list = Goods.query.order_by(Goods.create_time.desc()).all()
     return render_template('goods/index.html', goods_list=goods_list)
@@ -31,7 +32,8 @@ def update_goods(goods_id=None):
             delete_form.goods_id.data = goods_id
 
     if form.validate_on_submit():
-        kwargs = {'cash_pledge': form.cash_pledge.data, 'brand': form.brand.data, 'details': form.details.data}
+        kwargs = {'cash_pledge': form.cash_pledge.data, 'size': form.size.data,
+                  'brand': form.brand.data, 'details': form.details.data}
         if goods is None:
             if GoodsImg.query.filter_by(status=False, user_id=current_user.id).first():
                 Goods().add(form.name.data, form.rent.data, **kwargs)

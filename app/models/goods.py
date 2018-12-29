@@ -13,6 +13,7 @@ class Goods(db.Model):
     rent = db.Column(db.Integer)
     cash_pledge = db.Column(db.Integer)
     brand = db.Column(db.String(64))
+    size = db.Column(db.String(64))
     details = db.Column(db.Text)
     create_time = db.Column(db.DateTime, default=datetime.utcnow)
     updata_time = db.Column(db.DateTime, default=datetime.utcnow)
@@ -24,6 +25,7 @@ class Goods(db.Model):
         self.name = name
         self.rent = rent
         self.cash_pledge = kwargs.get('cash_pledge')
+        self.size = kwargs.get('size')
         self.brand = kwargs.get('brand')
         self.details = kwargs.get('details')
         self.user = user
@@ -37,6 +39,7 @@ class Goods(db.Model):
         self.name = name
         self.rent = rent
         self.cash_pledge = kwargs.get('cash_pledge')
+        self.size = kwargs.get('size')
         self.brand = kwargs.get('brand')
         self.details = kwargs.get('details')
         self.updata_time = datetime.utcnow()
