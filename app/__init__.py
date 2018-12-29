@@ -12,7 +12,7 @@ migrate = Migrate()
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth_bp.login'
-login_manager.login_message = '请先登录账号。'
+login_manager.login_message = '请登录账号。'
 
 
 def create_app(config_name=None):
@@ -29,7 +29,17 @@ def create_app(config_name=None):
     @app.cli.command()
     def deploy():
         """ 部署，部署前请创建数据库迁移脚本flask db migrate """
+        from .models import Goods
+
         upgrade()
+
+        for item in Goods.query.all():
+            # 添加size字段时使用，使用后删除
+            item.size = item.brand
+            item.brand = None
+            db.session.add(item)
+        db.session.commit()
+
         click.echo(u'本次部署初始化成功')
 
     from .main import main_bp

@@ -15,7 +15,7 @@
 
     {% block css %}{% endblock %}
 
-    <title>{% block title %}兰亭续(lanting.live)-汉服出租{% endblock %}</title>
+    <title>{% block title %}兰亭续(www.lanting.live)-汉服出租，古风妆照，摄影，活动策划{% endblock %}</title>
 </head>
 <body {% block body_tag %}{% endblock %}>
     <!-- Flash Modal -->
@@ -64,7 +64,7 @@
     <script type="text/javascript">
 
     // 消息提示JS
-    var flashMsg;
+    let flashMsg;
     $("#flash-modal").on("show.bs.modal", function () {
         let modal = $(this);
         modal.find(".modal-body").html(flashMsg);
@@ -87,7 +87,6 @@
         setTimeout(function () {
             $("#loading-modal").modal('hide');
         }, 500);
-
     }
 
     </script>
