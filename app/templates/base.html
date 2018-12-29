@@ -64,7 +64,7 @@
     <script type="text/javascript">
 
     // 消息提示JS
-    var flashMsg;
+    let flashMsg;
     $("#flash-modal").on("show.bs.modal", function () {
         let modal = $(this);
         modal.find(".modal-body").html(flashMsg);
@@ -87,7 +87,6 @@
         setTimeout(function () {
             $("#loading-modal").modal('hide');
         }, 500);
-
     }
 
     </script>
