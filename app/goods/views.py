@@ -33,7 +33,7 @@ def update_goods(goods_id=None):
 
     if form.validate_on_submit():
         kwargs = {'cash_pledge': form.cash_pledge.data, 'size': form.size.data,
-                  'brand': form.brand.data, 'details': form.details.data}
+                  'brand': form.brand.data, 'quantity': form.quantity.data, 'details': form.details.data}
         if goods is None:
             if GoodsImg.query.filter_by(status=False, user_id=current_user.id).first():
                 Goods().add(form.name.data, form.rent.data, **kwargs)

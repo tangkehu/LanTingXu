@@ -9,8 +9,10 @@
             {% if goods.cash_pledge %}<small class="text-muted font-weight-light">&nbsp;押金&yen;{{ goods.cash_pledge }}</small>{% endif %}
         </p>
         <p>
-            {% if goods.size %}{{ goods.size }} <br>{% endif %}
-            {% if goods.brand %}{{ goods.brand }}，{% endif %}
+            {% if goods.brand %}品牌：{{ goods.brand }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
+            {% if goods.size %}尺码：{{ goods.size }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
+            {% if goods.quantity %}库存：{{ goods.quantity }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
+            <hr>
             {% if goods.details %}{{ goods.details }}{% endif %}
         </p>
         {% for item in goods.img.all() %}
