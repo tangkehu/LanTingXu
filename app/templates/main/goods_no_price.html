@@ -13,8 +13,8 @@
         {% for item in goods_list %}
         <div id="{{ item.id }}" class="col-6 col-sm-4 col-md-3 col-lg-2 p-1">
             <a data-toggle="modal" data-target="#goods-no-price-modal" data-goodsid="{{ item.id }}">
-            <div style="padding-bottom: 100%; height: 0; background-size: cover; background-position: center;
-                    background-image: url('{% if item.img.first() %}{{ url_for('static', filename='img_goods/'+item.img.first().filename_s) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}')" class="rounded">
+            <div data-imageurl="{% if item.img.first() %}{{ url_for('static', filename='img_goods/'+item.img.first().filename_m) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}"
+                 style="padding-bottom: 100%; height: 0; background-size: cover; background-position: center;" class="rounded img_delay">
                 <span class="badge badge-pill badge-secondary">{{ item.id }}</span>
             </div>
             </a>
@@ -78,6 +78,29 @@ $("#goods-no-price-modal").on("show.bs.modal", function (event) {
             modal.find('.modal-body').html(html_str)
         }
     });
+});
+
+// 图片懒加载
+$(function () {
+    let $lazyImages = $('.img_delay');
+    let onScroll = function () {
+        // 获取滚动条滚动过的页面的高度
+        let scrollTop = $(window).scrollTop();
+        // 网页浏览器可视内容部分的高度
+        let screenHeight = $(window).height();
+        $lazyImages.each(function (index, element) {
+          let $el = $(element);
+          // $el.offset().top获取图片距离页面顶部的距离
+          // 图片出现在页面可见部分时设置图片的src属性值为data-src属性值
+          if ($el.offset().top - scrollTop < screenHeight) {
+            $el.attr('style', function(i,origValue){
+                return origValue + "background-image: url('"+$el.attr('data-imageurl')+"');"
+            }).removeAttr('data-imageurl');
+          }
+        });
+    };
+    $(window).scroll(onScroll);
+    onScroll();
 })
 
 </script>
