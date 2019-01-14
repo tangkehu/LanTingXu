@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container">
+    <nav class="navbar justify-content-center">
+        <div class="navbar-brand">
+            <img src="{{ url_for('static', filename='img/lantinglogo.gif') }}" width="30" height="30" class="d-inline-block align-top" alt="lanting.live">
+            兰亭续文创工作室 <small class="text-muted">汉服租赁</small>
+        </div>
+    </nav>
+
+    <div class="row">
+        {% for item in goods_list %}
+        <div id="{{ item.id }}" class="col-6 col-sm-4 col-md-3 col-lg-2 p-1">
+            <a data-toggle="modal" data-target="#goods-no-price-modal" data-goodsid="{{ item.id }}">
+            <div style="padding-bottom: 100%; height: 0; background-size: cover; background-position: center;
+                    background-image: url('{% if item.img.first() %}{{ url_for('static', filename='img_goods/'+item.img.first().filename_s) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}')" class="rounded">
+                <span class="badge badge-pill badge-secondary">{{ item.id }}</span>
+            </div>
+            </a>
+            <p class="text-truncate text-dark"><small>{{ item.name }}</small></p>
+        </div>
+        {% else %}
+            <div class="col">当前暂无商品图.</div>
+        {% endfor %}
+    </div>
+
+    <!-- goods-no-price show modal -->
+    <div class="modal fade" id="goods-no-price-modal" tabindex="-1" role="dialog" aria-labelledby="goods-no-price-modal-label" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-info" id="goods-no-price-modal-label">详情</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-info" data-dismiss="modal">知了</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+
+$("#goods-no-price-modal").on("show.bs.modal", function (event) {
+    let $item = $(event.relatedTarget);
+    let goods_id = $item.data('goodsid');
+    let modal = $(this);
+    $.ajax({
+        url: "{{ url_for('.goods_no_price') }}/"+goods_id,
+        type: 'get',
+        beforeSend: function(){
+            modal.find('.modal-body').html('<div class="spinner-border" role="status">' +
+                '<span class="sr-only">Loading...</span></div>')
+        },
+        success: function (data) {
+            let html_str = '';
+            if (data.name) { html_str += '<span class="lead font-weight-bold">'+data.name+'</span><br>' }
+            if (data.cash_pledge) { html_str += '押金：'+data.cash_pledge+'<br>' }
+            if (data.size) { html_str += '尺码：'+data.size+'<br>'}
+            if (data.quantity) { html_str += '库存：'+data.quantity+'<br>' }
+            if (data.images) {
+                for (one in data.images) {
+                    html_str += '<img class="img-fluid rounded mt-2" src="/static/img_goods/'+data.images[one]+'">'
+                }
+            }
+            modal.find('.modal-body').html(html_str)
+        },
+        error: function (data) {
+            let html_str = '未找到该商品详情.';
+            modal.find('.modal-body').html(html_str)
+        }
+    });
+})
+
+</script>
+{% endblock %}
