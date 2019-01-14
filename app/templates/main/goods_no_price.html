@@ -92,7 +92,7 @@ $(function () {
           let $el = $(element);
           // $el.offset().top获取图片距离页面顶部的距离
           // 图片出现在页面可见部分时设置图片的src属性值为data-src属性值
-          if ($el.offset().top - scrollTop < screenHeight) {
+          if ($el.offset().top - scrollTop < screenHeight && $el.attr('data-imageurl')) {
             $el.attr('style', function(i,origValue){
                 return origValue + "background-image: url('"+$el.attr('data-imageurl')+"');"
             }).removeAttr('data-imageurl');
