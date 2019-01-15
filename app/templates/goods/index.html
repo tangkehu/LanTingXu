@@ -5,7 +5,7 @@
     {% for item in goods_list %}
     <div id="{{ item.id }}" class="col-6 col-sm-4 col-md-3 col-lg-2 p-1">
         <a href="{{ url_for('.update_goods', goods_id=item.id) }}">
-        <div data-imageurl="{% if item.img.first() %}{{ url_for('static', filename='img_goods/'+item.img.first().filename_m) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}"
+        <div data-imageurl="{% if item.img.first() %}{{ url_for('static', filename='img_goods/'+item.img.first().filename_s) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}"
              style="padding-bottom: 100%; height: 0; background-size: cover; background-position: center;" class="rounded img_delay">
             <span class="badge badge-pill badge-secondary">{{ item.id }}</span>
         </div>
