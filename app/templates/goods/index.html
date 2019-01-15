@@ -28,22 +28,32 @@
 <script type="text/javascript">
 // 图片懒加载
 $(function () {
-    let $lazyImages = $('.img_delay');
+    let clock;  // 记录定时任务ID
     let onScroll = function () {
-        // 获取滚动条滚动过的页面的高度
-        let scrollTop = $(window).scrollTop();
-        // 网页浏览器可视内容部分的高度
-        let screenHeight = $(window).height();
-        $lazyImages.each(function (index, element) {
-          let $el = $(element);
-          // $el.offset().top获取图片距离页面顶部的距离
-          // 图片出现在页面可见部分时设置图片的src属性值为data-src属性值
-          if ($el.offset().top - scrollTop < screenHeight && $el.attr('data-imageurl')) {
-            $el.attr('style', function(i,origValue){
-                return origValue + "background-image: url('"+$el.attr('data-imageurl')+"');"
-            }).removeAttr('data-imageurl');
-          }
-        });
+        // 结束上次还未执行的任务
+        if (clock) {
+            clearTimeout(clock);
+        }
+        // 建立新的定时任务
+        clock = setTimeout(function () {
+            // 获取滚动条滚动过的页面的高度
+            let scrollTop = $(window).scrollTop();
+            // 网页浏览器可视内容部分的高度
+            let screenHeight = $(window).height();
+            $('.img_delay').each(function (index, element) {
+              let $el = $(element);
+              // $el.offset().top获取图片距离页面顶部的距离
+              // 图片出现在页面可见部分时设置图片的src属性值为data-src属性值
+              let elementTop = $el.offset().top;
+              let maxHeight = scrollTop + screenHeight;  // 滚动过的高度加上页面高度
+              let minHeight = scrollTop - $el.parent().parent().height();  // 滚动过的高度减去图片自身高度
+              if (elementTop < maxHeight && elementTop > minHeight && $el.attr('data-imageurl')) {
+                $el.attr('style', function(i,origValue){
+                    return origValue + "background-image: url('"+$el.attr('data-imageurl')+"');"
+                }).removeAttr('data-imageurl');
+              }
+            });
+        }, 300);
     };
     $(window).scroll(onScroll);
     onScroll();
