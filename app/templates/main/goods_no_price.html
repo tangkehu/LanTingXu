@@ -1,19 +1,20 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<div class="container">
-    <nav class="navbar justify-content-center">
-        <div class="navbar-brand">
-            <img src="{{ url_for('static', filename='img/lantinglogo.gif') }}" width="30" height="30" class="d-inline-block align-top" alt="lanting.live">
-            兰亭续文创工作室 <small class="text-muted">汉服租赁</small>
-        </div>
-    </nav>
 
+<nav class="navbar justify-content-center shadow">
+    <div class="navbar-brand">
+        <img src="{{ url_for('static', filename='img/lantinglogo.gif') }}" width="30" height="30" class="d-inline-block align-top" alt="lanting.live">
+        兰亭续文创工作室 <small class="text-muted">汉服租赁</small>
+    </div>
+</nav>
+
+<div class="container mt-3">
     <div class="row">
         {% for item in goods_list %}
         <div id="{{ item.id }}" class="col-6 col-sm-4 col-md-3 col-lg-2 p-1">
             <a data-toggle="modal" data-target="#goods-no-price-modal" data-goodsid="{{ item.id }}">
-            <div data-imageurl="{% if item.img.first() %}{{ url_for('static', filename='img_goods/'+item.img.first().filename_m) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}"
+            <div data-imageurl="{% if item.img.first() %}{{ url_for('static', filename='img_goods/'+item.img.first().filename_s) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}"
                  style="padding-bottom: 100%; height: 0; background-size: cover; background-position: center;" class="rounded img_delay">
                 <span class="badge badge-pill badge-secondary">{{ item.id }}</span>
             </div>
@@ -26,19 +27,13 @@
     </div>
 
     <!-- goods-no-price show modal -->
-    <div class="modal fade" id="goods-no-price-modal" tabindex="-1" role="dialog" aria-labelledby="goods-no-price-modal-label" aria-hidden="true">
+    <div class="modal fade" id="goods-no-price-modal" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title text-info" id="goods-no-price-modal-label">详情</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
           <div class="modal-body">
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-info" data-dismiss="modal">知了</button>
+            <button type="button" class="btn btn-info btn-block" data-dismiss="modal">知了</button>
           </div>
         </div>
       </div>
@@ -68,7 +63,7 @@ $("#goods-no-price-modal").on("show.bs.modal", function (event) {
             if (data.quantity) { html_str += '库存：'+data.quantity+'<br>' }
             if (data.images) {
                 for (one in data.images) {
-                    html_str += '<img class="img-fluid rounded mt-2" src="/static/img_goods/'+data.images[one]+'">'
+                    html_str += '<img class="img-fluid rounded mt-2" width=100% src="/static/img_goods/'+data.images[one]+'">'
                 }
             }
             modal.find('.modal-body').html(html_str)
@@ -82,22 +77,32 @@ $("#goods-no-price-modal").on("show.bs.modal", function (event) {
 
 // 图片懒加载
 $(function () {
-    let $lazyImages = $('.img_delay');
+    let clock;  // 记录定时任务ID
     let onScroll = function () {
-        // 获取滚动条滚动过的页面的高度
-        let scrollTop = $(window).scrollTop();
-        // 网页浏览器可视内容部分的高度
-        let screenHeight = $(window).height();
-        $lazyImages.each(function (index, element) {
-          let $el = $(element);
-          // $el.offset().top获取图片距离页面顶部的距离
-          // 图片出现在页面可见部分时设置图片的src属性值为data-src属性值
-          if ($el.offset().top - scrollTop < screenHeight && $el.attr('data-imageurl')) {
-            $el.attr('style', function(i,origValue){
-                return origValue + "background-image: url('"+$el.attr('data-imageurl')+"');"
-            }).removeAttr('data-imageurl');
-          }
-        });
+        // 结束上次还未执行的任务
+        if (clock) {
+            clearTimeout(clock);
+        }
+        // 建立新的定时任务
+        clock = setTimeout(function () {
+            // 获取滚动条滚动过的页面的高度
+            let scrollTop = $(window).scrollTop();
+            // 网页浏览器可视内容部分的高度
+            let screenHeight = $(window).height();
+            $('.img_delay').each(function (index, element) {
+              let $el = $(element);
+              // $el.offset().top获取图片距离页面顶部的距离
+              // 图片出现在页面可见部分时设置图片的src属性值为data-src属性值
+              let elementTop = $el.offset().top;
+              let maxHeight = scrollTop + screenHeight;  // 滚动过的高度加上页面高度
+              let minHeight = scrollTop - $el.parent().parent().height();  // 滚动过的高度减去图片自身高度
+              if (elementTop < maxHeight && elementTop > minHeight && $el.attr('data-imageurl')) {
+                $el.attr('style', function(i,origValue){
+                    return origValue + "background-image: url('"+$el.attr('data-imageurl')+"');"
+                }).removeAttr('data-imageurl');
+              }
+            });
+        }, 300);
     };
     $(window).scroll(onScroll);
     onScroll();
