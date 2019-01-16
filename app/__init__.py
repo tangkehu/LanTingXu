@@ -1,13 +1,14 @@
 import os
 import click
 import logging
-from logging.handlers import SMTPHandler, RotatingFileHandler
+from logging.handlers import RotatingFileHandler
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, upgrade
 from flask_login import LoginManager
 
 from config import config
+from .utils import SSLSMTPHandler
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -71,10 +72,21 @@ def register_template_context(app):
 def register_logging(app):
     if not app.debug:
         if app.config.get('MAIL_SERVER'):
-            mail_handler = SMTPHandler(mailhost=(app.config['MAIL_SERVER'], app.config['MAIL_PORT']),
-                                       credentials=(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD']),
-                                       fromaddr=app.config['MAIL_SENDER'], toaddrs=app.config['MAIL_ADMINS'],
-                                       subject='兰亭续官网 ERRORS 警报日志', secure=())
+            mail_handler = SSLSMTPHandler(mailhost=(app.config['MAIL_SERVER'], app.config['MAIL_PORT']),
+                                          credentials=(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD']),
+                                          fromaddr=app.config['MAIL_SENDER'], toaddrs=app.config['MAIL_ADMINS'],
+                                          subject='兰亭续官网 ERRORS 警报日志')
+            mail_handler.setFormatter(logging.Formatter('''
+                Message type:       %(levelname)s
+                Location:           %(pathname)s:%(lineno)d
+                Module:             %(module)s
+                Function:           %(funcName)s
+                Time:               %(asctime)s
+
+                Message:
+
+                %(message)s
+                '''))
             mail_handler.setLevel(logging.ERROR)
             app.logger.addHandler(mail_handler)
 
