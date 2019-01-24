@@ -10,7 +10,8 @@ from app.models import GoodsImg, Goods
 @login_required
 def index():
     goods_list = Goods.query.order_by(Goods.create_time.desc()).all()
-    return render_template('user/index.html', goods_list=goods_list)
+    # return render_template('user/index.html', goods_list=goods_list)
+    return render_template('user/profile.html')
 
 
 @user_bp.route('/update_goods', methods=['GET', 'POST'])
