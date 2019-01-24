@@ -42,13 +42,12 @@ def create_app(config_name=os.getenv('FLASK_CONFIG', 'production')):
 def register_blueprints(app):
     from .main import main_bp
     app.register_blueprint(main_bp)
-    app.register_blueprint(main_bp, subdomain='www')
 
     from .auth import auth_bp
-    app.register_blueprint(auth_bp, subdomain='auth')
+    app.register_blueprint(auth_bp)
 
-    from .goods import goods_bp
-    app.register_blueprint(goods_bp, subdomain='goods')
+    from .user import user_bp
+    app.register_blueprint(user_bp, url_prefix='/user')
 
 
 def register_errors(app):

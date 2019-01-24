@@ -2,8 +2,9 @@
 <!-- 底部导航条 -->
 <div class="row justify-content-center fixed-bottom mb-2">
     <nav class="nav rounded-pill border px-4" style="background: rgba(255, 255, 255, 0.8);">
-      <a class="nav-link text-info" href="{{ url_for('.index') }}"><i class="fas fa-store lead text-wrap" style="width: 2rem"><span style="font-size: xx-small">赶集</span></i> </a>
-      <a class="nav-link text-info" href="#"><i class="fas fa-shopping-basket lead text-wrap" style="width: 2rem"><span style="font-size: xx-small">箩筐</span></i> </a>
-      <a class="nav-link text-info" href="#"><i class="fas fa-home lead text-wrap" style="width: 2rem"><span style="font-size: xx-small">后院</span></i> </a>
+        <a class="nav-link text-info" href="{{ url_for('main_bp.index') }}"><i class="fas fa-store lead text-wrap" style="width: 2rem"><span style="font-size: xx-small">赶集</span></i> </a>
+        <a class="nav-link text-info" href="#"><i class="fas fa-shopping-basket lead text-wrap" style="width: 2rem"><span style="font-size: xx-small">箩筐</span></i> </a>
+        <a class="nav-link text-info" href="{{ url_for('user_bp.index') }}"><i class="fas fa-home lead text-wrap" style="width: 2rem"><span style="font-size: xx-small">小院</span></i> </a>
+        <a class="nav-link text-info" href="#"><i class="fas fa-cogs lead text-wrap" style="width: 2rem"><span style="font-size: xx-small">后台</span></i> </a>
     </nav>
 </div>

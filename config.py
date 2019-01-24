@@ -16,7 +16,6 @@ class Config:
 
 
 class DevelopmentConfig(Config):
-    SERVER_NAME = 'lanting.com'  # 用于配置子域名以及url_for生成完整的URL
     SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://{}:{}@{}/{}'.format(os.getenv('FLASK_DATABASE_USER'),
                                                                           os.getenv('FLASK_DATABASE_PASSWORD'),
                                                                           os.getenv('FLASK_DATABASE_HOST'),
@@ -24,7 +23,6 @@ class DevelopmentConfig(Config):
 
 
 class ProductionConfig(Config):
-    SERVER_NAME = 'lanting.live'
     SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://{}:{}@{}/{}'.format(os.getenv('FLASK_DATABASE_USER'),
                                                                           os.getenv('FLASK_DATABASE_PASSWORD'),
                                                                           os.getenv('FLASK_DATABASE_HOST'),

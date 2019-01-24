@@ -1,20 +1,20 @@
 from flask import render_template, redirect, url_for, request, flash, jsonify
 from flask_login import login_required, current_user
 
-from . import goods_bp
+from . import user_bp
 from .forms import GoodsForm, GoodsDeleteForm
 from app.models import GoodsImg, Goods
 
 
-@goods_bp.route('/')
+@user_bp.route('/')
 @login_required
 def index():
     goods_list = Goods.query.order_by(Goods.create_time.desc()).all()
-    return render_template('goods/index.html', goods_list=goods_list)
+    return render_template('user/index.html', goods_list=goods_list)
 
 
-@goods_bp.route('/update_goods', methods=['GET', 'POST'])
-@goods_bp.route('/update_goods/<int:goods_id>', methods=['GET', 'POST'])
+@user_bp.route('/update_goods', methods=['GET', 'POST'])
+@user_bp.route('/update_goods/<int:goods_id>', methods=['GET', 'POST'])
 @login_required
 def update_goods(goods_id=None):
     """ 处理商品的添加和修改 """
@@ -46,11 +46,11 @@ def update_goods(goods_id=None):
             flash('商品修改成功。')
             return redirect(url_for('.index')+'#{}'.format(goods_id))
 
-    return render_template('goods/update.html', form=form, delete_form=delete_form, goods=goods)
+    return render_template('user/update.html', form=form, delete_form=delete_form, goods=goods)
 
 
-@goods_bp.route('/img_goods_show')
-@goods_bp.route('/img_goods_show/<int:goods_id>')
+@user_bp.route('/img_goods_show')
+@user_bp.route('/img_goods_show/<int:goods_id>')
 @login_required
 def img_goods_show(goods_id=None):
     records = []
@@ -63,8 +63,8 @@ def img_goods_show(goods_id=None):
     return jsonify(records)
 
 
-@goods_bp.route('/img_goods_upload', methods=['POST'])
-@goods_bp.route('/img_goods_upload/<int:goods_id>', methods=['POST'])
+@user_bp.route('/img_goods_upload', methods=['POST'])
+@user_bp.route('/img_goods_upload/<int:goods_id>', methods=['POST'])
 @login_required
 def img_goods_upload(goods_id=None):
     fail_msg = ''
@@ -81,14 +81,14 @@ def img_goods_upload(goods_id=None):
     return jsonify(result)
 
 
-@goods_bp.route('/img_goods_delete', methods=["POST"])
+@user_bp.route('/img_goods_delete', methods=["POST"])
 @login_required
 def img_goods_delete():
     GoodsImg.query.get_or_404(int(request.form.get('img_id'))).delete()
     return '删除成功。'
 
 
-@goods_bp.route('/delete_goods', methods=['POST'])
+@user_bp.route('/delete_goods', methods=['POST'])
 @login_required
 def delete_goods():
     delete_form = GoodsDeleteForm()
