@@ -12,7 +12,7 @@
     <div class="container mb-5 pb-5">
         <div class="card">
             <div class="card-header">
-                <strong>我的商品</strong>
+                <strong>我发布的商品</strong>
                 <a href="{{ url_for('.update_goods') }}" class="float-right text-info text-decoration-none"><small>添加 <i class="fas fa-plus"></i></small> </a>
             </div>
             <ul class="list-group list-group-flush">
@@ -81,12 +81,13 @@
                 beforeSend: showLoading(),
                 success: function (data) {
                     $("#goods_"+goods_id.toString()).remove();
+                    hideLoading();
                 },
                 error: function () {
                     showMsg('该商品已被删除。');
                     $("#goods_"+goods_id.toString()).remove();
-                },
-                complete: hideLoading()
+                    hideLoading();
+                }
             })
         });
     });
