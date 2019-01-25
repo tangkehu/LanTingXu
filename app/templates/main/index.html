@@ -13,7 +13,7 @@
 
     <div class="row">
         {% for item in goods_list %}
-            <div id="{{ item.id }}" class="col-6 col-md-4 col-lg-3 p-1">
+            <div id="{{ item.id }}" class="col-6 col-md-4 col-xl-3 pr-0">
                 <a href="{{ url_for('.goods_show', goods_id=item.id) }}">
                 <div data-imageurl="{% if item.img.first() %}{{ url_for('static', filename='img_goods/'+item.img.first().filename_s) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}"
                      style="padding-bottom: 100%; height: 0; background-size: cover; background-position: center;" class="rounded img_delay">
@@ -24,7 +24,9 @@
                 <p class="text-truncate text-dark"><small>{{ item.name }}</small></p>
             </div>
         {% else %}
-            <p>当前暂无商品图。</p>
+            <div class="col-6 col-md-4 col-xl-3">
+                <p>当前暂无商品图。</p>
+            </div>
         {% endfor %}
     </div>
 
