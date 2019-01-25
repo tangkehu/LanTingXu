@@ -2,16 +2,15 @@ from flask import render_template, redirect, url_for, request, flash, jsonify
 from flask_login import login_required, current_user
 
 from . import user_bp
-from .forms import GoodsForm, GoodsDeleteForm
+from .forms import GoodsForm
 from app.models import GoodsImg, Goods
 
 
 @user_bp.route('/')
 @login_required
 def index():
-    goods_list = Goods.query.order_by(Goods.create_time.desc()).all()
-    # return render_template('user/index.html', goods_list=goods_list)
-    return render_template('user/profile.html')
+    goods_list = Goods.query.filter_by(user_id=current_user.id).order_by(Goods.create_time.desc()).all()
+    return render_template('user/profile.html', goods_list=goods_list)
 
 
 @user_bp.route('/update_goods', methods=['GET', 'POST'])
@@ -20,7 +19,6 @@ def index():
 def update_goods(goods_id=None):
     """ 处理商品的添加和修改 """
     form = GoodsForm()
-    delete_form = GoodsDeleteForm()
     goods = Goods.query.get_or_404(goods_id) if goods_id else None
 
     if request.method == 'GET':
@@ -30,7 +28,6 @@ def update_goods(goods_id=None):
         if goods is not None:
             # 商品编辑时的表单内容注入
             form.set_data(goods)
-            delete_form.goods_id.data = goods_id
 
     if form.validate_on_submit():
         kwargs = {'cash_pledge': form.cash_pledge.data, 'size': form.size.data,
@@ -47,7 +44,14 @@ def update_goods(goods_id=None):
             flash('商品修改成功。')
             return redirect(url_for('.index')+'#{}'.format(goods_id))
 
-    return render_template('user/update.html', form=form, delete_form=delete_form, goods=goods)
+    return render_template('user/update_goods.html', form=form, goods=goods)
+
+
+@user_bp.route('/delete_goods', methods=['POST'])
+@login_required
+def delete_goods():
+    Goods.query.get_or_404(int(request.form.get('goods_id'))).delete()
+    return 'successful'
 
 
 @user_bp.route('/img_goods_show')
@@ -86,21 +90,4 @@ def img_goods_upload(goods_id=None):
 @login_required
 def img_goods_delete():
     GoodsImg.query.get_or_404(int(request.form.get('img_id'))).delete()
-    return '删除成功。'
-
-
-@user_bp.route('/delete_goods', methods=['POST'])
-@login_required
-def delete_goods():
-    delete_form = GoodsDeleteForm()
-    if delete_form.validate_on_submit():
-        goods_id = int(delete_form.goods_id.data)
-        goods_ = Goods.query.get_or_404(goods_id)
-        goods_.delete()
-        flash('商品删除成功。')
-        next_obj = Goods.query.filter(Goods.id > goods_id).order_by(Goods.id.asc()).first()
-        next_id = next_obj.id if next_obj else ''
-        return redirect(url_for('.index')+'#{}'.format(next_id))
-    else:
-        flash(delete_form.goods_id.errors[0])
-        return redirect(url_for('.index'))
+    return 'successful'

@@ -20,7 +20,3 @@ class GoodsForm(FlaskForm):
         self.brand.data = goods_obj.brand
         self.quantity.data = goods_obj.quantity
         self.details.data = goods_obj.details
-
-
-class GoodsDeleteForm(FlaskForm):
-    goods_id = IntegerField(validators=[DataRequired('未找到要删除的对象。')])
