@@ -92,11 +92,17 @@ class GoodsImg(db.Model):
         db.session.commit()
 
     def delete(self):
-        os.remove(os.path.join(current_app.config['GOODS_IMG_PATH'], self.filename))
+        try:
+            os.remove(os.path.join(current_app.config['GOODS_IMG_PATH'], self.filename))
+        except Exception as e:
+            current_app.logger.error(e)
         try:
             os.remove(os.path.join(current_app.config['GOODS_IMG_PATH'], self.filename_m))
+        except Exception as e:
+            current_app.logger.error(e)
+        try:
             os.remove(os.path.join(current_app.config['GOODS_IMG_PATH'], self.filename_s))
         except Exception as e:
-            pass
+            current_app.logger.error(e)
         db.session.delete(self)
         db.session.commit()
