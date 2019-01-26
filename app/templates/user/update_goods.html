@@ -140,6 +140,11 @@
                     imgAppend(result.img);
                     hideLoading();
                     {#showMsg(result.msg);#}
+                },
+                error: function () {
+                    hideLoading();
+                    $("#uploadReset").click();
+                    showMsg('上传失败，系统内部错误！')
                 }
             });
         });
