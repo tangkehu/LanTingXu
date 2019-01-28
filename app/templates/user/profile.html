@@ -10,37 +10,36 @@
     </div>
 
     <div class="container mb-5 pb-5">
-        <div class="card">
-            <div class="card-header">
-                <strong>我发布的商品</strong>
-                <a href="{{ url_for('.update_goods') }}" class="float-right text-info text-decoration-none"><small>添加 <i class="fas fa-plus"></i></small> </a>
+        <div class="row">
+            <div class="col">
+            <strong>我发布的商品</strong>
+            <a href="{{ url_for('.update_goods') }}" class="float-right text-info text-decoration-none"><small>添加 <i class="fas fa-plus"></i></small> </a>
+            <hr>
             </div>
-            <ul class="list-group list-group-flush">
-                {% for item in goods_list %}
-                    <li class="list-group-item" id="goods_{{ item.id }}">
-                        <div class="row">
-                            <div class="col-3 col-md-2 col-xl-1 pr-0">
-                                <div style="height: 0; padding-top: 100%; background-size: cover; background-position: center; background-image: url('{% if item.img.first() %}{{ url_for('static', filename='img_goods/'+item.img.first().filename_s) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}')"></div>
-                            </div>
-                            <div class="col">
-                                {{ item.name }}
-                                <br>
-                                <small>编号：{{ item.id }} &nbsp; 租金：&yen;{{ item.rent }}</small>
-                                <br>
-                                <small class="float-right">
-                                    <a href="{{ url_for('.update_goods', goods_id=item.id) }}" class="text-info text-decoration-none mr-2">编辑 <i class="fas fa-pen-square"></i> </a>
-                                    <a href="javascript:void (0);" data-toggle="modal" data-target="#goods-delete-modal" data-goodsid="{{ item.id }}" class="text-danger text-decoration-none">删除 <i class="fas fa-trash"></i> </a>
-                                </small>
-                            </div>
-                        </div>
-                    </li>
-                {% else %}
-                    <li class="list-group-item">
-                        这里什么也没有...
-                    </li>
-                {% endfor %}
-            </ul>
         </div>
+        {% for item in goods_list %}
+            <div class="row mt-2" id="goods_{{ item.id }}">
+                <div class="col-3 col-md-2 col-xl-1 pr-0">
+                    <div style="height: 0; padding-top: 100%; background-size: cover; background-position: center; background-image: url('{% if item.img.first() %}{{ url_for('static', filename='img_goods/'+item.img.first().filename_s) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}')"></div>
+                </div>
+                <div class="col">
+                    {{ item.name }}
+                    <br>
+                    <small>编号：{{ item.id }} &nbsp; 租金：&yen;{{ item.rent }}</small>
+                    <br>
+                    <small class="float-right">
+                        <a href="{{ url_for('.update_goods', goods_id=item.id) }}" class="text-info text-decoration-none mr-2">编辑 <i class="fas fa-pen-square"></i> </a>
+                        <a href="javascript:void (0);" data-toggle="modal" data-target="#goods-delete-modal" data-goodsid="{{ item.id }}" class="text-danger text-decoration-none">删除 <i class="fas fa-trash"></i> </a>
+                    </small>
+                </div>
+            </div>
+        {% else %}
+            <div class="row mt-2">
+            <div class="col">
+                这里什么也没有...
+            </div>
+            </div>
+        {% endfor %}
     </div>
     
     <!-- 商品删除的post请求确认的modal -->
