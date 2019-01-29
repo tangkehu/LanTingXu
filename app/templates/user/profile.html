@@ -11,6 +11,7 @@
 
     <div class="container mb-5 pb-5">
 
+    {% if current_user.can('sell') %}
         <div class="row">
             <div class="col">
             <strong>我发布的商品</strong>
@@ -41,6 +42,11 @@
             </div>
         </div>
         {% endfor %}
+    {% else %}
+        <div class="row">
+        <div class="col">敬请期待...</div>
+        </div>
+    {% endif %}
 
     </div>
     
