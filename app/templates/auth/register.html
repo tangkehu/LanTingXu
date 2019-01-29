@@ -42,7 +42,7 @@
       border-bottom-left-radius: 0;
     }
     .form-signin input[type="password"] {
-      margin-bottom: 10px;
+      margin-bottom: -1px;
       border-top-left-radius: 0;
       border-top-right-radius: 0;
     }
@@ -60,15 +60,18 @@
         {{ form.email(class='form-control', placeholder="请输入邮箱账号") }}
         {{ form.password.label(class="sr-only") }}
         {{ form.password(class="form-control", placeholder="请输入登陆密码") }}
+        {{ form.password_check.label(class="sr-only") }}
+        {{ form.password_check(class="form-control", placeholder="请再次输入登陆密码") }}
         {% for error in form.email.errors %}<small class="text-danger float-left">{{ error }}</small><br>{% endfor %}
         {% for error in form.password.errors %}<small class="text-danger float-left">{{ error }}</small><br>{% endfor %}
+        {% for error in form.password_check.errors %}<small class="text-danger float-left">{{ error }}</small><br>{% endfor %}
 {#      <div class="checkbox mb-3">#}
 {#        <label>#}
 {#          <input type="checkbox" value="remember-me"> Remember me#}
 {#        </label>#}
 {#      </div>#}
-        {{ form.submit(class="btn btn-lg btn-info btn-block") }}
-        <p class="mt-2 small">还没有账号？点击这里<a href="{{ url_for('.register') }}">注册</a>一个吧！</p>
+        {{ form.submit(class="btn btn-lg btn-info btn-block mt-2") }}
+        <p class="mt-2 small">点击这里<a href="{{ url_for('.login') }}">登录</a></p>
         <p class="mt-5 mb-3 text-muted">&copy; 兰亭续文创工作室</p>
     </form>
 

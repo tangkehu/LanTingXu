@@ -37,6 +37,8 @@ def create_app(config_name=os.getenv('FLASK_CONFIG', 'production')):
         Permission.update_permissions()
         for item in User.query.all():
             item.__init__()
+            db.session.add(item)
+        db.session.commit()
 
         click.echo(u'本次部署初始化成功')
 

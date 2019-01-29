@@ -1,13 +1,13 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired, Email
+from wtforms.validators import DataRequired, Email, EqualTo
 from wtforms import ValidationError
 
 from app.models import User
 
 
 class LoginForm(FlaskForm):
-    email = StringField('邮箱', validators=[Email('请输入正确的邮箱地址')])
+    email = StringField('邮箱', validators=[DataRequired('请输入正确的邮箱地址'), Email('请输入正确的邮箱地址')])
     password = PasswordField('密码', validators=[DataRequired('请输入密码')])
     submit = SubmitField('登录')
 
@@ -20,9 +20,20 @@ class LoginForm(FlaskForm):
         if user_:
             self.user = user_
         else:
-            raise ValidationError('该帐号不存在')
+            raise ValidationError('该账号不存在')
 
     def validate_password(self, field):
         if self.user:
             if not self.user.verify_password(field.data):
                 raise ValidationError('密码输入错误')
+
+
+class RegisterForm(FlaskForm):
+    email = StringField('邮箱', validators=[DataRequired('请输入正确的邮箱地址'), Email('请输入正确的邮箱地址')])
+    password = PasswordField('密码', validators=[DataRequired('请输入密码')])
+    password_check = PasswordField('再次输入密码', validators=[DataRequired('请再次输入密码'), EqualTo('password', '两次密码输入不一致')])
+    submit = SubmitField('注册')
+
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data).count() > 0:
+            raise ValidationError('该邮箱账号已被注册')
