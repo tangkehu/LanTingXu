@@ -1,6 +1,6 @@
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import AnonymousUserMixin
+from flask_login import AnonymousUserMixin, UserMixin
 from flask import current_app
 
 from app import db, login_manager
@@ -37,7 +37,7 @@ relation_role_permission = db.Table(
 )
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), unique=True)
     email = db.Column(db.String(64), unique=True, nullable=False)
@@ -56,22 +56,6 @@ class User(db.Model):
                 self.roles.append(Role.query.filter_by(name='超级管理员').first_or_404())
             else:
                 self.roles.append(Role.query.filter_by(name='普通用户').first_or_404())
-
-    # 配置flask-login的必需属性
-    @property
-    def is_authenticated(self):
-        return True
-
-    @property
-    def is_active(self):
-        return True
-
-    @property
-    def is_anonymous(self):
-        return False
-
-    def get_id(self):
-        return str(self.id)
 
     # 密码处理
     @property    # 为方法添加只读属性（使方法可以像类属性一样读取）装饰器
@@ -92,10 +76,6 @@ class User(db.Model):
             relation_role_permission, (relation_role_permission.c.permission_id == Permission.id)).join(
             relation_user_role, (relation_user_role.c.role_id == relation_role_permission.c.role_id)).filter(
             relation_user_role.c.user_id == self.id, Permission.name == permission).count() > 0
-        # for item in self.roles.all():
-        #     if item.permissions.filter(Permission.name == permission).count() > 0:
-        #         return True
-        # return False
 
     @staticmethod
     def add(email, password):
