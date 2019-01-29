@@ -29,7 +29,15 @@ def create_app(config_name=os.getenv('FLASK_CONFIG', 'production')):
     @app.cli.command()
     def deploy():
         """ 部署，部署前请创建数据库迁移脚本flask db migrate """
+
+        # auth模型更新
+        from .models import User, Role, Permission
         upgrade()
+        Role.insert_basic_role()
+        Permission.update_permissions()
+        for item in User.query.all():
+            item.__init__()
+
         click.echo(u'本次部署初始化成功')
 
     register_logging(app)
