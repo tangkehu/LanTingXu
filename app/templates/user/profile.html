@@ -4,8 +4,9 @@
 
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
-            <h3 class="text-info">我的小院</h3>
+            <h3 class="text-info">{% if current_user.username %}{{ current_user.username }}{% else %}我的小院{% endif %}</h3>
             <p class="lead">{{ current_user.email }}</p>
+            <a href="{{ url_for('.update_user') }}" class="btn btn-outline-info btn-sm">个人信息</a>
         </div>
     </div>
 

@@ -87,7 +87,8 @@ class User(UserMixin, db.Model):
         self.email = kwargs.get('email')
         self.phone_number = kwargs.get('phone_number')
         self.resume = kwargs.get('resume')
-        self.password = kwargs.get('password')
+        if kwargs.get('password'):
+            self.password = kwargs.get('password')
         db.session.add(self)
         db.session.commit()
 

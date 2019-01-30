@@ -2,8 +2,8 @@ from flask import render_template, redirect, url_for, request, flash, jsonify
 from flask_login import login_required, current_user
 
 from . import user_bp
-from .forms import GoodsForm
-from app.models import GoodsImg, Goods
+from .forms import GoodsForm, UserForm
+from app.models import GoodsImg, Goods, User
 
 
 @user_bp.route('/')
@@ -42,7 +42,7 @@ def update_goods(goods_id=None):
         else:
             goods.edit(form.name.data, form.rent.data, **kwargs)
             flash('商品修改成功。')
-            return redirect(url_for('.index')+'#{}'.format(goods_id))
+            return redirect(url_for('.index')+'#goods_{}'.format(goods_id))
 
     return render_template('user/update_goods.html', form=form, goods=goods)
 
@@ -91,3 +91,18 @@ def img_goods_upload(goods_id=None):
 def img_goods_delete():
     GoodsImg.query.get_or_404(int(request.form.get('img_id'))).delete()
     return 'successful'
+
+
+@user_bp.route('/update_user', methods=['GET', 'POST'])
+@login_required
+def update_user():
+    form = UserForm()
+    if request.method == 'GET':
+        form.set_data()
+    if form.validate_on_submit():
+        kwargs = {'username': form.username.data, 'email': form.email.data, 'password': form.password.data,
+                  'phone_number': form.phone_number.data, 'resume': form.resume.data}
+        current_user.edit(**kwargs)
+        flash('账户信息修改成功！')
+        return redirect(url_for('.index'))
+    return render_template('user/update_user.html', form=form)
