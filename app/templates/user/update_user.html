@@ -8,7 +8,7 @@
                 <a href="{{ url_for('.index') }}" class="float-left text-dark text-decoration-none">
                     <i class="fas fa-angle-left"></i>
                 </a>
-                账户信息
+                个人信息
             </div>
         </div>
     </div>
@@ -49,6 +49,7 @@
                 <button class="btn btn-block btn-info" type="submit">提交修改</button>
                 <a href="{{ url_for('.update_user') }}" class="btn btn-block btn-secondary">取消修改</a>
             </form>
+            <a href="{{ url_for('auth_bp.logout') }}" class="btn btn-outline-danger btn-block mt-5">退出账号</a>
         </div>
     </div>
     </div>

@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, request, flash
-from flask_login import login_user, current_user
+from flask_login import login_user, current_user, logout_user, login_required
 
 from . import auth_bp
 from .forms import LoginForm, RegisterForm
@@ -27,3 +27,11 @@ def register():
         flash('注册成功，请登录。')
         return redirect(url_for('.login'))
     return render_template('auth/register.html', form=form)
+
+
+@auth_bp.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('账号退出成功！')
+    return redirect(url_for('.login'))
