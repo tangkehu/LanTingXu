@@ -1,0 +1,16 @@
+{% extends "manage/base.html" %}
+
+{% block content %}
+    <div class="jumbotron jumbotron-fluid bg-info">
+        <div class="container">
+            <h3 class="text-white"><i class="fas fa-users"></i> 用户管理</h3>
+        </div>
+    </div>
+    <div class="container">
+    <div class="row">
+        <div class="col">
+            {{ current_user.username }}
+        </div>
+    </div>
+    </div>
+{% endblock %}
