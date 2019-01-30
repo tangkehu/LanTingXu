@@ -59,6 +59,9 @@ def register_blueprints(app):
     from .user import user_bp
     app.register_blueprint(user_bp, url_prefix='/user')
 
+    from .manage import manage_bp
+    app.register_blueprint(manage_bp, url_prefix='/manage')
+
 
 def register_errors(app):
     @app.errorhandler(403)
