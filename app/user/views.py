@@ -3,7 +3,8 @@ from flask_login import login_required, current_user
 
 from . import user_bp
 from .forms import GoodsForm, UserForm
-from app.models import GoodsImg, Goods, User
+from app.models import GoodsImg, Goods
+from app.utils import permission_required
 
 
 @user_bp.route('/')
@@ -15,6 +16,7 @@ def index():
 
 @user_bp.route('/update_goods', methods=['GET', 'POST'])
 @user_bp.route('/update_goods/<int:goods_id>', methods=['GET', 'POST'])
+@permission_required('sell')
 @login_required
 def update_goods(goods_id=None):
     """ 处理商品的添加和修改 """
