@@ -50,6 +50,7 @@ def update_goods(goods_id=None):
 
 
 @user_bp.route('/delete_goods', methods=['POST'])
+@permission_required('sell')
 @login_required
 def delete_goods():
     Goods.query.get_or_404(int(request.form.get('goods_id'))).delete()
@@ -58,6 +59,7 @@ def delete_goods():
 
 @user_bp.route('/img_goods_show')
 @user_bp.route('/img_goods_show/<int:goods_id>')
+@permission_required('sell')
 @login_required
 def img_goods_show(goods_id=None):
     records = []
@@ -72,6 +74,7 @@ def img_goods_show(goods_id=None):
 
 @user_bp.route('/img_goods_upload', methods=['POST'])
 @user_bp.route('/img_goods_upload/<int:goods_id>', methods=['POST'])
+@permission_required('sell')
 @login_required
 def img_goods_upload(goods_id=None):
     fail_msg = ''
@@ -89,6 +92,7 @@ def img_goods_upload(goods_id=None):
 
 
 @user_bp.route('/img_goods_delete', methods=["POST"])
+@permission_required('sell')
 @login_required
 def img_goods_delete():
     GoodsImg.query.get_or_404(int(request.form.get('img_id'))).delete()
