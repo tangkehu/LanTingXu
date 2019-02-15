@@ -30,3 +30,9 @@ def role():
 
     roles = Role.query.order_by(Role.id.desc()).all()
     return render_template('manage/role.html', roles=roles)
+
+
+@manage_bp.route('/role_delete', methods=['POST'])
+def role_delete():
+    Role.query.get_or_404(int(request.form.get('role_id', 0))).delete()
+    return 'successful'

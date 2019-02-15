@@ -15,7 +15,7 @@
         </div>
 
         {% for item in roles %}
-        <div class="row mb-4">
+        <div id="role-{{ item.id }}" class="row mb-4">
             <div class="col border-bottom pb-2">
                 <span class="float-left">{{ item.name }}</span>
                 <span class="float-right">
@@ -24,7 +24,11 @@
                        data-roleid="{{ item.id }}" data-rolename="{{ item.name }}" data-roledetails="{{ item.details }}">
                         <i class="fas fa-pen-nib"></i>
                     </a>
-                    <a href="#" class="badge badge-danger"><i class="fas fa-trash"></i> </a>
+                    <a href="javascript: void (0);" class="badge badge-danger"
+                       data-toggle="modal" data-target="#deleteRoleModal"
+                       data-roleid="{{ item.id }}">
+                        <i class="fas fa-trash"></i>
+                    </a>
                 </span>
                 <br>
                 <small>引用数：{{ item.users.count() }} &nbsp; 描述：{{ item.details }}</small>
@@ -43,7 +47,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="editRoleModalLabel">用户角色管理</h5>
+            <h5 class="modal-title text-info" id="editRoleModalLabel">用户角色管理</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -65,6 +69,27 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
             <button type="button" class="btn btn-info" id="role-submit">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 角色删除确认modal -->
+    <div class="modal fade" id="deleteRoleModal" tabindex="-1" role="dialog" aria-labelledby="deleteRoleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-info" id="deleteRoleModalLabel">角色删除确认</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            请再次确认是否要删除该角色！
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-danger" id="role-delete-submit" data-dismiss="modal">删除</button>
           </div>
         </div>
       </div>
@@ -109,6 +134,29 @@
                 }
             })
         });
+
+        $("#deleteRoleModal").on('show.bs.modal', function (event) {
+            let role_id = $(event.relatedTarget).data('roleid');
+            $(this).find('#role-delete-submit').data('roleid', role_id);
+        });
+
+        $("#role-delete-submit").on('click', function () {
+            let role_id = $(this).data('roleid');
+            $.ajax({
+                url: "{{ url_for('.role_delete') }}",
+                type: 'post',
+                data: {'role_id': role_id},
+                beforeSend: showLoading(),
+                success: function () {
+                    $("#role-"+role_id).remove();
+                    hideLoading();
+                },
+                error: function (xhr) {
+                    hideLoading();
+                    showMsg(xhr.statusText);
+                }
+            })
+        })
 
     });
     </script>
