@@ -1,7 +1,7 @@
 
-from flask import render_template, request
+from flask import render_template, request, jsonify
 
-from app.models import User, Role
+from app.models import User, Role, Permission
 from . import manage_bp
 
 
@@ -36,3 +36,15 @@ def role():
 def role_delete():
     Role.query.get_or_404(int(request.form.get('role_id', 0))).delete()
     return 'successful'
+
+
+@manage_bp.route('/permission/<role_id>', methods=['GET', 'POST'])
+def permission(role_id):
+    result = []
+    the_role = Role.query.get_or_404(int(role_id))
+    for item in Permission.query.all():
+        if the_role.permissions.filter(Permission.name == item.name).count() > 0:
+            result.append((item.name, 1))
+        else:
+            result.append((item.name, 0))
+    return jsonify(result)
