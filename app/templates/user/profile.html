@@ -84,23 +84,26 @@
     
     $('#goods-delete-modal').on('show.bs.modal', function (event) {
         let goods_id = $(event.relatedTarget).data('goodsid');
-        $(this).find('.delete-goods').one('click', function () {
-            $.ajax({
-                url: "{{ url_for('.delete_goods') }}",
-                type: "post",
-                data: {"goods_id": goods_id},
-                beforeSend: showLoading(),
-                success: function (data) {
-                    $("#goods_"+goods_id.toString()).remove();
-                    hideLoading();
-                },
-                error: function () {
-                    showMsg('该商品已被删除。');
-                    $("#goods_"+goods_id.toString()).remove();
-                    hideLoading();
-                }
-            })
-        });
+        $(this).find('.delete-goods').data('goodsid', goods_id)
+    });
+
+    $(".delete-goods").on('click', function () {
+        let goods_id = $(this).data('goodsid');
+        $.ajax({
+            url: "{{ url_for('.delete_goods') }}",
+            type: "post",
+            data: {"goods_id": goods_id},
+            beforeSend: showLoading(),
+            success: function (data) {
+                $("#goods_"+goods_id.toString()).remove();
+                hideLoading();
+            },
+            error: function () {
+                showMsg('该商品已被删除。');
+                $("#goods_"+goods_id.toString()).remove();
+                hideLoading();
+            }
+        })
     });
 
     </script>
