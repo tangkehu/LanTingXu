@@ -122,6 +122,7 @@ class Role(db.Model):
 
     @staticmethod
     def update_admins_permission():
+        """ 更新权限后更新超级管理员的权限 """
         admins_role = Role.query.filter_by(name='超级管理员').first_or_404()
         admins_role.permissions = Permission.query.all()
         db.session.add(admins_role)
@@ -131,7 +132,7 @@ class Role(db.Model):
         self.name = name
         self.details = details
         db.session.add(self)
-        db.session.commit(self)
+        db.session.commit()
 
     def delete(self):
         db.session.delete(self)
