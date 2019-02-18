@@ -42,9 +42,19 @@ def role_delete():
 def permission(role_id):
     result = []
     the_role = Role.query.get_or_404(int(role_id))
+
+    if request.method == "POST":
+        permission_id = request.form.get('permission_id')
+        status = request.form.get('status')
+        if status == 'true':
+            the_role.append_permission(permission_id)
+        else:
+            the_role.remove_permission(permission_id)
+        return 'successful'
+
     for item in Permission.query.all():
         if the_role.permissions.filter(Permission.name == item.name).count() > 0:
-            result.append((item.name, 1))
+            result.append((item.name, item.id, 1))
         else:
-            result.append((item.name, 0))
+            result.append((item.name, item.id, 0))
     return jsonify(result)

@@ -24,6 +24,11 @@
                        data-roleid="{{ item.id }}" data-rolename="{{ item.name }}" data-roledetails="{{ item.details }}">
                         <i class="fas fa-pen-nib"></i>
                     </a>
+                    <a href="javascript: void (0);" class="badge badge-secondary"
+                       data-toggle="modal" data-target="#editPermissionModal"
+                       data-roleid="{{ item.id }}">
+                        <i class="fas fa-user-shield"></i>
+                    </a>
                     <a href="javascript: void (0);" class="badge badge-danger"
                        data-toggle="modal" data-target="#deleteRoleModal"
                        data-roleid="{{ item.id }}">
@@ -33,10 +38,6 @@
                 <br>
                 <small>引用数：{{ item.users.count() }} &nbsp; 描述：{{ item.details }}</small>
                 <br>
-                {% for one in item.permissions.all() %}
-                    <span class="badge badge-info badge-pill">{{ one.name }} <a href="#"><i class="fas fa-times text-danger"></i></a></span>
-                {% endfor %}
-                <a href="javascript: void (0);" class="badge badge-secondary badge-pill" data-toggle="modal" data-target="#editPermissionModal" data-roleid="{{ item.id }}">管理权限 <i class="fas fa-plus"></i></a>
             </div>
         </div>
         {% endfor %}
@@ -106,14 +107,6 @@
             </button>
           </div>
           <div class="modal-body">
-            <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="customSwitch1" value="1">
-              <label class="custom-control-label" for="customSwitch1">Toggle this switch element</label>
-            </div>
-            <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="customSwitch2" value="2" checked>
-              <label class="custom-control-label" for="customSwitch2">Toggle this switch element</label>
-            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-info btn-block" data-dismiss="modal">关闭</button>
@@ -175,7 +168,7 @@
                 url: "{{ url_for('.role_delete') }}",
                 type: 'post',
                 data: {'role_id': role_id},
-                beforeSend: showLoading(),
+                beforeSend: showLoading,
                 success: function () {
                     $("#role-"+role_id).remove();
                     hideLoading();
@@ -187,7 +180,7 @@
             })
         });
 
-        // 权限管理
+        // 权限管理，对不同角色的权限管理modal设置内容，并设置内联权限开关的方法
         $("#editPermissionModal").on('show.bs.modal', function (event) {
             let role_id = $(event.relatedTarget).data('roleid');
             let modal = $(this);
@@ -198,14 +191,14 @@
                 success: function (data) {
                     modal.find('.modal-body').html('');
                     for (let item of data) {
-                        if (item[1] === 0) {
+                        if (item[2] === 0) {
                             modal.find('.modal-body').append('<div class="custom-control custom-switch">\n' +
-                                '              <input type="checkbox" class="custom-control-input" id="'+item[0]+'" value="'+item[0]+'" data-roleid="'+role_id+'" onclick="permissionEdit()">\n' +
+                                '              <input type="checkbox" class="custom-control-input" id="'+item[0]+'" value="'+item[1]+'" onclick="permissionEdit(this, '+role_id+')">\n' +
                                 '              <label class="custom-control-label" for="'+item[0]+'">'+item[0]+'</label>\n' +
                                 '            </div>')
                         } else {
                             modal.find('.modal-body').append('<div class="custom-control custom-switch">\n' +
-                                '              <input type="checkbox" class="custom-control-input" id="'+item[0]+'" value="'+item[0]+'" data-roleid="'+role_id+'" checked onclick="permissionEdit()">\n' +
+                                '              <input type="checkbox" class="custom-control-input" id="'+item[0]+'" value="'+item[1]+'" onclick="permissionEdit(this, '+role_id+')" checked>\n' +
                                 '              <label class="custom-control-label" for="'+item[0]+'">'+item[0]+'</label>\n' +
                                 '            </div>')
                         }
@@ -220,8 +213,21 @@
 
     });
 
-    function permissionEdit(event) {
-        alert($(event.relatedTarget).data('roleid'))
+    // 权限管理函数
+    function permissionEdit(_this, role_id) {
+        $.ajax({
+            url: "{{ url_for('.permission', role_id='') }}"+role_id,
+            type: "post",
+            data: {permission_id: _this.value, status: _this.checked},
+            beforeSend: showLoading,
+            success: hideLoading,
+            error: function (xhr) {
+                hideLoading();
+                $("#editPermissionModal").modal('hide');
+                showMsg(xhr.statusText);
+            }
+        })
     }
+
     </script>
 {% endblock %}

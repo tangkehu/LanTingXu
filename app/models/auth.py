@@ -146,12 +146,12 @@ class Role(db.Model):
 
     def remove_permission(self, permission_id):
         if self.exist_permission(permission_id):
-            self.permission.remove(Permission.query.get_or_404(int(permission_id)))
+            self.permissions.remove(Permission.query.get_or_404(int(permission_id)))
             db.session.add(self)
             db.session.commit()
 
     def exist_permission(self, permission_id):
-        return self.permissions.filter_by(Permission.id == permission_id).count() > 0
+        return self.permissions.filter(Permission.id == permission_id).count() > 0
 
 
 class Permission(db.Model):
