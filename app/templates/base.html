@@ -19,6 +19,9 @@
     <title>{% block title %}兰亭续(www.lanting.live)-汉服出租，古风妆照，摄影，活动策划{% endblock %}</title>
 </head>
 <body {% block body_tag %}{% endblock %}>
+
+    {% block body %}{% endblock %}
+
     <!-- Flash Modal -->
     <div class="modal fade" id="flash-modal" tabindex="-1" role="dialog" aria-labelledby="flash-modal-label" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -50,8 +53,6 @@
         </div>
       </div>
     </div>
-
-    {% block body %}{% endblock %}
 
 {#    <script src="{{ url_for('static', filename='jquery-3.3.1/jquery-3.3.1.js') }}"></script>#}
 {#    <script src="{{ url_for('static', filename='bootstrap-4.2.1/js/bootstrap.bundle.js') }}"></script>#}

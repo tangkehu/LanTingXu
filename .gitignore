@@ -3,7 +3,7 @@
 nohup.out
 app/static/img_goods/
 migrations/
-.env
+.flaskenv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

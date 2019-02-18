@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block css %}
+    <style type="text/css">
+    /* Side Menu */
+    #sidebar-wrapper {
+      position: fixed;
+      z-index: 2;
+      right: 0;
+      width: 250px;
+      height: 100%;
+      -webkit-transition: all 0.4s ease 0s;
+      transition: all 0.4s ease 0s;
+      -webkit-transform: translateX(250px);
+      transform: translateX(250px);
+      background: #1D809F;
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar-nav {
+      position: absolute;
+      top: 0;
+      width: 250px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .sidebar-nav li.sidebar-nav-item a {
+      display: block;
+      text-decoration: none;
+      color: #fff;
+      padding: 15px;
+    }
+
+    .sidebar-nav li a:hover {
+      text-decoration: none;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .sidebar-nav li a:active,
+    .sidebar-nav li a:focus {
+      text-decoration: none;
+    }
+
+    .sidebar-nav > .sidebar-brand {
+      font-size: 1.2rem;
+      background: rgba(52, 58, 64, 0.1);
+      height: 80px;
+      line-height: 50px;
+      padding-top: 15px;
+      padding-bottom: 15px;
+      padding-left: 15px;
+    }
+
+    .sidebar-nav > .sidebar-brand a {
+      color: #fff;
+    }
+
+    .sidebar-nav > .sidebar-brand a:hover {
+      color: #fff;
+      background: none;
+    }
+
+    #sidebar-wrapper.active {
+      right: 250px;
+      width: 250px;
+      -webkit-transition: all 0.4s ease 0s;
+      transition: all 0.4s ease 0s;
+    }
+
+    .menu-toggle {
+      position: fixed;
+      right: 15px;
+      top: 15px;
+      width: 50px;
+      height: 50px;
+      text-align: center;
+      color: #fff;
+      background: rgba(52, 58, 64, 0.5);
+      line-height: 50px;
+      z-index: 999;
+    }
+
+    .menu-toggle:focus, .menu-toggle:hover {
+      color: #fff;
+    }
+
+    .menu-toggle:hover {
+      background: #343a40;
+    }
+    </style>
+{% endblock %}
+
+{% block title %}兰亭续管理系统{% endblock %}
+
+{% block body %}
+    <!-- Navigation -->
+    <a class="menu-toggle rounded" href="#">
+      <i class="fas fa-bars"></i>
+    </a>
+    <nav id="sidebar-wrapper">
+      <ul class="sidebar-nav">
+        <li class="sidebar-brand">
+          <a href="{{ url_for('.user') }}">兰亭续管理系统</a>
+        </li>
+        <li class="sidebar-nav-item">
+          <a href="{{ url_for('main_bp.index') }}"><i class="fas fa-home"></i> 兰亭续官网</a>
+          <a href="{{ url_for('.user') }}"><i class="fas fa-users"></i> 用户管理</a>
+          <a href="{{ url_for('.role') }}"><i class="fas fa-user-tag"></i> 角色管理</a>
+        </li>
+      </ul>
+    </nav>
+    {% block content %}{% endblock %}
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+
+    (function($) {
+      "use strict"; // Start of use strict
+
+      // Closes the sidebar menu
+      $(".menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#sidebar-wrapper").toggleClass("active");
+        $(".menu-toggle > .fa-bars, .menu-toggle > .fa-times").toggleClass("fa-bars fa-times");
+        $(this).toggleClass("active");
+      });
+
+      // Closes responsive menu when a scroll trigger link is clicked
+      $('#sidebar-wrapper').click(function() {
+        $("#sidebar-wrapper").removeClass("active");
+        $(".menu-toggle").removeClass("active");
+        $(".menu-toggle > .fa-bars, .menu-toggle > .fa-times").toggleClass("fa-bars fa-times");
+      });
+
+    })(jQuery); // End of use strict
+
+    </script>
+{% endblock %}

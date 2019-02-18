@@ -1,7 +1,10 @@
 import os
 import uuid
 from PIL import Image
+from functools import wraps
 from logging.handlers import SMTPHandler
+from flask_login import current_user
+from flask import abort
 
 
 def random_filename(filename):
@@ -59,3 +62,15 @@ class SSLSMTPHandler(SMTPHandler):
             raise
         except:
             self.handleError(record)
+
+
+def permission_required(permission):
+    """ 用于进行权限验证的装饰器 """
+    def decorator(fun):
+        @wraps(fun)
+        def decorator_fun(*args, **kwargs):
+            if not current_user.can(permission):
+                abort(403)
+            return fun(*args, **kwargs)
+        return decorator_fun
+    return decorator
