@@ -1,8 +1,15 @@
 
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, abort
+from flask_login import current_user
 
 from app.models import User, Role, Permission
 from . import manage_bp
+
+
+@manage_bp.before_request
+def before_request():
+    if not current_user.can('system_manage'):
+        abort(403)
 
 
 @manage_bp.route('/user', methods=['GET', 'POST'])
