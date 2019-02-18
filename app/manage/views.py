@@ -5,10 +5,21 @@ from app.models import User, Role, Permission
 from . import manage_bp
 
 
-@manage_bp.route('/user')
+@manage_bp.route('/user', methods=['GET', 'POST'])
 def user():
-    users = User.query.all()
+    """ 用户查看，用户密码修改 """
+    if request.method == 'POST':
+        User.query.get_or_404(int(request.form.get('user_id', 0))).change_password(request.form.get('password'))
+        return 'successful'
+
+    users = User.query.order_by(User.id.desc()).all()
     return render_template('manage/user.html', users=users)
+
+
+@manage_bp.route('/user_delete', methods=['POST'])
+def user_delete():
+    User.query.get_or_404(int(request.form.get('user_id', 0))).delete()
+    return 'successful'
 
 
 @manage_bp.route('/role', methods=['GET', 'POST'])
@@ -40,6 +51,7 @@ def role_delete():
 
 @manage_bp.route('/permission/<role_id>', methods=['GET', 'POST'])
 def permission(role_id):
+    """ 角色权限的添加和移除 """
     result = []
     the_role = Role.query.get_or_404(int(role_id))
 

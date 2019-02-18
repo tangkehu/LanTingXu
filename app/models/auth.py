@@ -92,6 +92,11 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def change_password(self, password):
+        self.password = password
+        db.session.add(self)
+        db.session.commit()
+
     def delete(self):
         for item in self.goods.all():
             item.delete()

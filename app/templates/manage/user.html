@@ -9,12 +9,20 @@
 
     <div class="container">
         {% for item in users %}
-        <div class="row mb-4">
+        <div class="row mb-4" id="user-{{ item.id }}">
             <div class="col border-bottom pb-2">
                 <span class="float-left">{{ item.username }}</span>
                 <span class="float-right">
-                    <a href="#" class="badge badge-secondary"><i class="fas fa-key"></i> </a>
-                    <a href="#" class="badge badge-danger"><i class="fas fa-trash"></i> </a>
+                    <a href="javascript: void(0);" class="badge badge-secondary"
+                       data-toggle="modal" data-target="#passwordModal"
+                       data-userid="{{ item.id }}">
+                        <i class="fas fa-key"></i>
+                    </a>
+                    <a href="javascript: void(0);" class="badge badge-danger"
+                       data-toggle="modal" data-target="#userDeleteModal"
+                       data-userid="{{ item.id }}">
+                        <i class="fas fa-trash"></i>
+                    </a>
                 </span>
                 <br>
                 {{ item.email }}
@@ -28,4 +36,114 @@
         {% endfor %}
     </div>
 
+    <!-- 密码的修改 -->
+    <div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-info" id="passwordModalLabel">密码修改</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="passwordForm">
+              <input type="hidden" id="user-id" name="user_id">
+              <div class="form-group">
+                <input type="text" class="form-control" name="password" placeholder="请输入新密码...">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-info" id="password-submit">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 用户删除 -->
+    <div class="modal fade" id="userDeleteModal" tabindex="-1" role="dialog" aria-labelledby="userDeleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-info" id="userDeleteModalLabel">用户删除确认</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            请再次确认是否要删除该用户。
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-danger" id="user-delete-submit" data-dismiss="modal">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    {{ super() }}
+
+    <script type="text/javascript">
+    $(function () {
+
+
+        // 用户密码修改
+        $('#passwordModal').on('show.bs.modal', function (event) {
+            let user_id = $(event.relatedTarget).data('userid');
+            $(this).find('#user-id').val(user_id);
+        });
+
+        $('#password-submit').on('click', function () {
+            $.ajax({
+                url: "{{ url_for('.user') }}",
+                type: 'post',
+                data: new FormData(document.getElementById('passwordForm')),
+                cache: false,
+                processData: false,
+                contentType: false,
+                beforeSend: showLoading,
+                success: function () {
+                    $("#passwordModal").modal('hide');
+                    hideLoading();
+                    showMsg('密码修改成功。')
+                },
+                error: function (xhr) {
+                    hideLoading();
+                    showMsg(xhr.statusText);
+                }
+            })
+        });
+
+
+        // 用户删除
+        $("#userDeleteModal").on('show.bs.modal', function (event) {
+            let user_id = $(event.relatedTarget).data('userid');
+            $(this).find('#user-delete-submit').data('userid', user_id);
+        });
+
+        $("#user-delete-submit").on('click', function () {
+            let user_id = $(this).data('userid');
+            $.ajax({
+                url: "{{ url_for('.user_delete') }}",
+                type: 'post',
+                data: {user_id: user_id},
+                beforeSend: showLoading,
+                success: function () {
+                    $("#user-"+user_id).remove();
+                    hideLoading();
+                },
+                error: function (xhr) {
+                    hideLoading();
+                    showMsg(xhr.statusText);
+                }
+            });
+        })
+
+    });
+    </script>
 {% endblock %}
