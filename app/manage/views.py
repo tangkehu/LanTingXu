@@ -1,5 +1,5 @@
 
-from flask import render_template, request, jsonify, abort
+from flask import render_template, request, jsonify, abort, redirect, url_for, flash
 from flask_login import current_user
 
 from app.models import User, Role, Permission
@@ -8,6 +8,9 @@ from . import manage_bp
 
 @manage_bp.before_request
 def before_request():
+    if not current_user.is_authenticated:
+        flash('请先登录。')
+        return redirect(url_for('auth_bp.login'))
     if not current_user.can('system_manage'):
         abort(403)
 
