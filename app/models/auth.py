@@ -97,6 +97,21 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def append_role(self, role_id):
+        if not self.exist_role(role_id):
+            self.roles.append(Role.query.get_or_404(role_id))
+            db.session.add(self)
+            db.session.commit()
+
+    def remove_role(self, role_id):
+        if self.exist_role(role_id):
+            self.roles.remove(Role.query.get_or_404(role_id))
+            db.session.add(self)
+            db.session.commit()
+
+    def exist_role(self, role_id):
+        return self.roles.filter(Role.id == role_id).count() > 0
+
     def delete(self):
         for item in self.goods.all():
             item.delete()

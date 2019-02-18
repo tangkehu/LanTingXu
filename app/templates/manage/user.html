@@ -28,9 +28,18 @@
                 {{ item.email }}
                 <br>
                 {% for one in item.roles.all() %}
-                    <span class="badge badge-info badge-pill">{{ one.name }} <a href="#"><i class="fas fa-times text-danger"></i></a></span>
+                    <span class="badge badge-info badge-pill" id="user-{{ item.id }}-{{ one.id }}">{{ one.name }}
+                        <a href="javascript: void (0);" onclick="userRoleEdit(this)"
+                           data-userid="{{ item.id }}" data-roleid="{{ one.id }}" data-status="remove">
+                            <i class="fas fa-times text-danger"></i>
+                        </a>
+                    </span>
                 {% endfor %}
-                <a href="#" class="badge badge-secondary badge-pill">添加角色 <i class="fas fa-plus"></i></a>
+                <a href="javascript: void(0);" class="badge badge-secondary badge-pill" id="role-add-btn-{{ item.id }}"
+                   data-toggle="modal" data-target="#userRoleModal"
+                   data-userid="{{ item.id }}">
+                    添加角色 <i class="fas fa-plus"></i>
+                </a>
             </div>
         </div>
         {% endfor %}
@@ -78,6 +87,25 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
             <button type="button" class="btn btn-danger" id="user-delete-submit" data-dismiss="modal">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 用户角色管理 -->
+    <div class="modal fade" id="userRoleModal" tabindex="-1" role="dialog" aria-labelledby="userRoleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-info" id="userRoleModalLabel">用户角色添加</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">关闭</button>
           </div>
         </div>
       </div>
@@ -142,8 +170,70 @@
                     showMsg(xhr.statusText);
                 }
             });
+        });
+
+
+        // 用户角色管理
+        $("#userRoleModal").on('show.bs.modal', function (event) {
+            let user_id = $(event.relatedTarget).data('userid');
+            let modal = $(this);
+            modal.find('.modal-body').html('');
+            $.ajax({
+                url: "{{ url_for('.user_role', user_id='') }}"+user_id,
+                type: 'get',
+                beforeSend: showLoading,
+                success: function (data) {
+                    for (let one of data) {
+                        modal.find('.modal-body').append(
+                            '<button class="btn btn-info mr-2" onclick="userRoleEdit(this)" id="role-'+one[1]+'-'+user_id+'"' +
+                            '  data-userid="'+user_id+'" data-roleid="'+one[1]+'" data-status="append">'+one[0]+' <i class="fas fa-plus"></i> ' +
+                            '</button>'
+                        )
+                    }
+                    hideLoading();
+                },
+                error: function (xhr) {
+                    modal.modal('hide');
+                    hideLoading();
+                    showMsg(xhr.statusText);
+                }
+            })
         })
 
     });
+
+
+    function userRoleEdit(_this) {
+        let user_id = $(_this).data('userid');
+        let role_id = $(_this).data('roleid');
+        let status = $(_this).data('status');
+        let content_text = $(_this).text();
+        $.ajax({
+            url: "{{ url_for('.user_role', user_id='') }}"+user_id,
+            type: 'post',
+            data: {role_id: role_id, status: status},
+            beforeSend: showLoading,
+            success: function () {
+                if (status === 'append') {
+                    $("#role-"+role_id+'-'+user_id).remove();
+                    $("#role-add-btn-"+user_id).before(
+                        '<span class="badge badge-info badge-pill mr-2" id="user-'+user_id+'-'+role_id+'">'+content_text+' \n' +
+                        '    <a href="javascript: void (0);" onclick="userRoleEdit(this)" \n' +
+                        '      data-userid="'+user_id+'" data-roleid="'+role_id+'" data-status="remove">\n' +
+                        '        <i class="fas fa-times text-danger"></i>\n' +
+                        '    </a>\n' +
+                        '</span>'
+                    );
+                } else {
+                    $("#user-"+user_id+'-'+role_id).remove();
+                }
+                hideLoading();
+            },
+            error: function (xhr) {
+                hideLoading();
+                showMsg(xhr.statusText);
+            }
+        });
+    }
     </script>
 {% endblock %}

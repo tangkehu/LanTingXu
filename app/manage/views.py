@@ -22,6 +22,23 @@ def user_delete():
     return 'successful'
 
 
+@manage_bp.route('/user_role/<user_id>', methods=['GET', 'POST'])
+def user_role(user_id):
+    the_user = User.query.get_or_404(int(user_id))
+
+    if request.method == "POST":
+        role_id = request.form.get('role_id')
+        status = request.form.get('status')
+        if status == 'append':
+            the_user.append_role(int(role_id))
+        else:
+            the_user.remove_role(int(role_id))
+        return 'successful'
+
+    return jsonify([(item.name, item.id) for item in Role.query.all()
+                    if the_user.roles.filter(Role.id == item.id).count() is 0])
+
+
 @manage_bp.route('/role', methods=['GET', 'POST'])
 def role():
     """ 用户角色的查看、添加和修改。 """
