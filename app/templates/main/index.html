@@ -31,7 +31,8 @@
                     <span class="badge badge-pill badge-secondary">{{ item.id }}</span>
                 </div>
                 </a>
-                <small class="text-danger">&yen;{{ item.rent }}</small>
+                <span class="text-danger">&yen;{{ item.rent }}</span>
+                {% if item.type_id %}<small class="float-right text-dark">{{ item.type.name }}</small>{% endif %}
                 <p class="text-truncate text-dark"><small>{{ item.name }}</small></p>
             </div>
         {% else %}
@@ -68,7 +69,7 @@ $(function () {
               // $el.offset().top获取图片距离页面顶部的距离
               // 图片出现在页面可见部分时设置图片的src属性值为data-src属性值
               let elementTop = $el.offset().top;
-              let maxHeight = scrollTop + screenHeight;  // 滚动过的高度加上页面高度
+              let maxHeight = scrollTop + screenHeight + 200;  // 滚动过的高度加上页面高度
               let minHeight = scrollTop - $el.parent().parent().height();  // 滚动过的高度减去图片自身高度
               if (elementTop < maxHeight && elementTop > minHeight && $el.attr('data-imageurl')) {
                 $el.attr('style', function(i,origValue){
@@ -76,7 +77,7 @@ $(function () {
                 }).removeAttr('data-imageurl');
               }
             });
-        }, 300);
+        }, 200);
     };
     $(window).scroll(onScroll);
     onScroll();
