@@ -6,6 +6,17 @@
     <div class="container">
         <h3 class="text-info">兰亭集市</h3>
         <p class="lead">兰亭续文创工作室</p>
+        <div class="dropdown">
+          <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{ current_type }}
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="{{ url_for('.index') }}">全部类别</a>
+            {% for item in type_list %}
+                <a class="dropdown-item" href="{{ url_for('.index', type_id=item.id) }}">{{ item.name }}</a>
+            {% endfor %}
+          </div>
+        </div>
     </div>
 </div>
 

@@ -1,13 +1,20 @@
 from flask import render_template, jsonify
 
 from . import main_bp
-from app.models import Goods
+from app.models import Goods, GoodsType
 
 
 @main_bp.route('/')
-def index():
-    goods_list = Goods.query.order_by(Goods.create_time.desc()).all()
-    return render_template('main/index.html', goods_list=goods_list)
+@main_bp.route('/<int:type_id>')
+def index(type_id=None):
+    type_list = GoodsType.query.all()
+    if type_id:
+        goods_list = Goods.query.filter_by(type_id=type_id).order_by(Goods.create_time.desc()).all()
+        current_type = GoodsType.query.get_or_404(type_id).name
+    else:
+        goods_list = Goods.query.order_by(Goods.create_time.desc()).all()
+        current_type = '全部类别'
+    return render_template('main/index.html', goods_list=goods_list, type_list=type_list, current_type=current_type)
 
 
 @main_bp.route('/goods_show/<int:goods_id>')
