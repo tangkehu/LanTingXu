@@ -30,15 +30,25 @@ def create_app(config_name=os.getenv('FLASK_CONFIG', 'production')):
     def deploy():
         """ 部署，部署前请创建数据库迁移脚本flask db migrate """
 
-        # auth模型更新
-        from .models import User, Role, Permission
+        # log:
+        # goods新增price字段
+
+        from .models import Goods, GoodsImg
+        from .utils import resize_img
+
         upgrade()
-        Role.insert_basic_role()
-        Permission.update_permissions()
-        for item in User.query.all():
-            item.__init__()
+        # 移植rent数据
+        for item in Goods.query.all():
+            item.price = item.rent
             db.session.add(item)
+        # 新建filename_l字段
+        for item in GoodsImg.query.all():
+            item.filename_l = resize_img(app.config['GOODS_IMG_PATH'], item.filename, 800)
+            db.session.add(item)
+
         db.session.commit()
+
+        # Permission.update_permissions()  # 在有新权限的时候开启
 
         click.echo(u'本次部署初始化成功')
 
