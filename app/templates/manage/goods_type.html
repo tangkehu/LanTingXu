@@ -1,0 +1,140 @@
+{% extends "manage/base.html" %}
+
+{% block content %}
+    <div class="jumbotron jumbotron-fluid bg-info">
+        <div class="container">
+            <h3 class="text-white"><i class="fas fa-store"></i> 商品类型管理</h3>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+
+    <div class="row justify-content-center mb-4">
+        <div class="col col-md-8 col-xl-4">
+            <button class="btn btn-info btn-block" data-toggle="modal" data-target="#typeModal">新增商品类型 <i class="fas fa-plus"></i> </button>
+        </div>
+    </div>
+
+    {% for item in goods_types %}
+        <div class="row">
+        <div class="col">
+            {{ item.name }} <small class="text-muted">被引用数：{{ item.goods.count() }}</small>
+            <a href="javascript: void(0);" class="text-danger float-right"
+               data-toggle="modal" data-target="#typeDeleteModal" data-typeid="{{ item.id }}">
+                删除 <i class="fas fa-trash"></i>
+            </a>
+            <a href="javascript: void(0);" class="text-info float-right mr-2"
+               data-toggle="modal" data-target="#typeModal" data-typeid="{{ item.id }}" data-typename="{{ item.name }}">
+                修改 <i class="fas fa-edit"></i>
+            </a>
+            <hr>
+        </div>
+        </div>
+    {% else %}
+        <div class="row"><div class="col">当前无商品类型...</div> </div>
+    {% endfor %}
+
+    </div>
+
+    <!-- 商品类型添加和修改的Modal -->
+    <div class="modal fade" id="typeModal" tabindex="-1" role="dialog" aria-labelledby="typeModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-info" id="typeModalLabel">商品类型管理</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="typeForm">
+                <input type="hidden" name="type_id">
+                <input class="form-control" type="text" name="type_name" placeholder="请输入商品类型名称">
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-info">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 商品类型删除 -->
+    <div class="modal fade" id="typeDeleteModal" tabindex="-1" role="dialog" aria-labelledby="typeDeleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-info" id="typeDeleteModalLabel">商品类型删除确认</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            请再次确认是否要删除该商品！
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">删除</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    {{ super() }}
+
+    <script type="text/javascript">
+    $(function () {
+        
+        // 商品类型新增和修改
+        $("#typeModal").on('show.bs.modal', function (event) {
+            let type_id = $(event.relatedTarget).data('typeid');
+            let type_name = $(event.relatedTarget).data('typename');
+            $(this).find("input[name='type_id']").val(type_id);
+            $(this).find("input[name='type_name']").val(type_name);
+        }).find(".modal-footer").find(".btn-info").on("click", function () {
+            $.ajax({
+                url: "{{ url_for('.goods_type') }}",
+                type: 'post',
+                data: new FormData(document.getElementById("typeForm")),
+                cache: false,
+                contentType: false,
+                processData: false,
+                beforeSend: showLoading,
+                success: function () {
+                    window.location.reload();
+                },
+                error: function (xhr) {
+                    hideLoading();
+                    showMsg(xhr.responseText);
+                }
+            })
+        });
+        
+        
+        //商品类型删除
+        $("#typeDeleteModal").on("show.bs.modal", function (event) {
+            let type_id = $(event.relatedTarget).data('typeid');
+            $(this).find('.btn-danger').data('typeid', type_id);
+        }).find('.btn-danger').on("click", function () {
+            let type_id = $(this).data('typeid');
+            $.ajax({
+                url: "{{ url_for('.goods_type_delete') }}",
+                type: 'post',
+                data: {type_id: type_id},
+                beforeSend: showLoading,
+                success: function () {
+                    window.location.reload();
+                },
+                error: function (xhr) {
+                    hideLoading();
+                    showMsg(xhr.statusText);
+                }
+            })
+        })
+    });
+    </script>
+{% endblock %}

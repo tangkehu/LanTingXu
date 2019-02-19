@@ -66,6 +66,15 @@ class GoodsType(db.Model):
 
     goods = db.relationship('Goods', backref='type', lazy='dynamic')
 
+    def update(self, name):
+        self.name = name
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
 
 class GoodsImg(db.Model):
     id = db.Column(db.Integer, primary_key=True)
