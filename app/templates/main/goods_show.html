@@ -22,9 +22,11 @@
             {% if goods.cash_pledge %}<small class="text-muted font-weight-light">&nbsp;押金&yen;{{ goods.cash_pledge }}</small>{% endif %}
         </p>
         <p>
+            {% if goods.type_id %}类别：{{ goods.type.name }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
             {% if goods.brand %}品牌：{{ goods.brand }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
             {% if goods.size %}尺码：{{ goods.size }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
             {% if goods.quantity %}库存：{{ goods.quantity }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
+            {% if current_user.id == goods.user_id %}<a href="{{ url_for('user_bp.update_goods', goods_id=goods.id) }}">编辑 <i class="fas fa-edit"></i> </a> {% endif %}
             <hr>
             {% if goods.details %}{{ goods.details }}{% endif %}
         </p>

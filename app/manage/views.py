@@ -2,7 +2,7 @@
 from flask import render_template, request, jsonify, abort, redirect, url_for, flash
 from flask_login import current_user
 
-from app.models import User, Role, Permission
+from app.models import User, Role, Permission, GoodsType
 from . import manage_bp
 
 
@@ -97,3 +97,29 @@ def permission(role_id):
         else:
             result.append((item.name, item.id, 0))
     return jsonify(result)
+
+
+@manage_bp.route('/goods_type', methods=['GET', 'POST'])
+def goods_type():
+    if request.method == "POST":
+        type_id = request.form.get('type_id', 0) or -1
+        type_name = request.form.get('type_name')
+
+        if not type_name or GoodsType.query.filter(GoodsType.id != int(type_id),
+                                                   GoodsType.name == type_name).count() > 0:
+            return '商品类型名非空且唯一', 400
+
+        if type_id is -1:
+            GoodsType().update(type_name)
+        else:
+            GoodsType.query.get_or_404(int(type_id)).update(type_name)
+        return 'successful'
+
+    goods_types = GoodsType.query.order_by(GoodsType.id.desc()).all()
+    return render_template('manage/goods_type.html', goods_types=goods_types)
+
+
+@manage_bp.route('/goods_type_delete', methods=['POST'])
+def goods_type_delete():
+    GoodsType.query.get_or_404(int(request.form.get('type_id', 0))).delete()
+    return 'successful'
