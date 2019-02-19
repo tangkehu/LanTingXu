@@ -33,6 +33,7 @@ class Goods(db.Model):
         self.brand = kwargs.get('brand')
         self.quantity = kwargs.get('quantity')
         self.details = kwargs.get('details')
+        self.type = GoodsType.query.get(kwargs.get('type'))
         self.user = user
         self.img = GoodsImg.query.filter_by(status=False, user_id=user.id).all()
         db.session.add(self)
@@ -50,6 +51,7 @@ class Goods(db.Model):
         self.quantity = kwargs.get('quantity')
         self.details = kwargs.get('details')
         self.updata_time = datetime.utcnow()
+        self.type = GoodsType.query.get(kwargs.get('type'))
         db.session.add(self)
         db.session.commit()
 
