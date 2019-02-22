@@ -6,9 +6,9 @@
         <div class="container">
             <h3 class="text-info">{% if current_user.username %}{{ current_user.username }}{% else %}我的小院{% endif %}</h3>
             <p class="lead">{{ current_user.email }}</p>
-            <a href="{{ url_for('.update_user') }}" class="btn btn-outline-info btn-sm">个人信息 <i class="fas fa-info"></i> </a>
+            <a href="{{ url_for('.update_user') }}" class="btn btn-info btn-sm">个人信息 <i class="fas fa-info"></i> </a>
             {% if current_user.can('system_manage') %}
-                <a href="{{ url_for('manage_bp.user') }}" class="btn btn-outline-secondary btn-sm">系统管理 <i class="fas fa-cog"></i> </a>
+                <a href="{{ url_for('manage_bp.user') }}" class="btn btn-outline-info btn-sm">系统管理 <i class="fas fa-cog"></i> </a>
             {% endif %}
         </div>
     </div>
@@ -31,7 +31,7 @@
             <div class="col px-0 mr-3 border-bottom">
                 {{ item.name }}
                 <br>
-                <small>编号：{{ item.id }} &nbsp; 租金：&yen;{{ item.rent }} &nbsp; {% if item.type_id %}类别：{{ item.type.name }}{% endif %}</small>
+                <small>编号：{{ item.id }} &nbsp; 价格：&yen;{{ item.rent }} &nbsp; {% if item.type_id %}类别：{{ item.type.name }}{% endif %}</small>
                 <br>
                 <small class="float-right">
                     <a href="{{ url_for('.update_goods', goods_id=item.id) }}" class="text-info text-decoration-none mr-2">编辑 <i class="fas fa-pen-square"></i> </a>

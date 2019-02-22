@@ -5,7 +5,7 @@
 <div class="jumbotron jumbotron-fluid">
     <div class="container">
         <h3 class="text-info">兰亭集市</h3>
-        <p class="lead">兰亭续文创工作室</p>
+        <p class="lead">专属于你的传统文化集市</p>
         <div class="dropdown">
           <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {{ current_type }}
@@ -26,13 +26,12 @@
         {% for item in goods_list %}
             <div id="{{ item.id }}" class="col-6 col-md-4 col-xl-3 pr-0">
                 <a href="{{ url_for('.goods_show', goods_id=item.id) }}">
-                <div data-imageurl="{% if item.img.first() %}{{ url_for('static', filename='img_goods/'+item.img.first().filename_s) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}"
+                <div data-imageurl="{% if item.img.first() %}{{ url_for('static', filename='img_goods/'+item.img.first().filename_m) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}"
                      style="padding-bottom: 100%; height: 0; background-size: cover; background-position: center;" class="rounded img_delay">
                     <span class="badge badge-pill badge-secondary">{{ item.id }}</span>
                 </div>
                 </a>
                 <span class="text-danger">&yen;{{ item.rent }}</span>
-                {% if item.type_id %}<small class="float-right text-dark">{{ item.type.name }}</small>{% endif %}
                 <p class="text-truncate text-dark"><small>{{ item.name }}</small></p>
             </div>
         {% else %}

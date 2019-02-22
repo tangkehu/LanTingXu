@@ -31,7 +31,7 @@
             {% if goods.details %}{{ goods.details }}{% endif %}
         </p>
         {% for item in goods.img.all() %}
-            <img src="{{ url_for('static', filename='img_goods/'+item.filename_m) }}" width="100%" class="img-fluid rounded mb-2">
+            <img src="{{ url_for('static', filename='img_goods/'+item.filename_l) }}" width="100%" class="img-fluid rounded mb-2">
         {% endfor %}
     </div>
 
