@@ -10,7 +10,7 @@ from app.models import User, GoodsType
 class GoodsForm(FlaskForm):
     name = StringField('商品名', validators=[DataRequired('请输入商品名'), Length(1, 64, '商品名不超过64个字符')])
     type = SelectField('类别', validators=[DataRequired('请选择类别')], coerce=int)
-    rent = IntegerField('租金', validators=[DataRequired('请输入租金')])
+    rent = IntegerField('价格', validators=[DataRequired('请输入商品价格')])
     cash_pledge = IntegerField('押金', validators=[Optional()])
     size = StringField('尺码', validators=[Length(-1, 64, '尺码内容不超过64个字符')])
     brand = StringField('品牌', validators=[Length(-1, 64, '品牌名不超过64个字符')])
