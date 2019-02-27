@@ -23,6 +23,7 @@ class Goods(db.Model):
     type_id = db.Column(db.Integer, db.ForeignKey('goods_type.id'))
 
     img = db.relationship('GoodsImg', backref='goods', lazy='dynamic')
+    orders = db.relationship('RelationOrderGoods', backref='goods', lazy='dynamic')
 
     def add(self, name, rent, user=current_user, **kwargs):
         self.name = name
