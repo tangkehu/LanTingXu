@@ -1,32 +1,93 @@
-import time
+from datetime import datetime
+from flask_login import current_user
 from app import db
 
 
 class SalesOrder(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    number = db.Column(db.String(20))
     price = db.Column(db.Float)
     real_price = db.Column(db.Float)
     pledge = db.Column(db.Float)
     real_pledge = db.Column(db.Float)
     total_real = db.Column(db.Float)
     pay_type = db.Column(db.String(32))
-    pay_status = db.Column(db.Boolean)
-    delivery_status = db.Column(db.Boolean)
-    status = db.Column(db.Boolean)
+    pay_status = db.Column(db.Boolean, default=False)
+    delivery_status = db.Column(db.Boolean, default=False)
+    status = db.Column(db.Integer, default=1)
     remarks = db.Column(db.Text)
     hide_remarks = db.Column(db.Text)
+    create_time = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     goods = db.relationship('RelationOrderGoods', backref='order', lazy='dynamic')
 
-    def salesman_add(self):
+    def salesman_add(self) -> int:
+        self.pay_status = True
+        self.delivery_status = True
+        self.status = 2
+        self.remarks = u'线下销售订单'
+        self.user = current_user._get_current_object()
         db.session.add(self)
         db.session.commit()
-        self.number = str(int(time.time()))+'{:0>5}'.format(self.id)
+        self.sum_price()
+        return self.id
 
-    def manager_add(self, goods: dict, real_price: float, real_pledge: float, pay_type, remarks):
-        pass
+    def salesman_update(self, real_price: float, real_pledge: float, pay_type: str, pay_status: bool, remarks: str):
+        self.real_price = real_price
+        self.real_pledge = real_pledge
+        self.total_real = real_price + real_pledge
+        self.pay_type = pay_type
+        self.pay_status = pay_status
+        self.remarks = remarks
+        self.status = 2 if self.pay_status and self.delivery_status else 1
+        db.session.add(self)
+        db.session.commit()
+
+    def salesman_close(self):
+        self.status = 0
+        db.session.add(self)
+        db.session.commit()
+
+    def salesman_goods_append(self, goods_id: int):
+        from . import Goods
+        relation = self.goods.filter_by(goods_id=goods_id).first()
+        if relation:
+            relation.count += 1
+            db.session.add(relation)
+        else:
+            db.session.add(RelationOrderGoods(count=1, order=self, goods=Goods.query.get_or_404(goods_id)))
+        db.session.commit()
+        self.sum_price()
+
+    def salesman_goods_remove(self, goods_id: int, is_delete=False):
+        relation = self.goods.filter_by(goods_id=goods_id).first()
+        if relation:
+            if is_delete is False and relation.count > 1:
+                relation.count -= 1
+                db.session.add(relation)
+            else:
+                self.goods.remove(relation)
+                db.session.add(self)
+            db.session.commit()
+            self.sum_price()
+
+    def sum_price(self):
+        price = 0
+        pledge = 0
+        for item in self.goods.all():
+            goods_price = item.goods.price
+            goods_pledge = item.goods.cash_pledge
+            if goods_price:
+                price += goods_price*item.count
+            if goods_pledge:
+                pledge += goods_pledge*item.count
+        self.price = price
+        self.pledge = pledge
+        self.real_price = price
+        self.real_pledge = pledge
+        self.total_real = price + pledge
+        db.session.add(self)
+        db.session.commit()
 
 
 class RelationOrderGoods(db.Model):
