@@ -1,0 +1,54 @@
+{% extends "sales/base.html" %}
+
+{% block content %}
+    <div class="container">
+    <div class="row">
+        <div class="col">
+            <a href="javascript: history.go(-1);" class="text-decoration-none text-secondary"><i class="fas fa-chevron-left"></i> </a>
+            <form method="post">
+                <div class="form-group">
+                    <label for="order_number">订单编号</label>
+                    <input type="text" class="form-control-plaintext" id="order_number" readonly value="001">
+                </div>
+                <div class="form-group">
+                    <label for="price">应收</label>
+                    <input type="text" class="form-control-plaintext" id="price" readonly value="￥100">
+                </div>
+                <div class="form-group">
+                    <label for="real_price">实收</label>
+                    <input type="text" class="form-control" id="real_price" name="real_price">
+                </div>
+                <div class="form-group">
+                    <label for="pledge">应收押金</label>
+                    <input type="text" class="form-control-plaintext" id="pledge" readonly value="￥400">
+                </div>
+                <div class="form-group">
+                    <label for="real_price">实收押金</label>
+                    <input type="text" class="form-control" id="real_pledge" name="real_pledge">
+                </div>
+                <div class="form-group">
+                    <label for="pay_type">付款方式</label>
+                    <select class="form-control" id="pay_type" name="pay_type">
+                        <option>现金</option>
+                        <option>微信</option>
+                        <option>支付宝</option>
+                    </select>
+                </div>
+                <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" id="pay_status">
+                    <label for="pay_status" class="form-check-label">付款状态</label>
+                </div>
+                <div class="form-group">
+                    <label for="remarks">备注</label>
+                    <textarea id="remarks" name="remarks" class="form-control">线下销售订单</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="real_total" class="lead text-warning">合计</label>
+                    <input type="text" class="form-control-plaintext text-danger" readonly id="real_total" name="real_total" value="500">
+                </div>
+                <button type="submit" class="btn btn-info btn-block">确定</button>
+            </form>
+        </div>
+    </div>
+    </div>
+{% endblock %}
