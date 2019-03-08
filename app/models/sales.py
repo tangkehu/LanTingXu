@@ -6,9 +6,7 @@ from app import db
 class SalesOrder(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     price = db.Column(db.Float)
-    real_price = db.Column(db.Float)
     pledge = db.Column(db.Float)
-    real_pledge = db.Column(db.Float)
     total_real = db.Column(db.Float)
     pay_type = db.Column(db.String(32))
     pay_status = db.Column(db.Boolean, default=False)
@@ -22,9 +20,9 @@ class SalesOrder(db.Model):
     goods = db.relationship('RelationOrderGoods', backref='order', lazy='dynamic')
 
     def salesman_add(self) -> int:
-        self.pay_status = True
+        self.pay_status = False
         self.delivery_status = True
-        self.status = 2
+        self.status = 1
         self.remarks = u'线下销售订单'
         self.user = current_user._get_current_object()
         db.session.add(self)
@@ -32,10 +30,8 @@ class SalesOrder(db.Model):
         self.sum_price()
         return self.id
 
-    def salesman_update(self, real_price: float, real_pledge: float, pay_type: str, pay_status: bool, remarks: str):
-        self.real_price = real_price
-        self.real_pledge = real_pledge
-        self.total_real = real_price + real_pledge
+    def salesman_update(self, total_real: float, pay_type: str, pay_status: bool, remarks: str):
+        self.total_real = total_real
         self.pay_type = pay_type
         self.pay_status = pay_status
         self.remarks = remarks
@@ -57,7 +53,6 @@ class SalesOrder(db.Model):
         else:
             db.session.add(RelationOrderGoods(count=1, order=self, goods=Goods.query.get_or_404(goods_id)))
         db.session.commit()
-        self.sum_price()
 
     def salesman_goods_remove(self, goods_id: int, is_delete=False):
         relation = self.goods.filter_by(goods_id=goods_id).first()
@@ -69,7 +64,6 @@ class SalesOrder(db.Model):
                 self.goods.remove(relation)
                 db.session.add(self)
             db.session.commit()
-            self.sum_price()
 
     def sum_price(self):
         price = 0
@@ -83,8 +77,6 @@ class SalesOrder(db.Model):
                 pledge += goods_pledge*item.count
         self.price = price
         self.pledge = pledge
-        self.real_price = price
-        self.real_pledge = pledge
         self.total_real = price + pledge
         db.session.add(self)
         db.session.commit()

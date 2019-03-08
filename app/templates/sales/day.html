@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="col text-right">
-            <a href="{{ url_for('.order_update') }}" class="btn btn-outline-info"><i class="fas fa-plus"></i> 新订单</a>
+            <a href="{{ url_for('.order_add_goods') }}" class="btn btn-outline-info"><i class="fas fa-plus"></i> 新订单</a>
         </div>
     </div>
 
@@ -34,46 +34,22 @@
             </tr>
           </thead>
           <tbody>
+            {% for item in order_list %}
             <tr>
-              <th scope="row">1</th>
-              <td><a href="" class="badge badge-secondary badge-pill">info</a></td>
-              <td>200</td>
-              <td>微信</td>
-              <td>已付款</td>
-              <td>已完成</td>
-              <td><span class="d-inline-block text-truncate" style="width: 10rem;">线下销售订单嘎嘎大幅嘎嘎反倒是爱国顺丰大概按公司发的是嘎嘎法国</span></td>
-              <td>2018/03/06 14:05:20</td>
+              <th scope="row">{{ item.id }}</th>
+              <td><a href="{{ url_for('.order_info', order_id=item.id) }}" class="badge badge-secondary badge-pill">info</a></td>
+              <td>{{ item.total_real }}</td>
+              <td>{{ item.pay_type }}</td>
+              <td>{% if item.pay_status %}已付款{% else %}未付款{% endif %}</td>
+              <td>{% if item.status == 0 %}已取消{% elif item.status == 1 %}进行中{% else %}已完成{% endif %}</td>
+              <td>{{ item.remarks }}</td>
+              <td>{{ item.create_time }}</td>
             </tr>
+            {% else %}
             <tr>
-              <th scope="row">2</th>
-              <td><a href="" class="badge badge-secondary badge-pill">info</a></td>
-              <td>200</td>
-              <td>微信</td>
-              <td>已付款</td>
-              <td>已完成</td>
-              <td>线下销售订单</td>
-              <td>2018/03/06 14:05:20</td>
+              <td colspan="8">还没有订单生成...</td>
             </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td><a href="" class="badge badge-secondary badge-pill">info</a></td>
-              <td>200</td>
-              <td>微信</td>
-              <td>已付款</td>
-              <td>已完成</td>
-              <td>线下销售订单</td>
-              <td>2018/03/06 14:05:20</td>
-            </tr>
-            <tr>
-              <th scope="row">4</th>
-              <td><a href="" class="badge badge-secondary badge-pill">info</a></td>
-              <td>200</td>
-              <td>微信</td>
-              <td>已付款</td>
-              <td>已完成</td>
-              <td>线下销售订单</td>
-              <td>2018/03/06 14:05:20</td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
