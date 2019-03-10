@@ -7,7 +7,9 @@ from ..models import Goods, SalesOrder, RelationOrderGoods
 
 @sales_bp.route('/day')
 def day():
-    order_list = SalesOrder.query.order_by(SalesOrder.create_time.desc()).all()
+    # TODO: 后续按天查找
+    SalesOrder.clear_invalid()
+    order_list = SalesOrder.query.filter(SalesOrder.status != 0).order_by(SalesOrder.create_time.desc()).all()
     return render_template('sales/day.html', order_list=order_list)
 
 

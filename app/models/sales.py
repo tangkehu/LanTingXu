@@ -22,7 +22,7 @@ class SalesOrder(db.Model):
     def salesman_add(self) -> int:
         self.pay_status = False
         self.delivery_status = True
-        self.status = 1
+        self.status = 0
         self.remarks = u'线下销售订单'
         self.user = current_user._get_current_object()
         db.session.add(self)
@@ -53,6 +53,7 @@ class SalesOrder(db.Model):
         else:
             db.session.add(RelationOrderGoods(count=1, order=self, goods=Goods.query.get_or_404(goods_id)))
         db.session.commit()
+        self.sum_price()
 
     def salesman_goods_remove(self, goods_id: int, is_delete=False):
         relation = self.goods.filter_by(goods_id=goods_id).first()
@@ -64,6 +65,7 @@ class SalesOrder(db.Model):
                 self.goods.remove(relation)
                 db.session.add(self)
             db.session.commit()
+            self.sum_price()
 
     def sum_price(self):
         price = 0
@@ -80,6 +82,14 @@ class SalesOrder(db.Model):
         self.total_real = price + pledge
         db.session.add(self)
         db.session.commit()
+
+    @staticmethod
+    def clear_invalid():
+        """ 清理无效订单 """
+        for item in SalesOrder.query.filter(SalesOrder.status == 0).all():
+            if item.goods.count() == 0:
+                db.session.delete(item)
+                db.session.commit()
 
 
 class RelationOrderGoods(db.Model):

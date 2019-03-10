@@ -24,7 +24,7 @@
           <thead>
             <tr>
               <th scope="col">编号</th>
-              <th scope="col">详情</th>
+              <th scope="col">操作</th>
               <th scope="col">实收</th>
               <th scope="col">付款方式</th>
               <th scope="col">付款状态</th>
@@ -37,11 +37,15 @@
             {% for item in order_list %}
             <tr>
               <th scope="row">{{ item.id }}</th>
-              <td><a href="{{ url_for('.order_info', order_id=item.id) }}" class="badge badge-secondary badge-pill">info</a></td>
+              <td>
+                  <a href="{{ url_for('.order_info', order_id=item.id) }}" class="badge badge-info badge-pill">详情</a>
+                  <a href="{{ url_for('.order_add_goods', order_id=item.id) }}" class="badge badge-secondary badge-pill">修改</a>
+                  <a href="" class="badge badge-danger badge-pill">删除</a>
+              </td>
               <td>{{ item.total_real }}</td>
               <td>{{ item.pay_type }}</td>
               <td>{% if item.pay_status %}已付款{% else %}未付款{% endif %}</td>
-              <td>{% if item.status == 0 %}已取消{% elif item.status == 1 %}进行中{% else %}已完成{% endif %}</td>
+              <td>{% if item.status == 0 %}已删除{% elif item.status == 1 %}进行中{% else %}已完成{% endif %}</td>
               <td>{{ item.remarks }}</td>
               <td>{{ item.create_time }}</td>
             </tr>
