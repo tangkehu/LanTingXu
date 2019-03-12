@@ -20,8 +20,8 @@
 
     <div class="row mb-5">
         <div class="col-6 text-right">订单编号</div><div class="col-6">{{ current_order.id }}</div>
-        <div class="col-6 text-right">应收金额</div><div class="col-6">{{ current_order.price }}</div>
-        <div class="col-6 text-right">应收押金</div><div class="col-6">{{ current_order.pledge }}</div>
+        <div class="col-6 text-right">商品总价</div><div class="col-6">{{ current_order.price }}</div>
+        <div class="col-6 text-right">商品押金</div><div class="col-6">{{ current_order.pledge }}</div>
         <div class="col-6 text-right">订单合计</div><div class="col-6">{{ current_order.price + current_order.pledge }}</div>
         <div class="col-6 text-right">付款方式</div><div class="col-6">{{ current_order.pay_type }}</div>
         <div class="col-6 text-right">付款状态</div><div class="col-6">{% if current_order.pay_status %}已付款{% else %}未付款{% endif %}</div>
@@ -42,7 +42,8 @@
                 编号：{{ item.goods_id }} &nbsp;
                 价格：&yen;{{ item.goods.price }} &nbsp;
                 {% if item.goods.cash_pledge %}押金：{{ item.goods.cash_pledge }} &nbsp;{% endif %}
-                {% if item.goods.type_id %}类别：{{ item.goods.type.name }}{% endif %}
+                {% if item.goods.type_id %}类别：{{ item.goods.type.name }} &nbsp;{% endif %}
+                数量：{{ item.count }} &nbsp;
             </small>
         </div>
     </div>
