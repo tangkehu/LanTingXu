@@ -20,7 +20,7 @@
     <div class="row mb-2">
         <div class="col-6 col-md-3 col-xl-2">
             <div class="input-group date">
-              <input type="text" class="form-control border-info">
+              <input type="text" class="form-control border-info" value="{{ current_date }}">
               <div class="input-group-append">
                 <button class="btn btn-info" type="button"><i class="fas fa-th"></i> </button>
               </div>
@@ -110,6 +110,10 @@
             minViewMode: 0,
             autoclose: true,
             todayHighlight: true
+        });
+
+        $('.input-group.date input').change(function () {
+            window.location.href = "{{ url_for('.index', the_type=current_type, the_date='') }}"+$(this).val();
         });
 
         $('#deleteOrderModal').on('show.bs.modal', function (event) {

@@ -1,17 +1,39 @@
 
+from datetime import datetime
 from flask import render_template, redirect, url_for, request, flash
+from sqlalchemy import cast, DATE, extract
 from . import sales_bp
 from .forms import SalesOrderForm
 from ..models import Goods, SalesOrder, RelationOrderGoods
 
 
-@sales_bp.route('/day')
-def day():
-    # TODO: 后续按天查找
+@sales_bp.route('/')
+@sales_bp.route('/<str:the_type>')
+@sales_bp.route('/<str:the_type>/<str:the_date>')
+def index(the_type='day', the_date=None):
     # 在每次GET请求时清理无效订单
     SalesOrder.clear_invalid()
-    order_list = SalesOrder.query.filter(SalesOrder.status != 0).order_by(SalesOrder.create_time.desc()).all()
-    return render_template('sales/day.html', order_list=order_list)
+
+    if the_type == 'day':
+        the_date = datetime.strptime(the_date, '%Y/%m/%d') if the_date else datetime.now()
+        order_list = SalesOrder.query.filter(
+            cast(SalesOrder.create_time, DATE) == the_date.date(), SalesOrder.status != 0).order_by(
+            SalesOrder.create_time.desc()).all()
+        current_date = the_date.strftime('%Y/%m/%d')
+        current_type = 'day'
+        toggle_type = 'month'
+    else:
+        the_date = datetime.strptime(the_date, '%Y/%m') if the_date else datetime.now()
+        order_list = SalesOrder.query.filter(
+            extract('year', SalesOrder.create_time) == the_date.year,
+            extract('month', SalesOrder.create_time) == the_date.month,
+            SalesOrder.status != 0).order_by(SalesOrder.create_time.desc()).all()
+        current_date = the_date.strftime('%Y/%m')
+        current_type = 'month'
+        toggle_type = 'day'
+
+    return render_template('sales/index.html', order_list=order_list,
+                           current_date=current_date, current_type=current_type, toggle_type=toggle_type)
 
 
 @sales_bp.route('/order_add_goods')
@@ -59,7 +81,7 @@ def order_update(order_id):
     if form.validate_on_submit():
         current_order.salesman_update(form.total_real.data, form.pay_type.data, form.pay_status.data, form.remarks.data)
         flash('操作成功')
-        return redirect(url_for('.day'))
+        return redirect(url_for('.index'))
 
     return render_template('sales/order_update.html', form=form)
 
