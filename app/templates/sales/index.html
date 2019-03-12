@@ -18,15 +18,18 @@
     <div class="container mb-5 pb-5">
 
     <div class="row mb-2">
-        <div class="col-6 col-md-3 col-xl-2">
+        <div class="col-5 col-md-3 col-xl-2 pr-1">
             <div class="input-group date">
-              <input type="text" class="form-control border-info" value="{{ current_date }}">
+              <input type="text" class="form-control border-info px-1" value="{{ current_date }}">
               <div class="input-group-append">
                 <button class="btn btn-info" type="button"><i class="fas fa-th"></i> </button>
               </div>
             </div>
         </div>
-        <div class="col text-right">
+        <div class="col px-0">
+            <a href="{{ url_for('.index', the_type=toggle_type) }}" class="btn btn-info text-white px-1">切换为{% if toggle_type == 'day' %}天{% else %}月{% endif %}</a>
+        </div>
+        <div class="col text-right text-nowrap">
             <a href="{{ url_for('.order_add_goods') }}" class="btn btn-outline-info"><i class="fas fa-plus"></i> 新订单</a>
         </div>
     </div>
@@ -63,7 +66,7 @@
             </tr>
             {% else %}
             <tr>
-              <td colspan="8">还没有订单生成...</td>
+              <td colspan="8">没有订单...</td>
             </tr>
             {% endfor %}
           </tbody>
@@ -105,14 +108,15 @@
 
     $(function () {
         $('.input-group.date').datepicker({
-            format: "yy/mm/dd",
+            format: "{{ current_fmt }}",
             language: "zh-CN",
-            minViewMode: 0,
+            minViewMode: {{ current_min_view }},
             autoclose: true,
             todayHighlight: true
         });
 
         $('.input-group.date input').change(function () {
+            showLoading();
             window.location.href = "{{ url_for('.index', the_type=current_type, the_date='') }}"+$(this).val();
         });
 

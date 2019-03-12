@@ -4,35 +4,41 @@ from flask import render_template, redirect, url_for, request, flash
 from sqlalchemy import cast, DATE, extract
 from . import sales_bp
 from .forms import SalesOrderForm
-from ..models import Goods, SalesOrder, RelationOrderGoods
+from ..models import Goods, SalesOrder
 
 
 @sales_bp.route('/')
-@sales_bp.route('/<str:the_type>')
-@sales_bp.route('/<str:the_type>/<str:the_date>')
+@sales_bp.route('/<the_type>')
+@sales_bp.route('/<the_type>/<the_date>')
 def index(the_type='day', the_date=None):
     # 在每次GET请求时清理无效订单
     SalesOrder.clear_invalid()
 
+    # 这里有sqlalchemy关于日期查询的典型示例
     if the_type == 'day':
-        the_date = datetime.strptime(the_date, '%Y/%m/%d') if the_date else datetime.now()
+        the_date = datetime.strptime(the_date, '%Y-%m-%d') if the_date else datetime.now()
         order_list = SalesOrder.query.filter(
             cast(SalesOrder.create_time, DATE) == the_date.date(), SalesOrder.status != 0).order_by(
             SalesOrder.create_time.desc()).all()
-        current_date = the_date.strftime('%Y/%m/%d')
-        current_type = 'day'
-        toggle_type = 'month'
+        current_date = the_date.strftime('%Y-%m-%d')
+        current_type = 'day'  # 控制请求的url
+        current_fmt = 'yyyy-mm-dd'  # 控制date插件显示的日期格式
+        current_min_view = 0  # 控制date插件显示的粒度
+        toggle_type = 'month'  # 控制切换
     else:
-        the_date = datetime.strptime(the_date, '%Y/%m') if the_date else datetime.now()
+        the_date = datetime.strptime(the_date, '%Y-%m') if the_date else datetime.now()
         order_list = SalesOrder.query.filter(
             extract('year', SalesOrder.create_time) == the_date.year,
             extract('month', SalesOrder.create_time) == the_date.month,
             SalesOrder.status != 0).order_by(SalesOrder.create_time.desc()).all()
-        current_date = the_date.strftime('%Y/%m')
+        current_date = the_date.strftime('%Y-%m')
         current_type = 'month'
+        current_fmt = 'yyyy-mm'
+        current_min_view = 1
         toggle_type = 'day'
 
     return render_template('sales/index.html', order_list=order_list,
+                           current_fmt=current_fmt, current_min_view=current_min_view,
                            current_date=current_date, current_type=current_type, toggle_type=toggle_type)
 
 
