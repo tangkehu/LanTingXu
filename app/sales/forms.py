@@ -15,7 +15,7 @@ class SalesOrderForm(FlaskForm):
     total_real = FloatField("实付款", validators=[DataRequired(message='请正确输入实付款额')])
 
     def set_data(self, order_obj):
-        self.order_number.data = '{:0>5}'.format(order_obj.id)
+        self.order_number.data = '{}'.format(order_obj.id)
         self.price.data = order_obj.price
         self.pledge.data = order_obj.pledge
         self.order_total.data = order_obj.price+order_obj.pledge

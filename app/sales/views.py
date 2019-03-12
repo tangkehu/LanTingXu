@@ -66,5 +66,5 @@ def order_update(order_id):
 
 @sales_bp.route('/order_info/<int:order_id>')
 def order_info(order_id):
-    goods_list = []
-    return render_template('sales/order_info.html', goods_list=goods_list)
+    current_order = SalesOrder.query.get_or_404(order_id)
+    return render_template('sales/order_info.html', current_order=current_order)
