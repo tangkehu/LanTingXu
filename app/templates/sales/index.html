@@ -17,7 +17,7 @@
 
     <div class="container mb-5 pb-5">
 
-    <div class="row mb-2">
+      <div class="row mb-2">
         <div class="col-5 col-md-3 col-xl-2 pr-1">
             <div class="input-group date">
               <input type="text" class="form-control border-info px-1" value="{{ current_date }}">
@@ -32,7 +32,18 @@
         <div class="col text-right text-nowrap">
             <a href="{{ url_for('.order_add_goods') }}" class="btn btn-outline-info"><i class="fas fa-plus"></i> 新订单</a>
         </div>
-    </div>
+      </div>
+
+      <div class="row my-4">
+          <div class="col-12">
+              当前条件下的数据统计结果
+          </div>
+          <div class="col">
+              订单总量：{{ stat.total }} &nbsp; 实收款总计：&yen;{{ stat.sum_total_real }} &nbsp; 应收款总计：&yen;{{ stat.sum_price }} &nbsp;
+              未付款订单数量：{{ stat.count_pay_false }}&nbsp; {% for item in stat.sum_pay_type %}{{ item.pay_type }}：{{ item.total }} &nbsp;{% endfor %}
+              {% for one in stat.sum_goods_count %}商品{{ one.id }}：{{ one.number }} &nbsp;{% endfor %}
+          </div>
+      </div>
 
       <div class="table-responsive">
         <table class="table table-hover text-nowrap">
@@ -60,7 +71,7 @@
               <td>{{ item.total_real }}</td>
               <td>{{ item.pay_type }}</td>
               <td>{% if item.pay_status %}已付款{% else %}<span class="text-warning">未付款</span>{% endif %}</td>
-                <td>{% if item.status == 0 %}<span class="text-secondary">已删除</span>{% elif item.status == 1 %}<span class="text-warning">进行中</span>{% else %}已完成{% endif %}</td>
+              <td>{% if item.status == 0 %}<span class="text-secondary">已删除</span>{% elif item.status == 1 %}<span class="text-warning">进行中</span>{% else %}已完成{% endif %}</td>
               <td><span class="d-inline-block text-truncate" style="max-width: 10rem;">{{ item.remarks }}</span></td>
               <td>{{ item.create_time }}</td>
             </tr>
@@ -72,6 +83,7 @@
           </tbody>
         </table>
       </div>
+
     </div>
 
     {% include "_navbar.html" %}
