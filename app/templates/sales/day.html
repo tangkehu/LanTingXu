@@ -1,9 +1,21 @@
-{% extends 'sales/base.html' %}
+{% extends 'base.html' %}
 
 {% block css %}<link href="https://cdn.bootcss.com/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css" rel="stylesheet">{% endblock %}
 
-{% block content %}
-    <div class="container">
+{% block body %}
+<main role="main">
+
+    <div class="border-bottom shadow-sm mb-2">
+    <div class="container py-2">
+        <div class="row">
+            <div class="col">
+                <span class="lead">销售管理</span>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="container mb-5 pb-5">
 
     <div class="row mb-2">
         <div class="col-6 col-md-3 col-xl-2">
@@ -44,9 +56,9 @@
               </td>
               <td>{{ item.total_real }}</td>
               <td>{{ item.pay_type }}</td>
-              <td>{% if item.pay_status %}已付款{% else %}未付款{% endif %}</td>
-              <td>{% if item.status == 0 %}已删除{% elif item.status == 1 %}进行中{% else %}已完成{% endif %}</td>
-              <td>{{ item.remarks }}</td>
+              <td>{% if item.pay_status %}已付款{% else %}<span class="text-warning">未付款</span>{% endif %}</td>
+                <td>{% if item.status == 0 %}已删除{% elif item.status == 1 %}<span class="text-warning">进行中</span>{% else %}已完成{% endif %}</td>
+              <td><span class="d-inline-block text-truncate" style="max-width: 10rem;">{{ item.remarks }}</span></td>
               <td>{{ item.create_time }}</td>
             </tr>
             {% else %}
@@ -58,6 +70,9 @@
         </table>
       </div>
     </div>
+
+    {% include "_navbar.html" %}
+</main>
 {% endblock %}
 
 {% block script %}

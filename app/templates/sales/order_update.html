@@ -1,84 +1,81 @@
-{% extends "sales/base.html" %}
+{% extends "base.html" %}
 
-{% block content %}
-    <div class="container mb-5">
-    <div class="row">
-        <div class="col text-center">
-            <a href="javascript: history.go(-1);" class="text-decoration-none text-secondary float-left"><i class="fas fa-chevron-left"></i> </a>
-            确认订单
-            <hr>
+{% block body %}
+    <main role="main">
+
+    <div class="border-bottom shadow-sm mb-2">
+        <div class="container py-2">
+            <div class="row">
+                <div class="col-4">
+                    <a href="javascript: history.go(-1);" class="text-decoration-none text-secondary"><i class="fas fa-chevron-left"></i> </a>
+                </div>
+                <div class="col-4 text-center">
+                    确认订单
+                </div>
+            </div>
         </div>
     </div>
+
+    <div class="container mb-5">
     <div class="row">
         <div class="col">
             <form method="post">
                 {{ form.hidden_tag() }}
                 <div class="form-group row">
-{#                    <label for="order_number" class="col-form-label col-4">订单编号</label>#}
                     {{ form.order_number.label(class="col-form-label col-4") }}
                     <div class="col">
                         {{ form.order_number(class="form-control", readonly='true') }}
-{#                    <input type="text" class="form-control" id="order_number" readonly value="001">#}
                     </div>
                 </div>
                 <div class="form-group row">
-{#                    <label for="price" class="col-form-label col-4">商品总价</label>#}
                     {{ form.price.label(class="col-form-label col-4") }}
                     <div class="col">
                         {{ form.price(class="form-control", readonly='true') }}
-{#                    <input type="text" class="form-control" id="price" readonly value="100">#}
                     </div>
                 </div>
                 <div class="form-group row">
-{#                    <label for="pledge" class="col-4 col-form-label">商品押金</label>#}
                     {{ form.pledge.label(class="col-4 col-form-label") }}
                     <div class="col">
-{#                    <input type="text" class="form-control" id="pledge" readonly value="400">#}
                         {{ form.pledge(class="form-control", readonly='true') }}
                     </div>
                 </div>
                 <div class="form-group row">
-{#                    <label for="order_total" class="col-4 col-form-label">订单合计</label>#}
                     {{ form.order_total.label(class="col-4 col-form-label") }}
                     <div class="col">
-{#                    <input type="text" class="form-control" id="order_total" name="order_total" value="500">#}
                         {{ form.order_total(class="form-control", readonly='true') }}
                     </div>
                 </div>
                 <div class="form-group row">
-{#                    <label for="pay_type" class="col-4 col-form-label">付款方式</label>#}
                     {{ form.pay_type.label(class="col-4 col-form-label") }}
                     <div class="col">
-{#                    <select class="custom-select" id="pay_type" name="pay_type">#}
-{#                        <option>现金</option>#}
-{#                        <option selected>微信</option>#}
-{#                        <option>支付宝</option>#}
-{#                    </select>#}
                         {{ form.pay_type(class="custom-select") }}
                     </div>
                 </div>
                 <div class="form-group row">
-                    {{ form.pay_status.label(class="col-4 col-form-label pt-0") }}
+                    {{ form.pay_status.label(class="col-4 col-form-label py-0") }}
                     {{ form.pay_status(class="col pay_status_css") }}
                 </div>
                 <div class="form-group row">
-                    <label for="remarks" class="col-4 col-form-label">备注</label>
+                    {{ form.remarks.label(class="col-4 col-form-label") }}
                     <div class="col">
-                    <textarea id="remarks" name="remarks" class="form-control">线下销售订单</textarea>
+                        {{ form.remarks(class="form-control") }}
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="real_total" class="col-4 col-form-label">实付款</label>
+                    {{ form.total_real.label(class="col-4 col-form-label") }}
                     <div class="col">
-                    <input type="text" class="form-control-plaintext" readonly id="real_total" name="real_total" value="500">
+                        {{ form.total_real(class="form-control") }}
+                        {% for error in form.total_real.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
                     </div>
                 </div>
-                <a href="javascript: history.go(-1);" class="btn btn-secondary btn-block rounded-pill">查看该订单商品</a>
+{#                <a href="javascript: history.go(-1);" class="btn btn-secondary btn-block rounded-pill">查看该订单商品</a>#}
                 <button type="submit" class="btn btn-info btn-block rounded-pill">确定</button>
             </form>
         </div>
     </div>
     </div>
+
+    </main>
 {% endblock %}
 
 {% block script %}

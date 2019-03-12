@@ -1,15 +1,22 @@
-{% extends "sales/base.html" %}
+{% extends "base.html" %}
 
-{% block content %}
-<div class="container mb-5">
+{% block body %}
+<main role="main">
 
-<div class="row">
-    <div class="col text-center">
-        <a href="javascript: history.back(-1);" class="text-secondary text-decoration-none float-left"><i class="fas fa-chevron-left"></i> </a>
-        选择商品
-        <hr>
+<div class="border-bottom shadow-sm mb-2">
+    <div class="container py-2">
+        <div class="row">
+            <div class="col-4">
+                <a href="javascript: history.go(-1);" class="text-decoration-none text-secondary"><i class="fas fa-chevron-left"></i> </a>
+            </div>
+            <div class="col-4 text-center">
+                选择商品
+            </div>
+        </div>
     </div>
 </div>
+
+<div class="container mb-5">
 
 {% for item in goods_list %}
 <div class="row mb-3" id="goods_{{ item.goods_id }}">
@@ -51,6 +58,8 @@
 </div>
 
 </div>
+
+</main>
 {% endblock %}
 
 {% block script %}

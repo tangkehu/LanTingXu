@@ -12,7 +12,7 @@ class SalesOrderForm(FlaskForm):
     pay_type = SelectField(label="付款方式", choices=[('现金', '现金'), ('微信', '微信'), ('支付宝', '支付宝'), ('其它', '其它')])
     pay_status = RadioField("付款状态", coerce=int, choices=[(1, "已付款"), (0, "未付款")])
     remarks = TextAreaField("备注")
-    total_real = FloatField("实付款", validators=[DataRequired(message='请输入实付款额')])
+    total_real = FloatField("实付款", validators=[DataRequired(message='请正确输入实付款额')])
 
     def set_data(self, order_obj):
         self.order_number.data = '{:0>5}'.format(order_obj.id)
