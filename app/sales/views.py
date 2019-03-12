@@ -33,7 +33,8 @@ def index(the_type='day', the_date=None):
             cast(SalesOrder.create_time, DATE) == the_date.date(),
             SalesOrder.status != 0, SalesOrder.pay_status == True).group_by(SalesOrder.pay_type)
 
-        sum_goods_count = db.session.query(Goods.id, func.sum(RelationOrderGoods.count).label('number')).join(RelationOrderGoods, RelationOrderGoods.goods_id == Goods.id).join(SalesOrder, SalesOrder.id == RelationOrderGoods.order_id).filter(cast(SalesOrder.create_time, DATE) == the_date.date(), SalesOrder.status != 0).group_by(Goods.id)[0:3]
+        # 统计各个商品的销售量
+        # sum_goods_count = db.session.query(Goods.id, func.sum(RelationOrderGoods.count).label('number')).join(RelationOrderGoods, RelationOrderGoods.goods_id == Goods.id).join(SalesOrder, SalesOrder.id == RelationOrderGoods.order_id).filter(cast(SalesOrder.create_time, DATE) == the_date.date(), SalesOrder.status != 0).group_by(Goods.id)[0:3]
 
         current_date = the_date.strftime('%Y-%m-%d')
         current_type = 'day'  # 控制请求的url
@@ -74,7 +75,7 @@ def index(the_type='day', the_date=None):
     # 统计分析数据结果
     total = order_find.count()
     stat = {'total': total, 'sum_total_real': sum_total_real, 'sum_price': sum_price,
-            'count_pay_false': count_pay_false, 'sum_pay_type': sum_pay_type, 'sum_goods_count': sum_goods_count}
+            'count_pay_false': count_pay_false, 'sum_pay_type': sum_pay_type}
 
     return render_template('sales/index.html', order_list=order_list, stat=stat,
                            current_fmt=current_fmt, current_min_view=current_min_view,

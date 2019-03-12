@@ -9,7 +9,7 @@
     <div class="container py-2">
         <div class="row">
             <div class="col">
-                <span class="lead">销售管理</span>
+                <span class="lead">订单管理</span>
             </div>
         </div>
     </div>
@@ -36,12 +36,12 @@
 
       <div class="row my-4">
           <div class="col-12">
-              当前条件下的数据统计结果
+              当前条件下的数据统计结果：
           </div>
           <div class="col">
-              订单总量：{{ stat.total }} &nbsp; 实收款总计：&yen;{{ stat.sum_total_real }} &nbsp; 应收款总计：&yen;{{ stat.sum_price }} &nbsp;
-              未付款订单数量：{{ stat.count_pay_false }}&nbsp; {% for item in stat.sum_pay_type %}{{ item.pay_type }}：{{ item.total }} &nbsp;{% endfor %}
-              {% for one in stat.sum_goods_count %}商品{{ one.id }}：{{ one.number }} &nbsp;{% endfor %}
+              订单总数量：{{ stat.total }} &nbsp; 未付款订单数量：{{ stat.count_pay_false }} &nbsp; 应收款总计：&yen;{{ stat.sum_price }} &nbsp; 实收款总计：&yen;{{ stat.sum_total_real }}
+               <br>
+              {% for item in stat.sum_pay_type %}{{ item.pay_type }}：{{ item.total }} &nbsp;{% endfor %}
           </div>
       </div>
 
