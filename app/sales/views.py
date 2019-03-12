@@ -58,7 +58,7 @@ def order_update(order_id):
 
     if form.validate_on_submit():
         current_order.salesman_update(form.total_real.data, form.pay_type.data, form.pay_status.data, form.remarks.data)
-        flash('新订单创建成功')
+        flash('操作成功')
         return redirect(url_for('.day'))
 
     return render_template('sales/order_update.html', form=form)
@@ -68,3 +68,9 @@ def order_update(order_id):
 def order_info(order_id):
     current_order = SalesOrder.query.get_or_404(order_id)
     return render_template('sales/order_info.html', current_order=current_order)
+
+
+@sales_bp.route('/order_delete', methods=['POST'])
+def order_delete():
+    SalesOrder.query.get_or_404(int(request.form.get('order_id'))).salesman_close()
+    return 'successful'

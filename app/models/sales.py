@@ -35,6 +35,7 @@ class SalesOrder(db.Model):
         self.pay_type = pay_type
         self.pay_status = pay_status
         self.remarks = remarks
+        self.create_time = datetime.utcnow()
         self.status = 2 if self.pay_status and self.delivery_status else 1
         db.session.add(self)
         db.session.commit()

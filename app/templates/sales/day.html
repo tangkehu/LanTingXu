@@ -47,17 +47,17 @@
           </thead>
           <tbody>
             {% for item in order_list %}
-            <tr>
+            <tr id="order_{{ item.id }}">
               <th scope="row">{{ item.id }}</th>
               <td>
                   <a href="{{ url_for('.order_info', order_id=item.id) }}" class="badge badge-info badge-pill">详情</a>
                   <a href="{{ url_for('.order_add_goods', order_id=item.id) }}" class="badge badge-secondary badge-pill">修改</a>
-                  <a href="" class="badge badge-danger badge-pill">删除</a>
+                  <a href="javascript: void(0);" class="badge badge-danger badge-pill" data-toggle="modal" data-target="#deleteOrderModal" data-oid="{{ item.id }}">删除</a>
               </td>
               <td>{{ item.total_real }}</td>
               <td>{{ item.pay_type }}</td>
               <td>{% if item.pay_status %}已付款{% else %}<span class="text-warning">未付款</span>{% endif %}</td>
-                <td>{% if item.status == 0 %}已删除{% elif item.status == 1 %}<span class="text-warning">进行中</span>{% else %}已完成{% endif %}</td>
+                <td>{% if item.status == 0 %}<span class="text-secondary">已删除</span>{% elif item.status == 1 %}<span class="text-warning">进行中</span>{% else %}已完成{% endif %}</td>
               <td><span class="d-inline-block text-truncate" style="max-width: 10rem;">{{ item.remarks }}</span></td>
               <td>{{ item.create_time }}</td>
             </tr>
@@ -73,14 +73,37 @@
 
     {% include "_navbar.html" %}
 </main>
+
+    <!-- 订单删除确认modal -->
+    <div class="modal fade" id="deleteOrderModal" tabindex="-1" role="dialog" aria-labelledby="deleteOrderModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-info" id="deleteOrderModalLabel">订单删除确认</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            请再次确认是否要删除该订单！
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-danger" id="order-delete-submit" data-dismiss="modal">删除</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 {% endblock %}
 
 {% block script %}
-    {{ super() }}
     <script src="https://cdn.bootcss.com/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap-datepicker/1.8.0/locales/bootstrap-datepicker.zh-CN.min.js"></script>
 
     <script type="text/javascript">
+
+    $(function () {
         $('.input-group.date').datepicker({
             format: "yy/mm/dd",
             language: "zh-CN",
@@ -88,6 +111,30 @@
             autoclose: true,
             todayHighlight: true
         });
+
+        $('#deleteOrderModal').on('show.bs.modal', function (event) {
+            $('#order-delete-submit').data('oid', $(event.relatedTarget).data('oid'))
+        });
+
+        $('#order-delete-submit').click(function () {
+            let oid = $(this).data('oid');
+            $.ajax({
+                url: '{{ url_for('.order_delete') }}',
+                type: 'post',
+                data: {order_id: oid},
+                beforeSend: showLoading,
+                success: function () {
+                    $("#order_"+oid.toString()).remove();
+                    hideLoading();
+                    showMsg('删除成功');
+                },
+                error: function (xhr) {
+                    hideLoading();
+                    showMsg(xhr.statusText);
+                }
+            })
+        });
+    });
     </script>
 
 {% endblock %}
