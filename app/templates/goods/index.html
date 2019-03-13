@@ -34,12 +34,16 @@
         {% for item in goods_list %}
             <div class="row mb-3" id="goods_{{ item.id }}">
                 <div class="col-4 col-md-3 col-xl-2 pr-0 py-0">
-                    <div style="height: 0; padding-top: 100%; background-size: cover; background-position: center; background-image: url('{% if item.img.first() %}{{ url_for('static', filename='img_goods/'+item.img.first().filename_s) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}')"></div>
+                    <a href="{{ url_for('.update_goods', goods_id=item.id) }}">
+                        <div style="height: 0; padding-bottom: 100%; background-size: cover; background-position: center; background-image: url('{% if item.img.first() %}{{ url_for('static', filename='img_goods/'+item.img.first().filename_s) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}')" class="rounded img_delay">
+                            <span class="badge badge-pill badge-secondary">{{ item.id }}</span>
+                        </div>
+                    </a>
                 </div>
                 <div class="col px-0 mx-3 border-bottom">
                     {{ item.name }}
                     <br>
-                    <small>编号：{{ item.id }} &nbsp; 价格：&yen;{{ item.rent }} &nbsp; {% if item.type_id %}类别：{{ item.type.name }}{% endif %}</small>
+                    <small>价格：&yen;{{ item.rent }} &nbsp; {% if item.type_id %}类别：{{ item.type.name }}{% endif %}</small>
                     <br>
                     <small class="float-right">
                         <a href="{{ url_for('.update_goods', goods_id=item.id) }}" class="text-info text-decoration-none mr-2">修改 <i class="fas fa-pen-square"></i> </a>
