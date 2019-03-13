@@ -23,7 +23,7 @@ def index(type_id=None):
 
 @goods_bp.route('/update_goods', methods=['GET', 'POST'])
 @goods_bp.route('/update_goods/<int:goods_id>', methods=['GET', 'POST'])
-@permission_required('sell')
+@permission_required('goods_manage')
 @login_required
 def update_goods(goods_id=None):
     """ 处理商品的添加和修改 """
@@ -57,7 +57,7 @@ def update_goods(goods_id=None):
 
 
 @goods_bp.route('/delete_goods', methods=['POST'])
-@permission_required('sell')
+@permission_required('goods_manage')
 @login_required
 def delete_goods():
     Goods.query.get_or_404(int(request.form.get('goods_id'))).delete()
@@ -66,7 +66,7 @@ def delete_goods():
 
 @goods_bp.route('/img_goods_show')
 @goods_bp.route('/img_goods_show/<int:goods_id>')
-@permission_required('sell')
+@permission_required('goods_manage')
 @login_required
 def img_goods_show(goods_id=None):
     records = []
@@ -81,7 +81,7 @@ def img_goods_show(goods_id=None):
 
 @goods_bp.route('/img_goods_upload', methods=['POST'])
 @goods_bp.route('/img_goods_upload/<int:goods_id>', methods=['POST'])
-@permission_required('sell')
+@permission_required('goods_manage')
 @login_required
 def img_goods_upload(goods_id=None):
     fail_msg = ''
@@ -99,7 +99,7 @@ def img_goods_upload(goods_id=None):
 
 
 @goods_bp.route('/img_goods_delete', methods=["POST"])
-@permission_required('sell')
+@permission_required('goods_manage')
 @login_required
 def img_goods_delete():
     GoodsImg.query.get_or_404(int(request.form.get('img_id'))).delete()

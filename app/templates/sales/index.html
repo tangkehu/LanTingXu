@@ -29,9 +29,11 @@
         <div class="col px-0">
             <a href="{{ url_for('.index', the_type=toggle_type) }}" class="btn btn-info text-white px-1">切换为{% if toggle_type == 'day' %}天{% else %}月{% endif %}</a>
         </div>
+        {% if current_user.can('order_manage') %}
         <div class="col text-right text-nowrap">
             <a href="{{ url_for('.order_add_goods') }}" class="btn btn-outline-info"><i class="fas fa-plus"></i> 新订单</a>
         </div>
+        {% endif %}
       </div>
 
       <div class="table-responsive">
@@ -54,8 +56,10 @@
               <th scope="row">{{ item.id }}</th>
               <td>
                   <a href="{{ url_for('.order_info', order_id=item.id) }}" class="badge badge-info badge-pill">详情</a>
+                  {% if current_user.can('order_manage') %}
                   <a href="{{ url_for('.order_add_goods', order_id=item.id) }}" class="badge badge-secondary badge-pill">修改</a>
                   <a href="javascript: void(0);" class="badge badge-danger badge-pill" data-toggle="modal" data-target="#deleteOrderModal" data-oid="{{ item.id }}">删除</a>
+                  {% endif %}
               </td>
               <td>{{ item.total_real }}</td>
               <td>{{ item.pay_type }}</td>

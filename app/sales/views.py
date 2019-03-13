@@ -2,14 +2,17 @@
 from datetime import datetime
 from flask import render_template, redirect, url_for, request, flash, jsonify
 from sqlalchemy import cast, DATE, extract
+from flask_login import login_required
 from . import sales_bp
 from .forms import SalesOrderForm
 from ..models import Goods, SalesOrder
+from ..utils import permission_required
 
 
 @sales_bp.route('/')
 @sales_bp.route('/<the_type>')
 @sales_bp.route('/<the_type>/<the_date>')
+@login_required
 def index(the_type='day', the_date=None):
     # 这里有sqlalchemy关于日期查询的典型示例
     if the_type == 'day':
@@ -38,6 +41,7 @@ def index(the_type='day', the_date=None):
 
 
 @sales_bp.route('/order_stat_api/<the_type>/<the_date>')
+@login_required
 def order_stat_api(the_type, the_date):
     # 在每次GET请求时清理无效订单
     SalesOrder.clear_invalid()
@@ -46,6 +50,7 @@ def order_stat_api(the_type, the_date):
 
 @sales_bp.route('/order_add_goods')
 @sales_bp.route('/order_add_goods/<int:order_id>', methods=['GET', 'POST'])
+@permission_required('order_manage')
 def order_add_goods(order_id=None):
     if order_id is None:
         return redirect(url_for('.order_add_goods', order_id=SalesOrder().salesman_add()))
@@ -67,6 +72,7 @@ def order_add_goods(order_id=None):
 
 
 @sales_bp.route('/goods_search/<int:order_id>', methods=['GET', 'POST'])
+@login_required
 def goods_search(order_id):
     goods_list = []
     if request.method == "POST":
@@ -79,6 +85,7 @@ def goods_search(order_id):
 
 
 @sales_bp.route('/order_update/<int:order_id>', methods=['GET', 'POST'])
+@permission_required('order_manage')
 def order_update(order_id):
     current_order = SalesOrder.query.get_or_404(order_id)
     form = SalesOrderForm()
@@ -95,12 +102,14 @@ def order_update(order_id):
 
 
 @sales_bp.route('/order_info/<int:order_id>')
+@login_required
 def order_info(order_id):
     current_order = SalesOrder.query.get_or_404(order_id)
     return render_template('sales/order_info.html', current_order=current_order)
 
 
 @sales_bp.route('/order_delete', methods=['POST'])
+@permission_required('order_manage')
 def order_delete():
     SalesOrder.query.get_or_404(int(request.form.get('order_id'))).salesman_close()
     return 'successful'

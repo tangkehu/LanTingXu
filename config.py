@@ -6,8 +6,9 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False  # 不追踪对象的修改，减少内存使用
     GOODS_IMG_PATH = os.path.join(os.getcwd(), 'app'+os.sep+'static'+os.sep+'img_goods')
     ADMINS = ['lantingxuapplet@163.com']
-    PERMISSIONS = [['sell', '发布商品进行租赁或售卖的能力'],
-                   ['system_manage', '管理系统的能力']]
+    PERMISSIONS = [['goods_manage', '管理商品的能力'],
+                   ['system_manage', '管理系统的能力'],
+                   ['order_manage', '管理订单的能力']]
 
     MAIL_SERVER = 'smtp.163.com'
     MAIL_PORT = 465
