@@ -29,7 +29,7 @@ def create_app(config_name=os.getenv('FLASK_CONFIG', 'production')):
     @app.cli.command()
     def deploy():
         """ 部署，部署前请创建数据库迁移脚本flask db migrate """
-        # 本次有数据和权限更新
+        # 本次有数据和权限更新，弃用sell权限
         from .models import Permission
         upgrade()
 

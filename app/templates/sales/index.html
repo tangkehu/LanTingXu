@@ -56,7 +56,7 @@
               <th scope="row">{{ item.id }}</th>
               <td>
                   <a href="{{ url_for('.order_info', order_id=item.id) }}" class="badge badge-info badge-pill">详情</a>
-                  {% if current_user.can('order_manage') %}
+                  {% if current_user.can('system_manage') or current_user.id == item.user_id %}
                   <a href="{{ url_for('.order_add_goods', order_id=item.id) }}" class="badge badge-secondary badge-pill">修改</a>
                   <a href="javascript: void(0);" class="badge badge-danger badge-pill" data-toggle="modal" data-target="#deleteOrderModal" data-oid="{{ item.id }}">删除</a>
                   {% endif %}
