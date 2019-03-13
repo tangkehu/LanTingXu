@@ -34,17 +34,6 @@
         </div>
       </div>
 
-      <div class="row my-4">
-          <div class="col-12">
-              当前条件下的数据统计结果：
-          </div>
-          <div class="col">
-              订单总数量：{{ stat.total }} &nbsp; 未付款订单数量：{{ stat.count_pay_false }} &nbsp; 应收款总计：&yen;{{ stat.sum_price }} &nbsp; 实收款总计：&yen;{{ stat.sum_total_real }}
-               <br>
-              {% for item in stat.sum_pay_type %}{{ item.pay_type }}：{{ item.total }} &nbsp;{% endfor %}
-          </div>
-      </div>
-
       <div class="table-responsive">
         <table class="table table-hover text-nowrap">
           <thead>
@@ -153,6 +142,51 @@
                     showMsg(xhr.statusText);
                 }
             })
+        });
+
+        $.ajax({
+            url: '{{ url_for('.order_stat_api', the_type=current_type, the_date=current_date) }}',
+            success: function (data) {
+                let droprigetContent = '';
+                for (let item of data.sum_pay_type){
+                    droprigetContent += item[1]+'：'+item[0].toString()+'<br>'
+                }
+                $('.table-responsive').before(
+                    '<div class="card-deck my-4">\n' +
+                    '          <div class="card text-center border-secondary text-secondary">\n' +
+                    '              <div class="card-body p-0">\n' +
+                    '                  <p class="card-text m-0">订单总量</p>\n' +
+                    '                  <h5 class="card-title m-0">'+data.count_order+'</h5>\n' +
+                    '              </div>\n' +
+                    '          </div>\n' +
+                    '          <div class="card text-center border-warning text-warning">\n' +
+                    '              <div class="card-body p-0">\n' +
+                    '                  <p class="card-text m-0">未付款订单量</p>\n' +
+                    '                  <h5 class="card-title m-0">'+data.count_pay_false+'</h5>\n' +
+                    '              </div>\n' +
+                    '          </div>\n' +
+                    '          <div class="card text-center border-success text-success">\n' +
+                    '              <div class="card-body p-0">\n' +
+                    '                  <p class="card-text m-0">应收金额</p>\n' +
+                    '                  <h5 class="card-title m-0">'+data.sum_price+'</h5>\n' +
+                    '              </div>\n' +
+                    '          </div>\n' +
+                    '          <div class="card text-center border-danger text-danger">\n' +
+                    '              <div class="card-body p-0">\n' +
+                    '                  <div class="dropright">\n' +
+                    '                    <a href="" class="dropdown-toggle text-decoration-none text-danger" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">\n' +
+                    '                      实收金额\n' +
+                    '                    </a>\n' +
+                    '                    <div class="dropdown-menu p-2 text-muted" aria-labelledby="dropdownMenu2">\n' +
+                    '                      <p>'+droprigetContent+'</p>\n' +
+                    '                    </div>\n' +
+                    '                  </div>\n' +
+                    '                  <h5 class="card-title m-0">'+data.sum_total_real+'</h5>\n' +
+                    '              </div>\n' +
+                    '          </div>\n' +
+                    '      </div>'
+                )
+            }
         });
     });
     </script>

@@ -1,11 +1,10 @@
 
 from datetime import datetime
-from flask import render_template, redirect, url_for, request, flash
-from sqlalchemy import cast, DATE, extract, func
+from flask import render_template, redirect, url_for, request, flash, jsonify
+from sqlalchemy import cast, DATE, extract
 from . import sales_bp
-from .. import db
 from .forms import SalesOrderForm
-from ..models import Goods, SalesOrder, RelationOrderGoods
+from ..models import Goods, SalesOrder
 
 
 @sales_bp.route('/')
@@ -20,22 +19,6 @@ def index(the_type='day', the_date=None):
         the_date = datetime.strptime(the_date, '%Y-%m-%d') if the_date else datetime.now()
         order_find = SalesOrder.query.filter(
             cast(SalesOrder.create_time, DATE) == the_date.date(), SalesOrder.status != 0)
-
-        sum_price = db.session.query(func.sum(SalesOrder.price)).filter(
-            cast(SalesOrder.create_time, DATE) == the_date.date(), SalesOrder.status != 0).scalar()
-        sum_total_real = db.session.query(func.sum(SalesOrder.total_real)).filter(
-            cast(SalesOrder.create_time, DATE) == the_date.date(),
-            SalesOrder.status != 0, SalesOrder.pay_status == True).scalar()
-        count_pay_false = SalesOrder.query.filter(
-            cast(SalesOrder.create_time, DATE) == the_date.date(),
-            SalesOrder.status != 0, SalesOrder.pay_status == False).count()
-        sum_pay_type = db.session.query(func.sum(SalesOrder.total_real).label('total'), SalesOrder.pay_type).filter(
-            cast(SalesOrder.create_time, DATE) == the_date.date(),
-            SalesOrder.status != 0, SalesOrder.pay_status == True).group_by(SalesOrder.pay_type)
-
-        # 统计各个商品的销售量
-        # sum_goods_count = db.session.query(Goods.id, func.sum(RelationOrderGoods.count).label('number')).join(RelationOrderGoods, RelationOrderGoods.goods_id == Goods.id).join(SalesOrder, SalesOrder.id == RelationOrderGoods.order_id).filter(cast(SalesOrder.create_time, DATE) == the_date.date(), SalesOrder.status != 0).group_by(Goods.id)[0:3]
-
         current_date = the_date.strftime('%Y-%m-%d')
         current_type = 'day'  # 控制请求的url
         current_fmt = 'yyyy-mm-dd'  # 控制date插件显示的日期格式
@@ -47,39 +30,19 @@ def index(the_type='day', the_date=None):
             extract('year', SalesOrder.create_time) == the_date.year,
             extract('month', SalesOrder.create_time) == the_date.month,
             SalesOrder.status != 0)
-
-        sum_price = db.session.query(func.sum(SalesOrder.price)).filter(
-            extract('year', SalesOrder.create_time) == the_date.year,
-            extract('month', SalesOrder.create_time) == the_date.month,
-            SalesOrder.status != 0).scalar()
-        sum_total_real = db.session.query(func.sum(SalesOrder.total_real)).filter(
-            extract('year', SalesOrder.create_time) == the_date.year,
-            extract('month', SalesOrder.create_time) == the_date.month,
-            SalesOrder.status != 0, SalesOrder.pay_status == True).scalar()
-        count_pay_false = SalesOrder.query.filter(
-            extract('year', SalesOrder.create_time) == the_date.year,
-            extract('month', SalesOrder.create_time) == the_date.month,
-            SalesOrder.status != 0, SalesOrder.pay_status == False).count()
-        sum_pay_type = db.session.query(func.sum(SalesOrder.total_real).label('total'), SalesOrder.pay_type).filter(
-            extract('year', SalesOrder.create_time) == the_date.year,
-            extract('month', SalesOrder.create_time) == the_date.month,
-            SalesOrder.status != 0, SalesOrder.pay_status == True).group_by(SalesOrder.pay_type)
-
         current_date = the_date.strftime('%Y-%m')
         current_type = 'month'
         current_fmt = 'yyyy-mm'
         current_min_view = 1
         toggle_type = 'day'
-
     order_list = order_find.order_by(SalesOrder.create_time.desc()).all()
-    # 统计分析数据结果
-    total = order_find.count()
-    stat = {'total': total, 'sum_total_real': sum_total_real, 'sum_price': sum_price,
-            'count_pay_false': count_pay_false, 'sum_pay_type': sum_pay_type}
+    return render_template('sales/index.html', order_list=order_list, current_fmt=current_fmt, toggle_type=toggle_type,
+                           current_min_view=current_min_view, current_date=current_date, current_type=current_type)
 
-    return render_template('sales/index.html', order_list=order_list, stat=stat,
-                           current_fmt=current_fmt, current_min_view=current_min_view,
-                           current_date=current_date, current_type=current_type, toggle_type=toggle_type)
+
+@sales_bp.route('/order_stat_api/<the_type>/<the_date>')
+def order_stat_api(the_type, the_date):
+    return jsonify(SalesOrder.stat_data(the_type, the_date))
 
 
 @sales_bp.route('/order_add_goods')

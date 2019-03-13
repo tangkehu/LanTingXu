@@ -1,5 +1,6 @@
 from datetime import datetime
 from flask_login import current_user
+from sqlalchemy import cast, extract, DATE, func
 from app import db
 
 
@@ -91,6 +92,38 @@ class SalesOrder(db.Model):
             if item.goods.count() == 0:
                 db.session.delete(item)
                 db.session.commit()
+
+    @staticmethod
+    def stat_data(the_type: str, the_date: str) -> dict:
+        """ 按照时间进行订单数据统计；这里示例了sql高级查询的方法 """
+        # TODO: 各种高级查询方法
+        params = [SalesOrder.status != 0]
+        if the_type == 'day':
+            the_date = datetime.strptime(the_date, '%Y-%m-%d')
+            params.append(cast(SalesOrder.create_time, DATE) == the_date.date())
+        elif the_type == 'month':
+            the_date = datetime.strptime(the_date, '%Y-%m')
+            params.append(extract('year', SalesOrder.create_time) == the_date.year)
+            params.append(extract('month', SalesOrder.create_time) == the_date.month)
+        count_order = SalesOrder.query.filter(*params).count()
+        count_pay_false = SalesOrder.query.filter(SalesOrder.pay_status == False, *params).count()
+        sum_price = db.session.query(func.sum(SalesOrder.price)).filter(*params).scalar() or 0
+        sum_total_real = db.session.query(func.sum(SalesOrder.total_real)).filter(
+            SalesOrder.pay_status == True, *params).scalar() or 0
+        sum_pay_type = db.session.query(func.sum(SalesOrder.total_real).label('total'), SalesOrder.pay_type).filter(
+            SalesOrder.pay_status == True, *params).group_by(SalesOrder.pay_type)
+        # 统计各个商品的销售量
+        # sum_goods_count = db.session.query(Goods.id, func.sum(RelationOrderGoods.count).label('number')).join(
+        #     RelationOrderGoods, RelationOrderGoods.goods_id == Goods.id).join(
+        #     SalesOrder, SalesOrder.id == RelationOrderGoods.order_id).filter(
+        #     cast(SalesOrder.create_time, DATE) == the_date.date(), SalesOrder.status != 0).group_by(Goods.id)[0:3]
+
+        result = {'count_order': count_order,  # 订单总量
+                  'count_pay_false': count_pay_false,  # 未付款订单量
+                  'sum_price': sum_price,  # 应收金额，不包括应收押金
+                  'sum_total_real': sum_total_real,  # 实收金额
+                  'sum_pay_type': list(sum_pay_type)}  # 各收款类别实收
+        return result
 
 
 class RelationOrderGoods(db.Model):
