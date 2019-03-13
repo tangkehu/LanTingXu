@@ -17,8 +17,8 @@ class Goods(db.Model):
     size = db.Column(db.String(64))
     quantity = db.Column(db.Integer)
     details = db.Column(db.Text)
-    create_time = db.Column(db.DateTime, default=datetime.utcnow)
-    updata_time = db.Column(db.DateTime, default=datetime.utcnow)
+    create_time = db.Column(db.DateTime, default=datetime.now)
+    updata_time = db.Column(db.DateTime, default=datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     type_id = db.Column(db.Integer, db.ForeignKey('goods_type.id'))
 
@@ -51,7 +51,7 @@ class Goods(db.Model):
         self.brand = kwargs.get('brand')
         self.quantity = kwargs.get('quantity')
         self.details = kwargs.get('details')
-        self.updata_time = datetime.utcnow()
+        self.updata_time = datetime.now()
         self.type = GoodsType.query.get(kwargs.get('type'))
         db.session.add(self)
         db.session.commit()
@@ -121,18 +121,18 @@ class GoodsImg(db.Model):
         try:
             os.remove(os.path.join(current_app.config['GOODS_IMG_PATH'], self.filename))
         except Exception as e:
-            current_app.logger.error(e)
+            current_app.logger.info(e)
         try:
             os.remove(os.path.join(current_app.config['GOODS_IMG_PATH'], self.filename_l))
         except Exception as e:
-            current_app.logger.error(e)
+            current_app.logger.info(e)
         try:
             os.remove(os.path.join(current_app.config['GOODS_IMG_PATH'], self.filename_m))
         except Exception as e:
-            current_app.logger.error(e)
+            current_app.logger.info(e)
         try:
             os.remove(os.path.join(current_app.config['GOODS_IMG_PATH'], self.filename_s))
         except Exception as e:
-            current_app.logger.error(e)
+            current_app.logger.info(e)
         db.session.delete(self)
         db.session.commit()

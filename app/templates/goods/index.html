@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <div class="border-bottom shadow-sm mb-4">
+        <div class="container py-2">
+            <div class="row">
+                <div class="col">
+                    <span class="lead">商品管理</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5 pb-5">
+
+        <div class="row mb-4">
+            <div class="col">
+                <div class="dropdown">
+                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" id="dropdownGoodsType">
+                        {{ current_type }}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownGoodsType">
+                        {% for item in type_list %}
+                            <a href="{{ url_for('.index', type_id=item.id) }}" class="dropdown-item">{{ item.name }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col text-right text-nowrap">
+                <a href="{{ url_for('.update_goods') }}" class="btn btn-outline-info"><i class="fas fa-plus"></i> 新商品</a>
+            </div>
+        </div>
+
+        {% for item in goods_list %}
+            <div class="row mb-3" id="goods_{{ item.id }}">
+                <div class="col-4 col-md-3 col-xl-2 pr-0 py-0">
+                    <div style="height: 0; padding-top: 100%; background-size: cover; background-position: center; background-image: url('{% if item.img.first() %}{{ url_for('static', filename='img_goods/'+item.img.first().filename_s) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}')"></div>
+                </div>
+                <div class="col px-0 mx-3 border-bottom">
+                    {{ item.name }}
+                    <br>
+                    <small>编号：{{ item.id }} &nbsp; 价格：&yen;{{ item.rent }} &nbsp; {% if item.type_id %}类别：{{ item.type.name }}{% endif %}</small>
+                    <br>
+                    <small class="float-right">
+                        <a href="{{ url_for('.update_goods', goods_id=item.id) }}" class="text-info text-decoration-none mr-2">修改 <i class="fas fa-pen-square"></i> </a>
+                        <a href="javascript:void (0);" data-toggle="modal" data-target="#goods-delete-modal" data-goodsid="{{ item.id }}" class="text-danger text-decoration-none">删除 <i class="fas fa-trash"></i> </a>
+                    </small>
+                </div>
+            </div>
+        {% else %}
+            <div class="row"><div class="col">如你所见这里一无所有...</div> </div>
+        {% endfor %}
+
+    </div>
+    
+    <!-- 商品删除的post请求确认的modal -->
+    <div class="modal fade" id="goods-delete-modal" tabindex="-1" role="dialog" aria-labelledby="goods-delete-modal-label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-info" id="goods-delete-modal-label">提示消息</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            请再次确定是否要删除该商品！
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger delete-goods" data-dismiss="modal">删除</button>
+            <button type="button" class="btn btn-info" data-dismiss="modal">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% include "_navbar.html" %}
+
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+    
+    $('#goods-delete-modal').on('show.bs.modal', function (event) {
+        let goods_id = $(event.relatedTarget).data('goodsid');
+        $(this).find('.delete-goods').data('goodsid', goods_id)
+    });
+
+    $(".delete-goods").on('click', function () {
+        let goods_id = $(this).data('goodsid');
+        $.ajax({
+            url: "{{ url_for('.delete_goods') }}",
+            type: "post",
+            data: {"goods_id": goods_id},
+            beforeSend: showLoading(),
+            success: function (data) {
+                $("#goods_"+goods_id.toString()).remove();
+                hideLoading();
+            },
+            error: function () {
+                showMsg('该商品已被删除。');
+                $("#goods_"+goods_id.toString()).remove();
+                hideLoading();
+            }
+        })
+    });
+
+    </script>
+{% endblock %}

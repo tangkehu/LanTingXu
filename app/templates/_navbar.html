@@ -2,9 +2,9 @@
 <!-- 底部导航条 -->
 <div class="row justify-content-center fixed-bottom mb-2">
     <nav class="nav rounded-pill border px-4" style="background: rgba(255, 255, 255, 0.8);">
-        <a class="nav-link text-info" href="{{ url_for('main_bp.index') }}" style="line-height: 16px; font-size: 12px;"><i class="fas fa-store lead"></i><br>商品 </a>
+{#        <a class="nav-link text-info" href="{{ url_for('main_bp.index') }}" style="line-height: 16px; font-size: 12px;"><i class="fas fa-store lead"></i><br>商品 </a>#}
 {#        <a class="nav-link text-info" href="#" style="line-height: 16px; font-size: 12px;"><i class="fas fa-shopping-basket lead"></i><br>箩筐 </a>#}
-        <a class="nav-link text-info" href="{{ url_for('sales.index') }}" style="line-height: 16px; font-size: 12px;"><i class="fas fa-th-list lead"></i><br>订单 </a>
-        <a class="nav-link text-info" href="{{ url_for('user_bp.index') }}" style="line-height: 16px; font-size: 12px;"><i class="fas fa-house-damage lead"></i><br>我的 </a>
+        <a class="nav-link text-info" href="{{ url_for('goods_bp.index') }}" style="line-height: 16px; font-size: 12px;"><i class="fas fa-house-damage lead"></i><br>商品 </a>
+        <a class="nav-link text-info" href="{{ url_for('sales_bp.index') }}" style="line-height: 16px; font-size: 12px;"><i class="fas fa-th-list lead"></i><br>订单 </a>
     </nav>
 </div>

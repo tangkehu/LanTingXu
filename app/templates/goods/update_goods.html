@@ -1,13 +1,19 @@
 {% extends 'base.html' %}
 
 {% block body %}
-    <div class="jumbotron jumbotron-fluid py-2">
-        <div class="container">
+    <div class="border-bottom shadow-sm mb-4">
+        <div class="container py-2">
             <div class="row justify-content-center">
-                <div class="col col-md-8 col-xl-6 text-center">
-                    <a href="{% if goods %}{{ url_for('.index') }}#goods_{{ goods.id }}{% else %}{{ url_for('.index') }}{% endif %}" class="text-dark text-decoration-none float-left"><i class="fas fa-angle-left"></i> </a>
+              <div class="col col-md-8 col-xl-6 p-0 m-0">
+              <div class="row p-0 m-0">
+                <div class="col-4">
+                    <a href="javascript: history.go(-1);" class="text-decoration-none text-secondary"><i class="fas fa-chevron-left"></i> </a>
+                </div>
+                <div class="col-4 text-center">
                     {% if goods %}商品编辑{% else %}商品添加{% endif %}
                 </div>
+              </div>
+              </div>
             </div>
         </div>
     </div>

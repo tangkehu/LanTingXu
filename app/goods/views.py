@@ -1,21 +1,28 @@
 from flask import render_template, redirect, url_for, request, flash, jsonify
 from flask_login import login_required, current_user
 
-from . import user_bp
+from . import goods_bp
 from .forms import GoodsForm, UserForm
-from app.models import GoodsImg, Goods
+from app.models import GoodsImg, Goods, GoodsType
 from app.utils import permission_required
 
 
-@user_bp.route('/')
+@goods_bp.route('/')
+@goods_bp.route('/<int:type_id>')
 @login_required
-def index():
-    goods_list = Goods.query.filter_by(user_id=current_user.id).order_by(Goods.create_time.desc()).all()
-    return render_template('user/profile.html', goods_list=goods_list)
+def index(type_id=None):
+    if type_id:
+        current_type = GoodsType.query.get_or_404(type_id).name
+        goods_list = Goods.query.filter_by(type_id=type_id).order_by(Goods.updata_time.desc()).all()
+    else:
+        current_type = "全部类别"
+        goods_list = Goods.query.order_by(Goods.updata_time.desc()).all()
+    type_list = GoodsType.query.all()
+    return render_template('goods/index.html', goods_list=goods_list, type_list=type_list, current_type=current_type)
 
 
-@user_bp.route('/update_goods', methods=['GET', 'POST'])
-@user_bp.route('/update_goods/<int:goods_id>', methods=['GET', 'POST'])
+@goods_bp.route('/update_goods', methods=['GET', 'POST'])
+@goods_bp.route('/update_goods/<int:goods_id>', methods=['GET', 'POST'])
 @permission_required('sell')
 @login_required
 def update_goods(goods_id=None):
@@ -46,10 +53,10 @@ def update_goods(goods_id=None):
             flash('商品修改成功。')
             return redirect(url_for('.index')+'#goods_{}'.format(goods_id))
 
-    return render_template('user/update_goods.html', form=form, goods=goods)
+    return render_template('goods/update_goods.html', form=form, goods=goods)
 
 
-@user_bp.route('/delete_goods', methods=['POST'])
+@goods_bp.route('/delete_goods', methods=['POST'])
 @permission_required('sell')
 @login_required
 def delete_goods():
@@ -57,8 +64,8 @@ def delete_goods():
     return 'successful'
 
 
-@user_bp.route('/img_goods_show')
-@user_bp.route('/img_goods_show/<int:goods_id>')
+@goods_bp.route('/img_goods_show')
+@goods_bp.route('/img_goods_show/<int:goods_id>')
 @permission_required('sell')
 @login_required
 def img_goods_show(goods_id=None):
@@ -72,8 +79,8 @@ def img_goods_show(goods_id=None):
     return jsonify(records)
 
 
-@user_bp.route('/img_goods_upload', methods=['POST'])
-@user_bp.route('/img_goods_upload/<int:goods_id>', methods=['POST'])
+@goods_bp.route('/img_goods_upload', methods=['POST'])
+@goods_bp.route('/img_goods_upload/<int:goods_id>', methods=['POST'])
 @permission_required('sell')
 @login_required
 def img_goods_upload(goods_id=None):
@@ -91,7 +98,7 @@ def img_goods_upload(goods_id=None):
     return jsonify(result)
 
 
-@user_bp.route('/img_goods_delete', methods=["POST"])
+@goods_bp.route('/img_goods_delete', methods=["POST"])
 @permission_required('sell')
 @login_required
 def img_goods_delete():
@@ -99,7 +106,7 @@ def img_goods_delete():
     return 'successful'
 
 
-@user_bp.route('/update_user', methods=['GET', 'POST'])
+@goods_bp.route('/update_user', methods=['GET', 'POST'])
 @login_required
 def update_user():
     form = UserForm()
@@ -111,4 +118,4 @@ def update_user():
         current_user.edit(**kwargs)
         flash('账户信息修改成功！')
         return redirect(url_for('.index'))
-    return render_template('user/update_user.html', form=form)
+    return render_template('goods/update_user.html', form=form)

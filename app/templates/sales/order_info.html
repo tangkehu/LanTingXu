@@ -33,9 +33,10 @@
     {% for item in current_order.goods.all() %}
     <div class="row mb-3">
         <div class="col-4 col-md-3 col-xl-2">
-            <div style="height: 0; padding-top: 100%; background-size: cover; background-position: center; background-image: url('{% if item.goods.img.first() %}{{ url_for('static', filename='img_goods/'+item.goods.img.first().filename_s) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}')"></div>
+            <div style="height: 0; padding-top: 100%; background-size: cover; background-position: center; background-image: url('{% if item.goods and item.goods.img.first() %}{{ url_for('static', filename='img_goods/'+item.goods.img.first().filename_s) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}')"></div>
         </div>
         <div class="col px-0 mr-3 border-bottom">
+          {% if item.goods %}
             {{ item.goods.name }}
             <br>
             <small>
@@ -45,6 +46,9 @@
                 {% if item.goods.type_id %}类别：{{ item.goods.type.name }} &nbsp;{% endif %}
                 数量：{{ item.count }} &nbsp;
             </small>
+          {% else %}
+             该商品已被删除...<br>数量：{{ item.count }}
+          {% endif %}
         </div>
     </div>
     {% else %}

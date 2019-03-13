@@ -50,8 +50,8 @@ def register_blueprints(app):
     from .auth import auth_bp
     app.register_blueprint(auth_bp)
 
-    from .user import user_bp
-    app.register_blueprint(user_bp, url_prefix='/user')
+    from .goods import goods_bp
+    app.register_blueprint(goods_bp, url_prefix='/goods')
 
     from .manage import manage_bp
     app.register_blueprint(manage_bp, url_prefix='/manage')
