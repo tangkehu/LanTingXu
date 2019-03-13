@@ -4,6 +4,7 @@ from flask_login import current_user
 
 from app.models import User, Role, Permission, GoodsType
 from . import manage_bp
+from .forms import UserForm
 
 
 @manage_bp.before_request
@@ -24,6 +25,21 @@ def user():
 
     users = User.query.order_by(User.id.desc()).all()
     return render_template('manage/user.html', users=users)
+
+
+@manage_bp.route('/user_update/<int:user_id>', methods=['GET', 'POST'])
+def user_update(user_id):
+    the_user = User.query.get_or_404(user_id)
+    form = UserForm(the_user)
+    if request.method == 'GET':
+        form.set_data()
+    if form.validate_on_submit():
+        kwargs = {'username': form.username.data, 'email': form.email.data, 'phone_number': form.phone_number.data,
+                  'resume': form.resume.data}
+        the_user.edit(**kwargs)
+        flash('账户信息修改成功！')
+        return redirect(url_for('.user'))
+    return render_template('manage/update_user.html', form=form)
 
 
 @manage_bp.route('/user_delete', methods=['POST'])

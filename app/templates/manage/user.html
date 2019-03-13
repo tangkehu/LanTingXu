@@ -11,7 +11,7 @@
         {% for item in users %}
         <div class="row mb-4" id="user-{{ item.id }}">
             <div class="col border-bottom pb-2">
-                <span class="float-left">{{ item.username }}</span>
+                <span class="float-left"><a href="{{ url_for('.user_update', user_id=item.id) }}" class="text-dark text-decoration-none">{{ item.username }}</a></span>
                 <span class="float-right">
                     <a href="javascript: void(0);" class="badge badge-secondary"
                        data-toggle="modal" data-target="#passwordModal"

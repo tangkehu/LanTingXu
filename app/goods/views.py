@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for, request, flash, jsonify
 from flask_login import login_required, current_user
 
 from . import goods_bp
-from .forms import GoodsForm, UserForm
+from .forms import GoodsForm
 from app.models import GoodsImg, Goods, GoodsType
 from app.utils import permission_required
 
@@ -105,17 +105,3 @@ def img_goods_delete():
     GoodsImg.query.get_or_404(int(request.form.get('img_id'))).delete()
     return 'successful'
 
-
-@goods_bp.route('/update_user', methods=['GET', 'POST'])
-@login_required
-def update_user():
-    form = UserForm()
-    if request.method == 'GET':
-        form.set_data()
-    if form.validate_on_submit():
-        kwargs = {'username': form.username.data, 'email': form.email.data, 'password': form.password.data,
-                  'phone_number': form.phone_number.data, 'resume': form.resume.data}
-        current_user.edit(**kwargs)
-        flash('账户信息修改成功！')
-        return redirect(url_for('.index'))
-    return render_template('goods/update_user.html', form=form)
