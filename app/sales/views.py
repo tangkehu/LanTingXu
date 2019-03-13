@@ -11,9 +11,6 @@ from ..models import Goods, SalesOrder
 @sales_bp.route('/<the_type>')
 @sales_bp.route('/<the_type>/<the_date>')
 def index(the_type='day', the_date=None):
-    # 在每次GET请求时清理无效订单
-    SalesOrder.clear_invalid()
-
     # 这里有sqlalchemy关于日期查询的典型示例
     if the_type == 'day':
         the_date = datetime.strptime(the_date, '%Y-%m-%d') if the_date else datetime.now()
@@ -42,6 +39,8 @@ def index(the_type='day', the_date=None):
 
 @sales_bp.route('/order_stat_api/<the_type>/<the_date>')
 def order_stat_api(the_type, the_date):
+    # 在每次GET请求时清理无效订单
+    SalesOrder.clear_invalid()
     return jsonify(SalesOrder.stat_data(the_type, the_date))
 
 
