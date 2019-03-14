@@ -34,10 +34,12 @@
         </div>
 
         {% for item in goods_list %}
+            {% set data_src = url_for('static', filename='img_goods/'+item.img.first().filename_s) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
+
             <div class="row mb-3" id="goods_{{ item.id }}">
-                <div class="col-4 col-md-3 col-xl-2 pr-0 py-0">
+                <div class="col-4 col-md-3 col-xl-2 pr-0 py-0 img-box-me">
                     <a {% if current_user.can('system_manage') or current_user.id == item.user_id %}href="{{ url_for('.update_goods', goods_id=item.id) }}"{% endif %}>
-                        <div style="height: 0; padding-bottom: 100%; background-size: cover; background-position: center; background-image: url('{% if item.img.first() %}{{ url_for('static', filename='img_goods/'+item.img.first().filename_s) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}')" class="rounded img_delay">
+                        <div class="rounded img_response_auto" data-src="{{ data_src }}">
                             <span class="badge badge-pill badge-secondary">{{ item.id }}</span>
                         </div>
                     </a>
@@ -88,29 +90,35 @@
 
 {% block script %}
     <script type="text/javascript">
-    
-    $('#goods-delete-modal').on('show.bs.modal', function (event) {
-        let goods_id = $(event.relatedTarget).data('goodsid');
-        $(this).find('.delete-goods').data('goodsid', goods_id)
-    });
 
-    $(".delete-goods").on('click', function () {
-        let goods_id = $(this).data('goodsid');
-        $.ajax({
-            url: "{{ url_for('.delete_goods') }}",
-            type: "post",
-            data: {"goods_id": goods_id},
-            beforeSend: showLoading(),
-            success: function (data) {
-                $("#goods_"+goods_id.toString()).remove();
-                hideLoading();
-            },
-            error: function () {
-                showMsg('该商品已被删除。');
-                $("#goods_"+goods_id.toString()).remove();
-                hideLoading();
-            }
-        })
+    $(function () {
+    
+        $('#goods-delete-modal').on('show.bs.modal', function (event) {
+            let goods_id = $(event.relatedTarget).data('goodsid');
+            $(this).find('.delete-goods').data('goodsid', goods_id)
+        });
+
+        $(".delete-goods").on('click', function () {
+            let goods_id = $(this).data('goodsid');
+            $.ajax({
+                url: "{{ url_for('.delete_goods') }}",
+                type: "post",
+                data: {"goods_id": goods_id},
+                beforeSend: showLoading(),
+                success: function (data) {
+                    $("#goods_"+goods_id.toString()).remove();
+                    hideLoading();
+                },
+                error: function () {
+                    showMsg('该商品已被删除。');
+                    $("#goods_"+goods_id.toString()).remove();
+                    hideLoading();
+                }
+            })
+        });
+
+        $(window).scroll($('.img-box-me'), lazyLoadingMe).scroll();
+
     });
 
     </script>
