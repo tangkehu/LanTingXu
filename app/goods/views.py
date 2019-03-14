@@ -105,3 +105,9 @@ def img_goods_delete():
     GoodsImg.query.get_or_404(int(request.form.get('img_id'))).delete()
     return 'successful'
 
+
+@goods_bp.route('/test', methods=['GET', 'POST'])
+def test():
+    if request.method == 'POST':
+        print(request.form.get('file'))
+    return 'successful'

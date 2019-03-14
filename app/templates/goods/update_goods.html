@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% block css %}<link href="{{ url_for('static', filename='dropzone/dropzone.css') }}" rel="stylesheet" type="text/css">{% endblock %}
+
 {% block body %}
     <div class="border-bottom shadow-sm mb-4">
         <div class="container py-2">
@@ -19,6 +21,18 @@
     </div>
 
     <div class="container mb-5">
+
+        <!-- dropzone测试 -->
+        <div class="row justify-content-center">
+        <div class="col col-md-8 col-xl-6">
+            <div class="row">
+                <div class="col-3">
+                    <div id="drop-zone-img" class="img_response_auto"></div>
+                </div>
+            </div>
+        </div>
+        </div>
+
         <div class="row justify-content-center">
         <div class="col col-md-8 col-xl-6">
 
@@ -91,6 +105,9 @@
 {% endblock %}
 
 {% block script %}
+{#    <script src="https://cdn.bootcss.com/dropzone/5.5.1/dropzone.js"></script>#}
+    <script src="{{ url_for('static', filename='dropzone/dropzone.js') }}"></script>
+
     <script type="text/javascript">
 
     function imgAppend(data) {
@@ -161,5 +178,12 @@
         });
 
     });
+
+    // Dropzone.autoDiscover = false;
+    $('#drop-zone-img').dropzone({
+        url: '{{ url_for('.test') }}',
+        previewsContainer: null,
+        createImageThumbnails: false
+    })
     </script>
 {% endblock %}
