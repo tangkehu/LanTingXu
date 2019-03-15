@@ -84,18 +84,12 @@ def img_goods_show(goods_id=None):
 @permission_required('goods_manage')
 @login_required
 def img_goods_upload(goods_id=None):
-    fail_msg = ''
-    success_msg = ''
-    img = []
-    for item in request.files.getlist('file'):  # 处理多文件上传的典型案例
-        result = GoodsImg().add(item, goods_id=goods_id)
-        if result['status'] is True:
-            success_msg = result['msg']
-            img.append((result['img_obj'].id, result['img_obj'].filename_s))
-        else:
-            fail_msg = result['msg']
-    result = {'msg': fail_msg if fail_msg else success_msg, 'img': img}
-    return jsonify(result)
+    # for item in request.files.getlist('file'):  # 处理多文件上传的典型案例，纪念一下
+    result = GoodsImg().add(request.files.get('file'), goods_id=goods_id)
+    if result['status'] is True:
+        return jsonify(result['img_obj'].id)
+    else:
+        return 400
 
 
 @goods_bp.route('/img_goods_delete', methods=["POST"])
@@ -105,9 +99,3 @@ def img_goods_delete():
     GoodsImg.query.get_or_404(int(request.form.get('img_id'))).delete()
     return 'successful'
 
-
-@goods_bp.route('/test', methods=['GET', 'POST'])
-def test():
-    if request.method == 'POST':
-        print(request.form.get('file'))
-    return 'successful'
