@@ -89,7 +89,7 @@ def img_goods_upload(goods_id=None):
     if result['status'] is True:
         return jsonify(result['img_obj'].id)
     else:
-        return 400
+        return 'error', 400
 
 
 @goods_bp.route('/img_goods_delete', methods=["POST"])

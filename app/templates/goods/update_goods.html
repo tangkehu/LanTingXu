@@ -128,7 +128,6 @@
                 });
                 this.on('error', function (file) {
                     this.removeFile(file);
-                    flashMsg('出意外了，请尝试其它图片...')
                 });
                 this.on('removedfile', function (file) {
                     let iid = $(file.previewElement).find('img').data('iid');
