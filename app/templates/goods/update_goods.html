@@ -1,35 +1,26 @@
 {% extends 'base.html' %}
 
-{% block css %}<link href="{{ url_for('static', filename='dropzone/dropzone.css') }}" rel="stylesheet" type="text/css">{% endblock %}
-
 {% block body %}
     <div class="border-bottom shadow-sm mb-4">
         <div class="container py-2">
-            <div class="row justify-content-center">
-              <div class="col col-md-8 col-xl-6 p-0 m-0">
-              <div class="row p-0 m-0">
-                <div class="col-4">
-                    <a href="javascript: history.go(-1);" class="text-decoration-none text-secondary"><i class="fas fa-chevron-left"></i> </a>
-                </div>
-                <div class="col-4 text-center">
-                    {% if goods %}商品编辑{% else %}商品添加{% endif %}
-                </div>
-              </div>
-              </div>
+          <div class="row">
+            <div class="col-4">
+                <a href="javascript: history.go(-1);" class="text-decoration-none text-secondary"><i class="fas fa-chevron-left"></i> </a>
             </div>
+            <div class="col-4 text-center">
+                {% if goods %}商品编辑{% else %}商品添加{% endif %}
+            </div>
+          </div>
         </div>
     </div>
 
-    <div class="container mb-5">
+    <div class="container mb-5 pb-5">
 
         <!-- dropzone 图片文件上传 -->
-        <div class="row justify-content-center">
-        <div class="col col-md-8 col-xl-6">
-
         <div class="row pr-3" id="drop-zone-img">
             <div id="preview-template" style="display: none;">
-                <div class="col-3 mb-3 pr-0">
-                    <div class="card">
+                <div class="col-3 col-md-2 col-xl-1 mb-3 pr-0">
+                    <div class="card border-0">
                       <img class="card-img" data-dz-thumbnail>
                       <div class="card-img-overlay p-0 text-right">
                           <i class="fas fa-times-circle text-danger" data-dz-remove></i>
@@ -41,78 +32,87 @@
                 </div>
             </div>
             
-            <div class="col-3 mb-3 pr-0 order-last">
+            <div class="col-3 col-md-2 col-xl-1 mb-3 pr-0 order-last">
                 <div id="upload-button" class="img_response_auto rounded text-center">
                     <i class="fas fa-camera h2" style="margin-top: 30%;"></i>
                 </div>
             </div>
         </div>
-
-        </div>
-        </div>
         <!-- dropzone end -->
 
-        <div class="row justify-content-center">
-        <div class="col col-md-8 col-xl-6">
+        <form method="post" class="mb-2">
+            {{ form.hidden_tag() }}
+            <div class="form-group row">
+                {{ form.name.label(class="col-3 col-form-label") }}
+                <div class="col">
+                {{ form.name(class="form-control") }}
+                {% for item in form.name.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
+                </div>
+            </div>
+            <div class="form-group row">
+                {{ form.type.label(class="col-3 col-form-label") }}
+                <div class="col">
+                {{ form.type(class="form-control") }}
+                {% for item in form.type.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
+                </div>
+            </div>
+            <div class="form-group row">
+                {{ form.rent.label(class="col-3 col-form-label") }}
+                <div class="col">
+                {{ form.rent(class="form-control", type="number") }}
+                {% for item in form.rent.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
+                </div>
+            </div>
+            <div class="form-group row">
+                {{ form.cash_pledge.label(class="col-3 col-form-label") }}
+                <div class="col">
+                {{ form.cash_pledge(class="form-control", type="number") }}
+                {% for item in form.cash_pledge.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
+                </div>
+            </div>
+            <div class="form-group row">
+                {{ form.size.label(class="col-3 col-form-label") }}
+                <div class="col">
+                {{ form.size(class="form-control") }}
+                {% for item in form.size.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
+                </div>
+            </div>
+            <div class="form-group row d-none">
+                {{ form.brand.label(class="col-3 col-form-label") }}
+                <div class="col">
+                {{ form.brand(class="form-control") }}
+                {% for item in form.brand.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
+                </div>
+            </div>
+            <div class="form-group row">
+                {{ form.quantity.label(class="col-3 col-form-label") }}
+                <div class="col">
+                {{ form.quantity(class="form-control", type="number") }}
+                {% for item in form.quantity.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
+                </div>
+            </div>
+            <div class="form-group row">
+                {{ form.details.label(class="col-3 col-form-label") }}
+                <div class="col">
+                {{ form.details(class="form-control", rows="10") }}
+                {% for item in form.details.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
+                </div>
+            </div>
+            {% if goods %}
+                <button class="btn btn-info btn-block rounded-pill" type="submit">提交修改</button>
+                <button class="btn btn-secondary btn-block rounded-pill" type="reset">取消修改</button>
+            {% else %}
+                <button class="btn btn-info btn-block rounded-pill" type="submit">添加</button>
+            {% endif %}
+        </form>
 
-            <form method="post" class="mb-2">
-                {{ form.hidden_tag() }}
-                <div class="form-group">
-                    {{ form.name.label() }}
-                    {{ form.name(class="form-control") }}
-                    {% for item in form.name.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
-                </div>
-                <div class="form-group">
-                    {{ form.type.label() }}
-                    {{ form.type(class="form-control") }}
-                    {% for item in form.type.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
-                </div>
-                <div class="form-group">
-                    {{ form.rent.label() }}
-                    {{ form.rent(class="form-control", type="number") }}
-                    {% for item in form.rent.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
-                </div>
-                <div class="form-group">
-                    {{ form.cash_pledge.label() }}
-                    {{ form.cash_pledge(class="form-control", type="number") }}
-                    {% for item in form.cash_pledge.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
-                </div>
-                <div class="form-group">
-                    {{ form.size.label() }}
-                    {{ form.size(class="form-control") }}
-                    {% for item in form.size.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
-                </div>
-                <div class="form-group d-none">
-                    {{ form.brand.label() }}
-                    {{ form.brand(class="form-control") }}
-                    {% for item in form.brand.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
-                </div>
-                <div class="form-group">
-                    {{ form.quantity.label }}
-                    {{ form.quantity(class="form-control", type="number") }}
-                    {% for item in form.quantity.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
-                </div>
-                <div class="form-group">
-                    {{ form.details.label() }}
-                    {{ form.details(class="form-control", rows="10") }}
-                    {% for item in form.details.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
-                </div>
-                {% if goods %}
-                    <button class="btn btn-info btn-block" type="submit">提交修改</button>
-                    <button class="btn btn-secondary btn-block" type="reset">取消修改</button>
-                {% else %}
-                    <button class="btn btn-info btn-block" type="submit">添加</button>
-                {% endif %}
-            </form>
-        </div>
-        </div>
     </div>
+    <!-- End container -->
 
 {% endblock %}
 
 {% block script %}
     <script src="https://cdn.bootcss.com/dropzone/5.5.1/dropzone.js"></script>
-{#    <script src="{{ url_for('static', filename='dropzone/dropzone.js') }}"></script>#}
 
     <script type="text/javascript">
     $(document).ready(function () {
