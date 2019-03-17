@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% block css %}<link href="https://cdn.bootcss.com/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css" rel="stylesheet">{% endblock %}
+
+{% block body %}
+<main role="main">
+
+    <div class="border-bottom shadow-sm mb-2">
+    <div class="container py-2">
+        <div class="row">
+            <div class="col">
+                <span class="lead">订单管理</span>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="container mb-5 pb-5">
+
+      <div class="row mb-2">
+        <div class="col-5 col-md-3 col-xl-2 pr-1">
+            <div class="input-group date">
+              <input type="text" class="form-control border-info px-1" value="{{ current_date }}">
+              <div class="input-group-append">
+                <button class="btn btn-info" type="button"><i class="fas fa-th"></i> </button>
+              </div>
+            </div>
+        </div>
+        <div class="col px-0">
+            <a href="{{ url_for('.index', the_type=toggle_type) }}" class="btn btn-info text-white px-1">切换为{% if toggle_type == 'day' %}天{% else %}月{% endif %}</a>
+        </div>
+        {% if current_user.can('order_manage') %}
+        <div class="col text-right text-nowrap">
+            <a href="{{ url_for('.order_add_goods') }}" class="btn btn-outline-info"><i class="fas fa-plus"></i> 新订单</a>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover text-nowrap">
+          <thead>
+            <tr>
+              <th scope="col">编号</th>
+              <th scope="col">操作</th>
+              <th scope="col">实收</th>
+              <th scope="col">付款方式</th>
+              <th scope="col">付款状态</th>
+              <th scope="col">订单状态</th>
+              <th scope="col">备注</th>
+              <th scope="col">创建时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in order_list %}
+            <tr id="order_{{ item.id }}">
+              <th scope="row">{{ item.id }}</th>
+              <td>
+                  <a href="{{ url_for('.order_info', order_id=item.id) }}" class="badge badge-info badge-pill">详情</a>
+                  {% if current_user.can('system_manage') or current_user.id == item.user_id %}
+                  <a href="{{ url_for('.order_add_goods', order_id=item.id) }}" class="badge badge-secondary badge-pill">修改</a>
+                  <a href="javascript: void(0);" class="badge badge-danger badge-pill" data-toggle="modal" data-target="#deleteOrderModal" data-oid="{{ item.id }}">删除</a>
+                  {% endif %}
+              </td>
+              <td>{{ item.total_real }}</td>
+              <td>{{ item.pay_type }}</td>
+              <td>{% if item.pay_status %}已付款{% else %}<span class="text-warning">未付款</span>{% endif %}</td>
+              <td>{% if item.status == 0 %}<span class="text-secondary">已删除</span>{% elif item.status == 1 %}<span class="text-warning">进行中</span>{% else %}已完成{% endif %}</td>
+              <td><span class="d-inline-block text-truncate" style="max-width: 10rem;">{{ item.remarks }}</span></td>
+              <td>{{ item.create_time }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="8">没有订单...</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    {% include "_navbar.html" %}
+</main>
+
+    <!-- 订单删除确认modal -->
+    <div class="modal fade" id="deleteOrderModal" tabindex="-1" role="dialog" aria-labelledby="deleteOrderModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-info" id="deleteOrderModalLabel">订单删除确认</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            请再次确认是否要删除该订单！
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-danger" id="order-delete-submit" data-dismiss="modal">删除</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script src="https://cdn.bootcss.com/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-datepicker/1.8.0/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+
+    <script type="text/javascript">
+
+    $(function () {
+        $('.input-group.date').datepicker({
+            format: "{{ current_fmt }}",
+            language: "zh-CN",
+            minViewMode: {{ current_min_view }},
+            autoclose: true,
+            todayHighlight: true
+        });
+
+        $('.input-group.date input').change(function () {
+            showLoading();
+            window.location.href = "{{ url_for('.index', the_type=current_type, the_date='') }}"+$(this).val();
+        });
+
+        $('#deleteOrderModal').on('show.bs.modal', function (event) {
+            $('#order-delete-submit').data('oid', $(event.relatedTarget).data('oid'))
+        });
+
+        $('#order-delete-submit').click(function () {
+            let oid = $(this).data('oid');
+            $.ajax({
+                url: '{{ url_for('.order_delete') }}',
+                type: 'post',
+                data: {order_id: oid},
+                beforeSend: showLoading,
+                success: function () {
+                    $("#order_"+oid.toString()).remove();
+                    hideLoading();
+                    showMsg('删除成功');
+                },
+                error: function (xhr) {
+                    hideLoading();
+                    showMsg(xhr.statusText);
+                }
+            })
+        });
+
+        $.ajax({
+            url: '{{ url_for('.order_stat_api', the_type=current_type, the_date=current_date) }}',
+            success: function (data) {
+                let droprigetContent = '';
+                for (let item of data.sum_pay_type){
+                    droprigetContent += item[1]+'：'+item[0].toString()+'<br>'
+                }
+                $('.table-responsive').before(
+                    '<div class="card-deck my-4">\n' +
+                    '          <div class="card text-center border-secondary text-secondary">\n' +
+                    '              <div class="card-body p-0">\n' +
+                    '                  <p class="card-text m-0">订单总量</p>\n' +
+                    '                  <h5 class="card-title m-0">'+data.count_order+'</h5>\n' +
+                    '              </div>\n' +
+                    '          </div>\n' +
+                    '          <div class="card text-center border-warning text-warning">\n' +
+                    '              <div class="card-body p-0">\n' +
+                    '                  <p class="card-text m-0">未付款订单量</p>\n' +
+                    '                  <h5 class="card-title m-0">'+data.count_pay_false+'</h5>\n' +
+                    '              </div>\n' +
+                    '          </div>\n' +
+                    '          <div class="card text-center border-success text-success">\n' +
+                    '              <div class="card-body p-0">\n' +
+                    '                  <p class="card-text m-0">应收金额</p>\n' +
+                    '                  <h5 class="card-title m-0">'+data.sum_price+'</h5>\n' +
+                    '              </div>\n' +
+                    '          </div>\n' +
+                    '          <div class="card text-center border-danger text-danger">\n' +
+                    '              <div class="card-body p-0">\n' +
+                    '                  <div class="dropdown">\n' +
+                    '                    <a href="" class="dropdown-toggle text-decoration-none text-danger" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">\n' +
+                    '                      实收金额\n' +
+                    '                    </a>\n' +
+                    '                    <div class="dropdown-menu p-2 text-muted" aria-labelledby="dropdownMenu2">\n' +
+                    '                      <p>'+droprigetContent+'</p>\n' +
+                    '                    </div>\n' +
+                    '                  </div>\n' +
+                    '                  <h5 class="card-title m-0">'+data.sum_total_real+'</h5>\n' +
+                    '              </div>\n' +
+                    '          </div>\n' +
+                    '      </div>'
+                )
+            }
+        });
+    });
+    </script>
+
+{% endblock %}

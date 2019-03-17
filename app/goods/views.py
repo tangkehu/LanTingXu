@@ -1,22 +1,29 @@
 from flask import render_template, redirect, url_for, request, flash, jsonify
 from flask_login import login_required, current_user
 
-from . import user_bp
-from .forms import GoodsForm, UserForm
-from app.models import GoodsImg, Goods
+from . import goods_bp
+from .forms import GoodsForm
+from app.models import GoodsImg, Goods, GoodsType
 from app.utils import permission_required
 
 
-@user_bp.route('/')
+@goods_bp.route('/')
+@goods_bp.route('/<int:type_id>')
 @login_required
-def index():
-    goods_list = Goods.query.filter_by(user_id=current_user.id).order_by(Goods.create_time.desc()).all()
-    return render_template('user/profile.html', goods_list=goods_list)
+def index(type_id=None):
+    if type_id:
+        current_type = GoodsType.query.get_or_404(type_id).name
+        goods_list = Goods.query.filter_by(type_id=type_id).order_by(Goods.updata_time.desc()).all()
+    else:
+        current_type = "全部类别"
+        goods_list = Goods.query.order_by(Goods.updata_time.desc()).all()
+    type_list = GoodsType.query.all()
+    return render_template('goods/index.html', goods_list=goods_list, type_list=type_list, current_type=current_type)
 
 
-@user_bp.route('/update_goods', methods=['GET', 'POST'])
-@user_bp.route('/update_goods/<int:goods_id>', methods=['GET', 'POST'])
-@permission_required('sell')
+@goods_bp.route('/update_goods', methods=['GET', 'POST'])
+@goods_bp.route('/update_goods/<int:goods_id>', methods=['GET', 'POST'])
+@permission_required('goods_manage')
 @login_required
 def update_goods(goods_id=None):
     """ 处理商品的添加和修改 """
@@ -46,20 +53,20 @@ def update_goods(goods_id=None):
             flash('商品修改成功。')
             return redirect(url_for('.index')+'#goods_{}'.format(goods_id))
 
-    return render_template('user/update_goods.html', form=form, goods=goods)
+    return render_template('goods/update_goods.html', form=form, goods=goods)
 
 
-@user_bp.route('/delete_goods', methods=['POST'])
-@permission_required('sell')
+@goods_bp.route('/delete_goods', methods=['POST'])
+@permission_required('goods_manage')
 @login_required
 def delete_goods():
     Goods.query.get_or_404(int(request.form.get('goods_id'))).delete()
     return 'successful'
 
 
-@user_bp.route('/img_goods_show')
-@user_bp.route('/img_goods_show/<int:goods_id>')
-@permission_required('sell')
+@goods_bp.route('/img_goods_show')
+@goods_bp.route('/img_goods_show/<int:goods_id>')
+@permission_required('goods_manage')
 @login_required
 def img_goods_show(goods_id=None):
     records = []
@@ -72,43 +79,23 @@ def img_goods_show(goods_id=None):
     return jsonify(records)
 
 
-@user_bp.route('/img_goods_upload', methods=['POST'])
-@user_bp.route('/img_goods_upload/<int:goods_id>', methods=['POST'])
-@permission_required('sell')
+@goods_bp.route('/img_goods_upload', methods=['POST'])
+@goods_bp.route('/img_goods_upload/<int:goods_id>', methods=['POST'])
+@permission_required('goods_manage')
 @login_required
 def img_goods_upload(goods_id=None):
-    fail_msg = ''
-    success_msg = ''
-    img = []
-    for item in request.files.getlist('file'):  # 处理多文件上传的典型案例
-        result = GoodsImg().add(item, goods_id=goods_id)
-        if result['status'] is True:
-            success_msg = result['msg']
-            img.append((result['img_obj'].id, result['img_obj'].filename_s))
-        else:
-            fail_msg = result['msg']
-    result = {'msg': fail_msg if fail_msg else success_msg, 'img': img}
-    return jsonify(result)
+    # for item in request.files.getlist('file'):  # 处理多文件上传的典型案例，纪念一下
+    result = GoodsImg().add(request.files.get('file'), goods_id=goods_id)
+    if result['status'] is True:
+        return jsonify(result['img_obj'].id)
+    else:
+        return 'error', 400
 
 
-@user_bp.route('/img_goods_delete', methods=["POST"])
-@permission_required('sell')
+@goods_bp.route('/img_goods_delete', methods=["POST"])
+@permission_required('goods_manage')
 @login_required
 def img_goods_delete():
     GoodsImg.query.get_or_404(int(request.form.get('img_id'))).delete()
     return 'successful'
 
-
-@user_bp.route('/update_user', methods=['GET', 'POST'])
-@login_required
-def update_user():
-    form = UserForm()
-    if request.method == 'GET':
-        form.set_data()
-    if form.validate_on_submit():
-        kwargs = {'username': form.username.data, 'email': form.email.data, 'password': form.password.data,
-                  'phone_number': form.phone_number.data, 'resume': form.resume.data}
-        current_user.edit(**kwargs)
-        flash('账户信息修改成功！')
-        return redirect(url_for('.index'))
-    return render_template('user/update_user.html', form=form)

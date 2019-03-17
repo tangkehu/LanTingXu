@@ -48,6 +48,7 @@ class User(UserMixin, db.Model):
 
     goods = db.relationship('Goods', backref='user', lazy='dynamic')
     goods_img = db.relationship('GoodsImg', backref='user', lazy='dynamic')
+    orders = db.relationship('SalesOrder', backref='user', lazy='dynamic')
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)

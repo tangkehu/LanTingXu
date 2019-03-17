@@ -29,10 +29,11 @@ def create_app(config_name=os.getenv('FLASK_CONFIG', 'production')):
     @app.cli.command()
     def deploy():
         """ 部署，部署前请创建数据库迁移脚本flask db migrate """
-
+        # 本次有数据和权限更新，弃用sell权限
+        from .models import Permission
         upgrade()
 
-        # Permission.update_permissions()  # 在有新权限的时候开启
+        Permission.update_permissions()  # 在有新权限的时候开启
 
         click.echo(u'本次部署初始化成功')
 
@@ -50,11 +51,14 @@ def register_blueprints(app):
     from .auth import auth_bp
     app.register_blueprint(auth_bp)
 
-    from .user import user_bp
-    app.register_blueprint(user_bp, url_prefix='/user')
+    from .goods import goods_bp
+    app.register_blueprint(goods_bp, url_prefix='/goods')
 
     from .manage import manage_bp
     app.register_blueprint(manage_bp, url_prefix='/manage')
+
+    from .sales import sales_bp
+    app.register_blueprint(sales_bp, url_prefix='/sales')
 
 
 def register_errors(app):

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <main role="main">
+
+    <div class="border-bottom shadow-sm mb-2">
+        <div class="container py-2">
+            <div class="row">
+                <div class="col-4">
+                    <a href="javascript: history.go(-1);" class="text-decoration-none text-secondary"><i class="fas fa-chevron-left"></i> </a>
+                </div>
+                <div class="col-4 text-center">
+                    确认订单
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+    <div class="row">
+        <div class="col">
+            <form method="post">
+                {{ form.hidden_tag() }}
+                <div class="form-group row">
+                    {{ form.order_number.label(class="col-form-label col-4") }}
+                    <div class="col">
+                        {{ form.order_number(class="form-control", readonly='true') }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    {{ form.price.label(class="col-form-label col-4") }}
+                    <div class="col">
+                        {{ form.price(class="form-control", readonly='true') }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    {{ form.pledge.label(class="col-4 col-form-label") }}
+                    <div class="col">
+                        {{ form.pledge(class="form-control", readonly='true') }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    {{ form.order_total.label(class="col-4 col-form-label") }}
+                    <div class="col">
+                        {{ form.order_total(class="form-control", readonly='true') }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    {{ form.pay_type.label(class="col-4 col-form-label") }}
+                    <div class="col">
+                        {{ form.pay_type(class="custom-select") }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    {{ form.pay_status.label(class="col-4 col-form-label py-0") }}
+                    {{ form.pay_status(class="col pay_status_css") }}
+                </div>
+                <div class="form-group row">
+                    {{ form.remarks.label(class="col-4 col-form-label") }}
+                    <div class="col">
+                        {{ form.remarks(class="form-control", rows=4) }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    {{ form.total_real.label(class="col-4 col-form-label") }}
+                    <div class="col">
+                        {{ form.total_real(class="form-control") }}
+                        {% for error in form.total_real.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
+                    </div>
+                </div>
+{#                <a href="javascript: history.go(-1);" class="btn btn-secondary btn-block rounded-pill">查看该订单商品</a>#}
+                <button type="submit" class="btn btn-info btn-block rounded-pill">确定</button>
+            </form>
+        </div>
+    </div>
+    </div>
+
+    </main>
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+
+    $(function () {
+        $('ul.pay_status_css li').attr('class', "custom-control custom-radio");
+        $('ul.pay_status_css li input').attr('class', "custom-control-input");
+        $('ul.pay_status_css li label').attr('class', "custom-control-label");
+    })
+
+    </script>
+{% endblock %}

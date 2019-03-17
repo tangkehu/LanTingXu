@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <main role="main" class="mb-5">
+
+    <div class="border-bottom shadow-sm mb-2">
+        <div class="container py-2">
+            <div class="row">
+                <div class="col-4">
+                    <a href="javascript: history.go(-1);" class="text-decoration-none text-secondary"><i class="fas fa-chevron-left"></i> </a>
+                </div>
+                <div class="col-4 text-center">
+                    订单详情
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+
+    <div class="row mb-5">
+        <div class="col-6 text-right">订单编号</div><div class="col-6">{{ current_order.id }}</div>
+        <div class="col-6 text-right">商品总价</div><div class="col-6">{{ current_order.price }}</div>
+        <div class="col-6 text-right">商品押金</div><div class="col-6">{{ current_order.pledge }}</div>
+        <div class="col-6 text-right">订单合计</div><div class="col-6">{{ current_order.price + current_order.pledge }}</div>
+        <div class="col-6 text-right">付款方式</div><div class="col-6">{{ current_order.pay_type }}</div>
+        <div class="col-6 text-right">付款状态</div><div class="col-6">{% if current_order.pay_status %}已付款{% else %}未付款{% endif %}</div>
+        <div class="col-6 text-right">备注</div><div class="col-6">{{ current_order.remarks }}</div>
+        <div class="col-12"><hr></div>
+        <div class="col-6 text-right">实付款</div><div class="col-6">{{ current_order.total_real }}</div>
+    </div>
+
+    {% for item in current_order.goods.all() %}
+    <div class="row mb-3">
+        <div class="col-4 col-md-3 col-xl-2">
+            <div style="height: 0; padding-top: 100%; background-size: cover; background-position: center; background-image: url('{% if item.goods and item.goods.img.first() %}{{ url_for('static', filename='img_goods/'+item.goods.img.first().filename_s) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}')"></div>
+        </div>
+        <div class="col px-0 mr-3 border-bottom">
+          {% if item.goods %}
+            {{ item.goods.name }}
+            <br>
+            <small>
+                编号：{{ item.goods_id }} &nbsp;
+                价格：&yen;{{ item.goods.price }} &nbsp;
+                {% if item.goods.cash_pledge %}押金：{{ item.goods.cash_pledge }} &nbsp;{% endif %}
+                {% if item.goods.type_id %}类别：{{ item.goods.type.name }} &nbsp;{% endif %}
+                数量：{{ item.count }} &nbsp;
+            </small>
+          {% else %}
+             该商品已被删除...<br>数量：{{ item.count }}
+          {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <div class="row mb-3">
+        <div class="col">
+            该订单无商品...
+        </div>
+    </div>
+    {% endfor %}
+
+    </div>
+
+    </main>
+{% endblock %}

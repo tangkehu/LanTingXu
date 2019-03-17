@@ -14,6 +14,16 @@
     <link href="https://cdn.bootcss.com/twitter-bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
 
+    <style type="text/css">
+        .img_response_auto {
+            height: 0;
+            padding-bottom: 100%;
+            background-size: cover;
+            background-position: center;
+            background-color: #cccccc;
+        }
+    </style>
+
     {% block css %}{% endblock %}
 
     <title>{% block title %}兰亭集市-汉服发饰道具出租{% endblock %}</title>
@@ -88,6 +98,34 @@
         setTimeout(function () {
             $("#loading-modal").modal('hide');
         }, 500);
+    }
+
+    // LazyLoading 图片懒加载自定义
+    let lazy_load_clock_me;  // 记录定时任务ID
+    function lazyLoadingMe(event) {
+        // 结束上次还未执行的任务
+        if (lazy_load_clock_me) {
+            clearTimeout(lazy_load_clock_me);
+        }
+        // 建立新的定时任务
+        lazy_load_clock_me = setTimeout(function () {
+            // 获取滚动条滚动过的页面的高度
+            let scrollTop = $(window).scrollTop();
+            // 网页浏览器可视内容部分的高度
+            let screenHeight = $(window).height();
+            event.data.each(function (index, element) {
+                let $el = $(element);
+                let $img = $el.find('.img_response_auto');
+                // $el.offset().top获取box距离页面顶部的距离
+                // 图片出现在页面可见部分时设置图片的src属性值为data-src属性值
+                let elementTop = $el.offset().top;
+                let maxHeight = scrollTop + screenHeight + 1000;  // 滚动过的高度加上页面高度
+                let minHeight = scrollTop - $el.height() - 500;  // 滚动过的高度减去box自身高度
+                if (elementTop < maxHeight && elementTop > minHeight && $img.attr('data-src')) {
+                    $img.attr('style', "background-image: url('"+$img.data('src')+"');").removeAttr('data-src');
+                }
+            });
+        }, 100);
     }
 
     </script>
