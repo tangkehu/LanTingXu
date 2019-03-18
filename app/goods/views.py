@@ -13,10 +13,10 @@ from app.utils import permission_required
 def index(type_id=None):
     if type_id:
         current_type = GoodsType.query.get_or_404(type_id).name
-        goods_list = Goods.query.filter_by(type_id=type_id).order_by(Goods.updata_time.desc()).all()
+        goods_list = Goods.query.filter_by(type_id=type_id).order_by(Goods.create_time.desc()).all()
     else:
         current_type = "全部类别"
-        goods_list = Goods.query.order_by(Goods.updata_time.desc()).all()
+        goods_list = Goods.query.order_by(Goods.create_time.desc()).all()
     type_list = GoodsType.query.all()
     return render_template('goods/index.html', goods_list=goods_list, type_list=type_list, current_type=current_type)
 
