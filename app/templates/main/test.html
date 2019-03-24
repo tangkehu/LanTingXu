@@ -33,6 +33,9 @@
                   <span class="sr-only">Loading...</span>
                 </div>
             </div>
+            <div class="col text-center mb-5 data-null" style="display: none;">
+                全部已加载...
+            </div>
             <div class="col text-center mb-5 error-load" style="display: none;">
                 加载失败，请刷新页面重试...
             </div>
@@ -78,6 +81,9 @@
                             msnry.layout();
                         });
                         data_url = data.next;
+                        if (!data.next) {
+                            $('.data-null').show();
+                        }
                     },
                     error: function () {
                         $('.error-load').show();
