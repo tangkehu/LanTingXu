@@ -10,7 +10,7 @@ from app.models import Goods, GoodsType, GoodsImg
 def index(type_id=0):
     type_list = GoodsType.query.all()
     current_type = '全部类别' if type_id is 0 else GoodsType.query.get_or_404(type_id).name
-    return render_template('main/test.html', type_id=type_id, type_list=type_list, current_type=current_type)
+    return render_template('main/index.html', type_id=type_id, type_list=type_list, current_type=current_type)
 
 
 @main_bp.route('/goods_list/<int:tid>/<int:page>')

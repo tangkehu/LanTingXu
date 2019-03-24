@@ -10,9 +10,9 @@
 
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.2.1/css/bootstrap.css') }}">
-{#    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">#}
-{#    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">#}
+{#    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.2.1/css/bootstrap.css') }}">#}
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
 
     <style type="text/css">
         .img_response_auto {
@@ -64,11 +64,11 @@
       </div>
     </div>
 
-    <script src="{{ url_for('static', filename='jquery-3.3.1/jquery-3.3.1.js') }}"></script>
-    <script src="{{ url_for('static', filename='bootstrap-4.2.1/js/bootstrap.bundle.js') }}"></script>
-    <script src="{{ url_for('static', filename='fontawesome-free-5.6.3-web/all.min.js') }}"></script>
-{#    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>#}
-{#    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.2.1/js/bootstrap.bundle.min.js"></script>#}
+{#    <script src="{{ url_for('static', filename='jquery-3.3.1/jquery-3.3.1.js') }}"></script>#}
+{#    <script src="{{ url_for('static', filename='bootstrap-4.2.1/js/bootstrap.bundle.js') }}"></script>#}
+{#    <script src="{{ url_for('static', filename='fontawesome-free-5.6.3-web/all.min.js') }}"></script>#}
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.2.1/js/bootstrap.bundle.min.js"></script>
 
     {% block script %}{% endblock %}
 
