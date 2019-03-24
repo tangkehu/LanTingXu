@@ -1,39 +1,41 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<div class="jumbotron jumbotron-fluid py-2">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 text-center">
-                <a href="{{ url_for('.index') }}#{{ goods.id }}" class="text-decoration-none text-dark float-left"><i class="fas fa-angle-left"></i> </a>
-                商品详情
+<main role="main">
+    <div class="border-bottom shadow py-4 mb-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-4">
+                    <a href="javascript: history.back();" class="text-decoration-none text-secondary"><i class="fas fa-chevron-left"></i> </a>
+                </div>
+                <div class="col-4 text-center">
+                    商品详情
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="container mb-5">
-    <div class="row justify-content-center">
-
-    <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5">
-        <p class="h4">{{ goods.name }}</p>
-        <p>
-            <span class="lead text-danger font-weight-bold">&yen;{{ goods.rent }}</span>
-            {% if goods.cash_pledge %}<small class="text-muted font-weight-light">&nbsp;押金&yen;{{ goods.cash_pledge }}</small>{% endif %}
-        </p>
-        <p>
-            {% if goods.type_id %}类别：{{ goods.type.name }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
-            {% if goods.brand %}品牌：{{ goods.brand }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
-            {% if goods.size %}尺码：{{ goods.size }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
-            {% if goods.quantity %}库存：{{ goods.quantity }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
-            <hr>
-            {% if goods.details %}{{ goods.details }}{% endif %}
-        </p>
-        {% for item in goods.img.all() %}
-            <img src="{{ url_for('static', filename='img_goods/'+item.filename_l) }}" width="100%" class="img-fluid rounded mb-2">
-        {% endfor %}
+    <div class="container mb-5 pb-5">
+        <div class="row">
+            <div class="col col-md-10 col-xl-8">
+                <p class="h4">{{ goods.name }}</p>
+                <p>
+                    <span class="lead text-danger font-weight-bold">&yen;{{ goods.rent }}</span>
+                    {% if goods.cash_pledge %}<small class="text-muted font-weight-light">&nbsp;押金&yen;{{ goods.cash_pledge }}</small>{% endif %}
+                </p>
+                <p>
+                    {% if goods.type_id %}类别：{{ goods.type.name }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
+                    {% if goods.brand %}品牌：{{ goods.brand }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
+                    {% if goods.size %}尺码：{{ goods.size }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
+                    {% if goods.quantity %}库存：{{ goods.quantity }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
+                    <hr>
+                    {% if goods.details %}{{ goods.details }}{% endif %}
+                </p>
+                {% for item in goods.img.all() %}
+                    <img src="{{ url_for('static', filename='img_goods/'+item.filename_l) }}" width="100%" class="img-fluid rounded mb-2">
+                {% endfor %}
+            </div>
+        </div>
     </div>
-
-    </div>
-</div>
+</main>
 {% endblock %}
