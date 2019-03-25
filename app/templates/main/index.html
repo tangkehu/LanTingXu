@@ -45,52 +45,46 @@
 {% endblock %}
 
 {% block script %}
-<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
-<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script src="https://cdn.bootcss.com/masonry/4.2.2/masonry.pkgd.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery.imagesloaded/4.1.4/imagesloaded.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.js"></script>
 
 <script type="text/javascript">
 
     $(function(){
 
-        let $masonry = $('.masonry');
-
-        // 初始化瀑布流
-        let msnry = new Masonry('.masonry', {itemSelector: '.masonry-item'});
-
-        // 商品数据分页无限加载
+        // 商品数据分页无限懒加载瀑布流
         let data_url = '{{ url_for('.goods_list', tid=type_id, page=1) }}';
         let getGoods = function (){
             if (data_url && $(document).height() - $(window).height() - $(window).scrollTop() < 20){
+                let $loading = $('.loading');
+                let $dataNull = $('.data-null');
+                let $errorLoad = $('.error-load');
+                let $masonry = $('.masonry');
                 $.ajax({
                     url: data_url,
-                    beforeSend: function () {
-                        $('.loading').show();
-                    },
+                    beforeSend: () => $loading.show(),
                     success: function (data) {
                         for (let v of data.items) {
                             let $content = $(
-                                '<div class="col-6 col-md-4 col-xl-3 masonry-item mb-3 pr-0 text-right">\n' +
-                                '    <img src="/static/img_goods/'+v[2]+'" class="img-fluid  rounded shadow" alt="..." onclick="location.href = \'/goods_show/'+v[0]+'\'">\n' +
+                                '<div class="col-6 col-md-4 col-xl-3 mb-3 pr-0">\n' +
+                                '  <a href="/goods_show/'+v[0]+'">\n' +
+                                '    <img data-original="/static/img_goods/'+v[2]+'" src="/static/img/no-image.jpg" class="img-fluid rounded lazy">\n' +
                                 '    <span class="badge badge-pill badge-secondary" style="position: absolute; left:1.5rem; top:0.5rem;">'+v[0]+'</span>' +
+                                '  </a>' +
                                 '</div>'
                             );
-                            $masonry.append($content);
-                            msnry.appended($content);
+                            $masonry.masonry().append($content).masonry('appended', $content);
                         }
-                        $masonry.imagesLoaded(function () {
-                            msnry.layout();
-                        });
+                        $masonry.imagesLoaded(() => $masonry.masonry());
+                        setTimeout(function () {
+                            $("img.lazy").lazyload({load : () => $masonry.masonry()});
+                        }, 200);
+                        if (!data.next) $dataNull.show();
                         data_url = data.next;
-                        if (!data.next) {
-                            $('.data-null').show();
-                        }
                     },
-                    error: function () {
-                        $('.error-load').show();
-                    },
-                    complete: function () {
-                        $('.loading').hide();
-                    }
+                    error: () => $errorLoad.show(),
+                    complete: () => $loading.hide()
                 });
                 data_url = null;
             }
