@@ -6,7 +6,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-4">
-                    <a href="javascript: history.back();" class="text-decoration-none text-secondary"><i class="fas fa-chevron-left"></i> </a>
+                    <a href="javascript: window.close();" class="text-decoration-none text-secondary"><i class="fas fa-chevron-left"></i> </a>
                 </div>
                 <div class="col-4 text-center">
                     商品详情
@@ -19,21 +19,22 @@
         <div class="row">
             <div class="col col-md-10 col-xl-8">
                 <p class="h4">{{ goods.name }}</p>
-                <p>
-                    <span class="lead text-danger font-weight-bold">&yen;{{ goods.rent }}</span>
-                    {% if goods.cash_pledge %}<small class="text-muted font-weight-light">&nbsp;押金&yen;{{ goods.cash_pledge }}</small>{% endif %}
-                </p>
+{#                <p>#}
+{#                    <span class="lead text-danger font-weight-bold">&yen;{{ goods.rent }}</span>#}
+{#                    {% if goods.cash_pledge %}<small class="text-muted font-weight-light">&nbsp;押金&yen;{{ goods.cash_pledge }}</small>{% endif %}#}
+{#                </p>#}
                 <p>
                     {% if goods.type_id %}类别：{{ goods.type.name }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
                     {% if goods.brand %}品牌：{{ goods.brand }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
                     {% if goods.size %}尺码：{{ goods.size }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
                     {% if goods.quantity %}库存：{{ goods.quantity }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
-                    <hr>
-                    {% if goods.details %}{{ goods.details }}{% endif %}
                 </p>
+                <hr>
                 {% for item in goods.img.all() %}
                     <img src="{{ url_for('static', filename='img_goods/'+item.filename_l) }}" width="100%" class="img-fluid rounded mb-2">
                 {% endfor %}
+                <hr>
+                <p>{% if goods.details %}{{ goods.details }}{% endif %}</p>
             </div>
         </div>
     </div>
