@@ -5,7 +5,7 @@ class Config:
     SECRET_KEY = os.getenv('FLASK_SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False  # 不追踪对象的修改，减少内存使用
     GOODS_IMG_PATH = os.path.join(os.getcwd(), 'app'+os.sep+'static'+os.sep+'img_goods')
-    PER_PAGE = 20  # 分页查询的每页数据量设置
+    PER_PAGE = 50  # 分页查询的每页数据量设置
     ADMINS = ['lantingxuapplet@163.com']
     PERMISSIONS = [['goods_manage', '管理商品的能力'],
                    ['system_manage', '管理系统的能力'],
