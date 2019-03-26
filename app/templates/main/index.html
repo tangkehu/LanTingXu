@@ -10,7 +10,7 @@
         </div>
     </div>
 
-    <div class="container mb-5 pb-5">
+    <div id="content" class="container mb-5 pb-5">
         <div class="row mb-4">
             <div class="col text-right">
                 <div class="dropdown">
@@ -48,14 +48,17 @@
 <script src="https://cdn.bootcss.com/masonry/4.2.2/masonry.pkgd.min.js"></script>
 <script src="https://cdn.bootcss.com/jquery.imagesloaded/4.1.4/imagesloaded.min.js"></script>
 <script src="https://cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.js"></script>
-<script src="https://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
 <script type="text/javascript">
 
-    $(function(){
+    let data_url;
+    let setState = function () {  // 记录当前页面状态
+        window.sessionStorage.content=$("#content").html();
+        window.sessionStorage.url=data_url;
+    };
 
+    $(function(){
         // 商品数据分页无限懒加载瀑布流
-        let data_url;
         let getGoods = function (){
             if (data_url && $(document).height() - $(window).height() - $(window).scrollTop() < 20){
                 let $loading = $('.loading');
@@ -69,7 +72,7 @@
                         for (let v of data.items) {
                             let $content = $(
                                 '<div class="col-6 col-md-4 col-xl-3 mb-3 pr-0">\n' +
-                                '  <a href="/goods_show/'+v[0]+'" onclick="javascript: $.cookie(\'last-position\', $(window).scrollTop());">\n' +
+                                '  <a href="/goods_show/'+v[0]+'" onclick="setState()">\n' +
                                 '    <img data-original="/static/img_goods/'+v[2]+'" src="/static/img/no-image.jpg" class="img-fluid rounded lazy">\n' +
                                 '    <span class="badge badge-pill badge-secondary" style="position: absolute; left:1.5rem; top:0.5rem;">'+v[0]+'</span>' +
                                 '  </a>' +
@@ -90,20 +93,17 @@
                 data_url = null;
             }
         };
-        data_url = '{{ url_for('.goods_list', tid=type_id, page=1) }}';  // 初始化url
-        $(window).scroll(getGoods).scroll();
+        $(window).scroll(getGoods);
 
-        // 商品详情返回时返回浏览位置
-        setTimeout(function () {
-            let lastPosition = $.cookie('last-position');
-            if (lastPosition) {
-                let lp = parseInt(lastPosition);
-                $("html,body").animate({scrollTop: lp},lp/3);
-                setTimeout(function () {
-                    $("html,body").scrollTop(0).animate({scrollTop: lp}, lp/3)
-                }, lp/3+100);
-            }
-        }, 400);
+        if (window.sessionStorage.content !== undefined) {
+            data_url = window.sessionStorage.url === 'null' ? null : window.sessionStorage.url;
+            $("#content").html(window.sessionStorage.content);
+            $("img.lazy").lazyload({load : () => $('.masonry').masonry()});
+            window.sessionStorage.clear();
+        } else {
+            data_url = '{{ url_for('.goods_list', tid=type_id, page=1) }}';  // 初始化url
+            $(window).scroll();
+        }
 
     });
 
