@@ -55,6 +55,7 @@
     let setState = function () {  // 记录当前页面状态
         window.sessionStorage.content=$("#content").html();
         window.sessionStorage.url=data_url;
+        window.sessionStorage.scroll=$(window).scrollTop();
     };
 
     $(function(){
@@ -99,6 +100,7 @@
             data_url = window.sessionStorage.url === 'null' ? null : window.sessionStorage.url;
             $("#content").html(window.sessionStorage.content);
             $("img.lazy").lazyload({load : () => $('.masonry').masonry()});
+            $(window).scrollTop(parseInt(window.sessionStorage.scroll));
             window.sessionStorage.clear();
         } else {
             data_url = '{{ url_for('.goods_list', tid=type_id, page=1) }}';  // 初始化url
