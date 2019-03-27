@@ -1,113 +1,198 @@
 {% extends "base.html" %}
 
-{% block body %}
-<main role="main">
-    <div class="border-bottom shadow py-4 mb-4">
-        <div class="container">
-            <div class="row">
-                <div class="col"><span class="h3">兰亭续</span> <span class="lead">文化创意工作室</span> </div>
-            </div>
-        </div>
-    </div>
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='custom/main-index.css') }}">{% endblock %}
 
-    <div id="content" class="container mb-5 pb-5">
-        <div class="row mb-4">
-            <div class="col text-right">
-                <div class="dropdown">
-                  <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ current_type }}
-                  </button>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="{{ url_for('.index') }}">全部类别</a>
-                    {% for item in type_list %}
-                        <a class="dropdown-item" href="{{ url_for('.index', type_id=item.id) }}">{{ item.name }}</a>
-                    {% endfor %}
-                  </div>
-                </div>
-            </div>
-        </div>
-        <div class="row masonry mr-0"></div>
-        <div class="row">
-            <div class="col text-center mb-5 loading" style="display: none;">
-                <div class="spinner-border" role="status">
-                  <span class="sr-only">Loading...</span>
-                </div>
-            </div>
-            <div class="col text-center mb-5 data-null" style="display: none;">
-                全部已加载...
-            </div>
-            <div class="col text-center mb-5 error-load" style="display: none;">
-                加载失败，请刷新页面重试...
-            </div>
-        </div>
+{% block body_tag %}id="page-top"{% endblock %}
+
+{% block body %}
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand js-scroll-trigger" href="#page-top"><span class="h3">兰亭续</span> <span class="lead">文化创意工作室</span></a>
     </div>
-</main>
+  </nav>
+
+  <!-- Masthead -->
+  <header class="masthead">
+    <div class="container h-100">
+      <div class="row h-100 align-items-center justify-content-center text-center">
+        <div class="col-lg-10 align-self-end">
+          <h1 class="text-uppercase text-white font-weight-bold">给你一整套与汉服有关的服务</h1>
+          <hr class="divider my-4">
+        </div>
+        <div class="col-lg-8 align-self-baseline">
+{#          <p class="text-white-75 font-weight-light mb-5">Start Bootstrap can help you build better websites using the Bootstrap framework! Just download a theme and start customizing, no strings attached!</p>#}
+          <a class="btn btn-primary btn-xl js-scroll-trigger" href="#services">我们的汉服</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- About Section -->
+{#  <section class="page-section bg-primary" id="about">#}
+{#    <div class="container">#}
+{#      <div class="row justify-content-center">#}
+{#        <div class="col-lg-8 text-center">#}
+{#          <h2 class="text-white mt-0">We've got what you need!</h2>#}
+{#          <hr class="divider light my-4">#}
+{#          <p class="text-white-50 mb-4">Start Bootstrap has everything you need to get your new website up and running in no time! Choose one of our open source, free to download, and easy to use themes! No strings attached!</p>#}
+{#          <a class="btn btn-light btn-xl js-scroll-trigger" href="#services">Get Started!</a>#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{#  </section>#}
+
+  <!-- Services Section -->
+  <section class="page-section" id="services">
+    <div class="container" id="content">
+      <h2 class="text-center mt-0">At Your Service</h2>
+      <hr class="divider my-4">
+      <div class="row mb-4">
+        <div class="col text-right">
+            <div class="dropdown">
+              <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ current_type }}
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" onclick="javascript: window.sessionStorage.services='#services'">
+                <a class="dropdown-item" href="{{ url_for('.index') }}">全部类别</a>
+                {% for item in type_list %}
+                    <a class="dropdown-item" href="{{ url_for('.index', type_id=item.id) }}">{{ item.name }}</a>
+                {% endfor %}
+              </div>
+            </div>
+        </div>
+      </div>
+      <div class="row masonry mr-0"></div>
+      <div class="row">
+        <div class="col text-center loading" style="display: none;">
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <div class="col text-center data-null" style="display: none;">
+            全部已加载...
+        </div>
+        <div class="col text-center error-load" style="display: none;">
+            加载失败，请刷新页面重试...
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Call to Action Section -->
+{#  <section class="page-section bg-dark text-white">#}
+{#    <div class="container text-center">#}
+{#      <h2 class="mb-4">Free Download at Start Bootstrap!</h2>#}
+{#    </div>#}
+{#  </section>#}
+
+  <!-- Contact Section -->
+{#  <section class="page-section" id="contact">#}
+{#    <div class="container">#}
+{#      <div class="row justify-content-center">#}
+{#        <div class="col-lg-8 text-center">#}
+{#          <h2 class="mt-0">Let's Get In Touch!</h2>#}
+{#          <hr class="divider my-4">#}
+{#          <p class="text-muted mb-5">Ready to start your next project with us? Give us a call or send us an email and we will get back to you as soon as possible!</p>#}
+{#        </div>#}
+{#      </div>#}
+{#      <div class="row">#}
+{#        <div class="col-lg-4 ml-auto text-center">#}
+{#          <i class="fas fa-phone fa-3x mb-3 text-muted"></i>#}
+{#          <div>+1 (202) 555-0149</div>#}
+{#        </div>#}
+{#        <div class="col-lg-4 mr-auto text-center">#}
+{#          <i class="fas fa-envelope fa-3x mb-3 text-muted"></i>#}
+{#          <!-- Make sure to change the email address in anchor text AND the link below! -->#}
+{#          <a class="d-block" href="mailto:contact@yourwebsite.com">contact@yourwebsite.com</a>#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{#  </section>#}
+
+  <!-- Footer -->
+  <footer class="bg-light py-5">
+    <div class="container">
+      <div class="small text-center text-muted">Copyright &copy; 2019 - 兰亭续文化创意工作室</div>
+    </div>
+  </footer>
 {% endblock %}
 
 {% block script %}
-<script src="https://cdn.bootcss.com/masonry/4.2.2/masonry.pkgd.min.js"></script>
-<script src="https://cdn.bootcss.com/jquery.imagesloaded/4.1.4/imagesloaded.min.js"></script>
-<script src="https://cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+    <script src="https://cdn.bootcss.com/masonry/4.2.2/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery.imagesloaded/4.1.4/imagesloaded.min.js"></script>
+    <script src="https://cdn.bootcss.com/vanilla-lazyload/11.0.5/lazyload.min.js"></script>
+    <script src="{{ url_for('static', filename='custom/main-index.js') }}"></script>
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    let data_url;
-    let setState = function () {  // 记录当前页面状态
-        window.sessionStorage.content=$("#content").html();
-        window.sessionStorage.url=data_url;
-        window.sessionStorage.scroll=$(window).scrollTop();
-    };
-
-    $(function(){
-        // 商品数据分页无限懒加载瀑布流
-        let getGoods = function (){
-            if (data_url && $(document).height() - $(window).height() - $(window).scrollTop() < 20){
-                let $loading = $('.loading');
-                let $dataNull = $('.data-null');
-                let $errorLoad = $('.error-load');
-                let $masonry = $('.masonry');
-                $.ajax({
-                    url: data_url,
-                    beforeSend: () => $loading.show(),
-                    success: function (data) {
-                        for (let v of data.items) {
-                            let $content = $(
-                                '<div class="col-6 col-md-4 col-xl-3 mb-3 pr-0">\n' +
-                                '  <a href="/goods_show/'+v[0]+'" onclick="setState()">\n' +
-                                '    <img data-original="/static/img_goods/'+v[2]+'" src="/static/img/no-image.jpg" class="img-fluid rounded lazy">\n' +
-                                '    <span class="badge badge-pill badge-secondary" style="position: absolute; left:1.5rem; top:0.5rem;">'+v[0]+'</span>' +
-                                '  </a>' +
-                                '</div>'
-                            );
-                            $masonry.masonry().append($content).masonry('appended', $content);
-                        }
-                        $masonry.imagesLoaded(() => $masonry.masonry());
-                        setTimeout(function () {
-                            $("img.lazy").lazyload({load : () => $masonry.masonry()});
-                        }, 200);
-                        if (!data.next) $dataNull.show();
-                        data_url = data.next;
-                    },
-                    error: () => $errorLoad.show(),
-                    complete: () => $loading.hide()
-                });
-                data_url = null;
-            }
+        let data_url;
+        let setState = function () {  // 记录当前页面状态
+            window.sessionStorage.content=$("#content").html();
+            window.sessionStorage.url=data_url;
+            window.sessionStorage.scroll=$(window).scrollTop();
         };
-        $(window).scroll(getGoods);
 
-        if (window.sessionStorage.content !== undefined) {
-            data_url = window.sessionStorage.url === 'null' ? null : window.sessionStorage.url;
-            $("#content").html(window.sessionStorage.content);
-            $("img.lazy").lazyload({load : () => $('.masonry').masonry()});
-            $(window).scrollTop(parseInt(window.sessionStorage.scroll));
-            window.sessionStorage.clear();
-        } else {
-            data_url = '{{ url_for('.goods_list', tid=type_id, page=1) }}';  // 初始化url
-            $(window).scroll();
-        }
+        $(function(){
+            let $loading = $('.loading');
+            let $dataNull = $('.data-null');
+            let $errorLoad = $('.error-load');
+            let $masonry = $('.masonry');
 
-    });
+            // 初始化懒加载
+            let lazyLoadInstance = new LazyLoad({elements_selector: ".lazy", callback_loaded: ()=>$masonry.masonry()});
 
-</script>
+            // 监听窗口滚动事件 商品数据分页无限懒加载瀑布流
+            $(window).scroll(function () {
+                if (data_url && $(document).height() - $(window).height() - $(window).scrollTop() < 1300){
+                    $.ajax({
+                        url: data_url,
+                        beforeSend: () => $loading.show(),
+                        success: function (data) {
+                            for (let v of data.items) {
+                                let $content = $(
+                                    '<div class="col-6 col-md-4 col-xl-3 mb-3 pr-0">\n' +
+                                    '  <a href="/goods_show/'+v[0]+'" onclick="setState()">\n' +
+                                    '    <img data-src="/static/img_goods/'+v[2]+'" src="/static/img/no-image.jpg" class="img-fluid rounded lazy">\n' +
+                                    '    <span class="badge badge-pill badge-secondary" style="position: absolute; left:1.5rem; top:0.5rem;">'+v[0]+'</span>' +
+                                    '  </a>' +
+                                    '</div>'
+                                );
+                                $masonry.append($content);
+                            }
+                            $masonry.imagesLoaded(() => $masonry.masonry());
+                            setTimeout(()=>lazyLoadInstance.update(), 200);
+                            if (!data.next) $dataNull.show();
+                            data_url = data.next;
+                        },
+                        error: () => $errorLoad.show(),
+                        complete: () => $loading.hide()
+                    });
+                    data_url = null;
+                }
+            });
+
+            // 滚动到商品位置
+            if (window.sessionStorage.services !== undefined) {
+                window.location.href = window.sessionStorage.services;
+                window.sessionStorage.clear();
+            }
+
+            // 加载之前浏览位置
+            if (window.sessionStorage.url !== undefined) {
+                data_url = window.sessionStorage.url === 'null' ? null : window.sessionStorage.url;
+                $("#content").html(window.sessionStorage.content);
+                lazyLoadInstance.update();
+                $(window).scrollTop(parseInt(window.sessionStorage.scroll));
+                window.sessionStorage.clear();
+            } else {
+                data_url = '{{ url_for('.goods_list', tid=type_id, page=1) }}';  // 初始化url
+                $(window).scroll();
+            }
+
+        });
+
+    </script>
 {% endblock %}

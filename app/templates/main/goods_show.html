@@ -2,28 +2,26 @@
 
 {% block body %}
 <main role="main">
-    <div class="border-bottom shadow py-4 mb-4">
+    <div class="border-bottom shadow-sm py-4 mb-4 fixed-top bg-light">
         <div class="container">
             <div class="row">
-                <div class="col-4">
+                <div class="col">
                     <a href="javascript: window.history.back();"
-                       class="text-decoration-none text-secondary"><i class="fas fa-chevron-left"></i> </a>
-                </div>
-                <div class="col-4 text-center">
-                    商品详情
+                       class="text-decoration-none text-secondary lead"><i class="fas fa-chevron-left"></i> </a>
+                    <span class="lead ml-2">详情</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="container mb-5 pb-5">
+    <div class="container mb-5 pb-5" style="margin-top: 7rem;">
         <div class="row">
             <div class="col col-md-10 col-xl-8">
                 <p class="h4">{{ goods.name }}</p>
-{#                <p>#}
-{#                    <span class="lead text-danger font-weight-bold">&yen;{{ goods.rent }}</span>#}
-{#                    {% if goods.cash_pledge %}<small class="text-muted font-weight-light">&nbsp;押金&yen;{{ goods.cash_pledge }}</small>{% endif %}#}
-{#                </p>#}
+                <p>
+                    <span class="lead text-danger font-weight-bold">&yen;{{ goods.rent }}</span>
+                    {% if goods.cash_pledge %}<small class="text-muted font-weight-light">&nbsp;押金&yen;{{ goods.cash_pledge }}</small>{% endif %}
+                </p>
                 <p>
                     {% if goods.type_id %}类别：{{ goods.type.name }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
                     {% if goods.brand %}品牌：{{ goods.brand }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
