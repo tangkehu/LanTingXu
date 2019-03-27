@@ -23,6 +23,7 @@
                     {% if goods.cash_pledge %}<small class="text-muted font-weight-light">&nbsp;押金&yen;{{ goods.cash_pledge }}</small>{% endif %}
                 </p>
                 <p>
+                    编号：{{ goods.id }}&nbsp;&nbsp;&nbsp;&nbsp;
                     {% if goods.type_id %}类别：{{ goods.type.name }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
                     {% if goods.brand %}品牌：{{ goods.brand }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
                     {% if goods.size %}尺码：{{ goods.size }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
