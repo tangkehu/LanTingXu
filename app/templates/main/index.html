@@ -51,7 +51,7 @@
       <h2 class="text-center mt-0">集市</h2>
       <hr class="divider my-4">
       <div class="row mb-4">
-        <div class="col text-right">
+        <div class="col text-lg-right text-center">
             <div class="dropdown">
               <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{ current_type }}
@@ -147,17 +147,19 @@
         };
 
         $(function(){
-            let $loading = $('.loading');
-            let $dataNull = $('.data-null');
-            let $errorLoad = $('.error-load');
-            let $masonry = $('.masonry');
-
             // 初始化懒加载
-            let lazyLoadInstance = new LazyLoad({elements_selector: ".lazy", callback_loaded: ()=>$masonry.masonry()});
+            let lazyLoadInstance = new LazyLoad({
+                elements_selector: ".lazy",
+                callback_loaded: () => { $('.masonry').masonry('layout') }
+            });
 
             // 监听窗口滚动事件 商品数据分页无限懒加载瀑布流
             $(window).scroll(function () {
                 if (data_url && $(document).height() - $(window).height() - $(window).scrollTop() < 1888){
+                    let $loading = $('.loading');
+                    let $dataNull = $('.data-null');
+                    let $errorLoad = $('.error-load');
+                    let $masonry = $('.masonry');
                     $.ajax({
                         url: data_url,
                         beforeSend: () => $loading.show(),
@@ -171,10 +173,12 @@
                                     '  </a>' +
                                     '</div>'
                                 );
-                                $masonry.masonry().append($content).masonry('appended', $content);
+                                $masonry.masonry({itemSelector: '.masonry-item'}).append($content).masonry('appended', $content);
                             }
-                            $masonry.imagesLoaded(() => $masonry.masonry({itemSelector: '.masonry-item'}));
-                            setTimeout(()=>lazyLoadInstance.update(), 200);
+                            $masonry.imagesLoaded( function () {
+                                $masonry.masonry('layout');
+                                lazyLoadInstance.update();
+                            });
                             if (!data.next) $dataNull.show();
                             data_url = data.next;
                         },
@@ -195,8 +199,10 @@
             if (window.sessionStorage.url !== undefined) {
                 data_url = window.sessionStorage.url === 'null' ? null : window.sessionStorage.url;
                 $("#content").html(window.sessionStorage.content);
-                $masonry.imagesLoaded(() => $masonry.masonry({itemSelector: '.masonry-item'}));
-                setTimeout(()=>lazyLoadInstance.update(), 100);
+                $('.masonry').imagesLoaded( function () {
+                    $('.masonry').masonry({itemSelector: '.masonry-item'});
+                    lazyLoadInstance.update();
+                });
                 $(window).scrollTop(parseInt(window.sessionStorage.scroll));
                 window.sessionStorage.clear();
             } else {
