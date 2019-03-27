@@ -39,6 +39,6 @@ def goods_no_price(goods_id=None):
                         'cash_pledge': goods.cash_pledge,
                         'size': goods.size,
                         'quantity': goods.quantity,
-                        'images': [item.filename_m for item in goods.img.all()]})
+                        'images': [item.filename_l for item in goods.img.all()]})
     goods_list = Goods.query.order_by(Goods.create_time.desc()).all()
     return render_template('main/goods_no_price.html', goods_list=goods_list)

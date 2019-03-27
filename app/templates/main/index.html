@@ -8,7 +8,10 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
     <div class="container">
-      <a class="navbar-brand js-scroll-trigger" href="#page-top"><span class="h3">兰亭续</span> <span class="lead">文化创意工作室</span></a>
+      <a class="navbar-brand js-scroll-trigger" href="#page-top">
+          <img src="{{ url_for('static', filename='img/lantinglogo.gif') }}" width="40" height="40" alt="">
+          <span class="align-middle">文化创意工作室</span>
+      </a>
     </div>
   </nav>
 
@@ -33,7 +36,7 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-lg-8 text-center">
-          <h2 class="text-white mt-0">关于我们</h2>
+          <h2 class="text-white mt-0"><a href="{{ url_for('goods_bp.index') }}" class="text-white text-decoration-none">关于我们</a></h2>
           <hr class="divider light my-4">
           <p class="text-white-50 mb-4">我们一群热爱中华民族优秀传统文化的青年，我们始终不忘传承并发扬中华文化的初衷，希望与你一起推动中华文化的发展。</p>
           <a class="btn btn-light btn-xl js-scroll-trigger" href="#services">我们的集市</a>
@@ -98,21 +101,25 @@
         <div class="col-lg-8 text-center">
           <h2 class="mt-0">联系我们</h2>
           <hr class="divider my-4">
-          <p class="text-muted mb-5">给我们打电话、发微信或QQ，我们会尽快回复。</p>
+          <p class="text-muted mb-5">你可以给我们打电话、发微信或QQ，我们会尽快回复；也可以直接预约来工作室地址体验。</p>
         </div>
       </div>
       <div class="row">
-        <div class="col-lg-4 ml-auto text-center">
+        <div class="col-lg-3 ml-auto text-center mb-5">
           <i class="fas fa-phone fa-3x mb-3 text-muted"></i>
           <div>13398190196</div>
         </div>
-        <div class="col-lg-4 mr-auto text-center">
+        <div class="col-lg-3 mr-auto text-center mb-5">
           <i class="fab fa-weixin fa-3x mb-3 text-muted"></i>
           <div>Zhongtinglu0215</div>
         </div>
-        <div class="col-lg-4 mr-auto text-center">
+        <div class="col-lg-3 mr-auto text-center mb-5">
           <i class="fab fa-qq fa-3x mb-3 text-muted"></i>
           <div>734749721</div>
+        </div>
+        <div class="col-lg-3 mr-auto text-center mb-5">
+          <i class="fas fa-map-marker-alt fa-3x mb-3 text-muted"></i>
+          <div>成都市十陵镇龙锦湾3幢2006</div>
         </div>
       </div>
     </div>
@@ -122,6 +129,7 @@
   <footer class="bg-light py-5">
     <div class="container">
       <div class="small text-center text-muted">Copyright &copy; 2019 - 兰亭续文化创意工作室</div>
+      <div class="small text-center"><a href="http://www.miitbeian.gov.cn/" class="text-black-50">蜀ICP备18036635号</a></div>
     </div>
   </footer>
 {% endblock %}
@@ -149,14 +157,14 @@
 
             // 监听窗口滚动事件 商品数据分页无限懒加载瀑布流
             $(window).scroll(function () {
-                if (data_url && $(document).height() - $(window).height() - $(window).scrollTop() < 1300){
+                if (data_url && $(document).height() - $(window).height() - $(window).scrollTop() < 1888){
                     $.ajax({
                         url: data_url,
                         beforeSend: () => $loading.show(),
                         success: function (data) {
                             for (let v of data.items) {
                                 let $content = $(
-                                    '<div class="col-6 col-md-4 col-xl-3 mb-3 pr-0">\n' +
+                                    '<div class="col-6 col-md-4 col-xl-3 mb-3 pr-0 masonry-item">\n' +
                                     '  <a href="/goods_show/'+v[0]+'" onclick="setState()">\n' +
                                     '    <img data-src="/static/img_goods/'+v[2]+'" src="/static/img/no-image.jpg" class="img-fluid rounded lazy">\n' +
                                     '    <span class="badge badge-pill badge-secondary" style="position: absolute; left:1.5rem; top:0.5rem;">'+v[0]+'</span>' +
@@ -165,7 +173,7 @@
                                 );
                                 $masonry.masonry().append($content).masonry('appended', $content);
                             }
-                            $masonry.imagesLoaded(() => $masonry.masonry());
+                            $masonry.imagesLoaded(() => $masonry.masonry({itemSelector: '.masonry-item'}));
                             setTimeout(()=>lazyLoadInstance.update(), 200);
                             if (!data.next) $dataNull.show();
                             data_url = data.next;
@@ -187,7 +195,8 @@
             if (window.sessionStorage.url !== undefined) {
                 data_url = window.sessionStorage.url === 'null' ? null : window.sessionStorage.url;
                 $("#content").html(window.sessionStorage.content);
-                lazyLoadInstance.update();
+                $masonry.imagesLoaded(() => $masonry.masonry({itemSelector: '.masonry-item'}));
+                setTimeout(()=>lazyLoadInstance.update(), 100);
                 $(window).scrollTop(parseInt(window.sessionStorage.scroll));
                 window.sessionStorage.clear();
             } else {
