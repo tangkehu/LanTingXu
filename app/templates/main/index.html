@@ -120,10 +120,6 @@
 {% endblock %}
 
 {% block script %}
-    <script src="https://cdn.bootcss.com/jquery-easing/1.4.1/jquery.easing.min.js"></script>
-    <script src="https://cdn.bootcss.com/masonry/4.2.2/masonry.pkgd.min.js"></script>
-    <script src="https://cdn.bootcss.com/jquery.imagesloaded/4.1.4/imagesloaded.min.js"></script>
-    <script src="https://cdn.bootcss.com/vanilla-lazyload/11.0.5/lazyload.min.js"></script>
     <script src="{{ url_for('static', filename='custom/main-index.js') }}"></script>
 
     <script type="text/javascript">
@@ -160,7 +156,7 @@
                                     '  </a>' +
                                     '</div>'
                                 );
-                                $masonry.append($content);
+                                $masonry.masonry().append($content).masonry('appended', $content);
                             }
                             $masonry.imagesLoaded(() => $masonry.masonry());
                             setTimeout(()=>lazyLoadInstance.update(), 200);
