@@ -1,4 +1,9 @@
 import os
+from dotenv import load_dotenv
+
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+if os.path.exists(dotenv_path):
+    load_dotenv(dotenv_path)
 
 
 class Config:
@@ -7,6 +12,7 @@ class Config:
     GOODS_IMG_PATH = os.path.join(os.getcwd(), 'app'+os.sep+'static'+os.sep+'img_goods')
     PER_PAGE = 50  # 分页查询的每页数据量设置
     ADMINS = ['lantingxuapplet@163.com']
+    BOOT_CDN = True  # 是否使用免费快速的bootcdn服务
     PERMISSIONS = [['goods_manage', '管理商品的能力'],
                    ['system_manage', '管理系统的能力'],
                    ['order_manage', '管理订单的能力']]

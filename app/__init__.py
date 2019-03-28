@@ -26,6 +26,16 @@ def create_app(config_name=os.getenv('FLASK_CONFIG', 'production')):
     migrate.init_app(app, db)
     login_manager.init_app(app)
 
+    register_logging(app)
+    register_blueprints(app)
+    register_errors(app)
+    register_template_context(app)
+    register_click(app)
+
+    return app
+
+
+def register_click(app):
     @app.cli.command()
     def deploy():
         """ 部署，部署前请创建数据库迁移脚本flask db migrate """
@@ -35,12 +45,6 @@ def create_app(config_name=os.getenv('FLASK_CONFIG', 'production')):
         # Permission.update_permissions()  # 在有新权限的时候开启
 
         click.echo(u'本次部署初始化成功')
-
-    register_logging(app)
-    register_blueprints(app)
-    register_errors(app)
-
-    return app
 
 
 def register_blueprints(app):
@@ -75,7 +79,9 @@ def register_errors(app):
 
 
 def register_template_context(app):
-    pass
+    @app.context_processor
+    def inject_bootcdn():
+        return dict(bootcdn=app.config['BOOT_CDN'])
 
 
 def register_logging(app):
