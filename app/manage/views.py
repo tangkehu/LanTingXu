@@ -4,7 +4,7 @@ from flask_login import current_user
 
 from app.models import User, Role, Permission, GoodsType
 from . import manage_bp
-from .forms import UserForm
+from .forms import UserForm, HomePageForm
 
 
 @manage_bp.before_request
@@ -139,3 +139,14 @@ def goods_type():
 def goods_type_delete():
     GoodsType.query.get_or_404(int(request.form.get('type_id', 0))).delete()
     return 'successful'
+
+
+@manage_bp.route('/homepage', methods=['GET', 'POST'])
+def homepage():
+    form = HomePageForm()
+    if form.validate_on_submit():
+        print('post')
+        print(form.bg_img.data.filename, form.caption.data)
+        return redirect(url_for('.homepage'))
+    print(form.caption.data, form.subhead.data)
+    return render_template('manage/homepage.html', form=form)

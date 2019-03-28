@@ -1,0 +1,56 @@
+{% extends "manage/base.html" %}
+
+{% block content %}
+    <div class="jumbotron jumbotron-fluid bg-info">
+        <div class="container">
+            <h3 class="text-white"><i class="fas fa-file-code"></i> 主页内容管理</h3>
+        </div>
+    </div>
+
+    <div class="container mb-5 pb-5">
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                {{ form.caption.label() }}
+                {{ form.caption(class="form-control") }}
+                {% for item in form.caption.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.subhead.label() }}
+                {{ form.subhead(class="form-control") }}
+                {% for item in form.subhead.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.about.label() }}
+                {{ form.about(class="form-control") }}
+                {% for item in form.about.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.statement.label() }}
+                {{ form.statement(class="form-control") }}
+                {% for item in form.statement.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
+            </div>
+{#            <div class="form-group">#}
+{#                {{ form.bg_img.label() }}#}
+{#                {{ form.bg_img(class="form-control-file") }}#}
+{#                <small class="form-text text-muted">需要更换背景图时选择此项</small>#}
+{#                {% for item in form.bg_img.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}#}
+{#            </div>#}
+            <button type="submit" class="btn btn-info">提交</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {{ super() }}
+    <script type="text/javascript">
+        $(function () {
+            $("button").click(function () {
+                $(this).append(
+                    '<div class="spinner-border spinner-border-sm" role="status">\n' +
+                    '  <span class="sr-only">Loading...</span>\n' +
+                    '</div>'
+                ).addClass('disabled');
+            })
+        });
+    </script>
+{% endblock %}
