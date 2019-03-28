@@ -18,6 +18,7 @@
     <script src="{{ url_for('static', filename='fontawesome-free-5.6.3-web/all.min.js') }}"></script>
     #}
 
+    {% if bootcdn %}
     <!-- https://www.bootcdn.cn/ CDN -->
     <link href="https://cdn.bootcss.com/twitter-bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
@@ -31,9 +32,9 @@
     <script src="https://cdn.bootcss.com/dropzone/5.5.1/min/dropzone.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap-datepicker/1.8.0/locales/bootstrap-datepicker.zh-CN.min.js"></script>
-
+    {% else %}
     <!-- https://www.jsdelivr.com/ http://www.staticfile.org/ CDN -->
-{#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css">
     <link href="https://cdn.staticfile.org/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
     <link href="https://cdn.staticfile.org/font-awesome/5.8.1/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
@@ -45,7 +46,8 @@
     <script src="https://cdn.jsdelivr.net/npm/dropzone@5.5.1/dist/dropzone.min.js"></script>
     <script src="https://cdn.staticfile.org/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
     <script src="https://cdn.staticfile.org/bootstrap-datepicker/1.8.0/locales/bootstrap-datepicker.zh-CN.min.js"></script>
-#}
+    {% endif %}
+
     <style type="text/css">
         .img_response_auto {
             height: 0;
