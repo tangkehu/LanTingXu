@@ -1,5 +1,4 @@
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, TextAreaField, PasswordField
 from wtforms.validators import DataRequired, Length, Email, Regexp
 from wtforms import ValidationError
@@ -34,4 +33,9 @@ class HomePageForm(FlaskForm):
     subhead = TextAreaField('副标题', validators=[DataRequired('请输入副标题内容')])
     about = TextAreaField('关于我们', validators=[DataRequired('请输入关于我们的内容')])
     statement = TextAreaField('声明', validators=[DataRequired('请输入声明内容')])
-    # bg_img = FileField('背景图', validators=[FileAllowed(['jpg', 'jpeg', 'png', 'gif'], '只能上传图片')])
+
+    def set_data(self, obj):
+        self.caption.data = obj.caption
+        self.subhead.data = obj.subhead
+        self.about.data = obj.about
+        self.statement.data = obj.statement

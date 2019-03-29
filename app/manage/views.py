@@ -2,7 +2,7 @@
 from flask import render_template, request, jsonify, abort, redirect, url_for, flash
 from flask_login import current_user
 
-from app.models import User, Role, Permission, GoodsType
+from app.models import User, Role, Permission, GoodsType, HomePage
 from . import manage_bp
 from .forms import UserForm, HomePageForm
 
@@ -144,9 +144,16 @@ def goods_type_delete():
 @manage_bp.route('/homepage', methods=['GET', 'POST'])
 def homepage():
     form = HomePageForm()
+    obj = HomePage.query.first()
+
+    if request.method == 'GET' and obj:
+        form.set_data(obj)
+
     if form.validate_on_submit():
-        print('post')
-        print(form.bg_img.data.filename, form.caption.data)
+        if obj:
+            obj.update(**form.data)
+        else:
+            HomePage().update(**form.data)
+        flash('主页内容更新成功')
         return redirect(url_for('.homepage'))
-    print(form.caption.data, form.subhead.data)
     return render_template('manage/homepage.html', form=form)

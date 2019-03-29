@@ -6,7 +6,7 @@
         <div class="container">
             <div class="row">
                 <div class="col">
-                    <a href="javascript: window.history.back();"
+                    <a href="javascript: if (window.history.length === 1) {window.location.href='/'} else {window.history.back();}"
                        class="text-decoration-none text-secondary lead"><i class="fas fa-chevron-left"></i> </a>
                     <span class="lead ml-2">详情</span>
                 </div>
