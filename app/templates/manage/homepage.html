@@ -1,0 +1,51 @@
+{% extends "manage/base.html" %}
+
+{% block content %}
+    <div class="jumbotron jumbotron-fluid bg-info">
+        <div class="container">
+            <h3 class="text-white"><i class="fas fa-paw"></i> 主页内容管理</h3>
+        </div>
+    </div>
+
+    <div class="container mb-5 pb-5">
+        <form method="post">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.caption.label() }}
+                {{ form.caption(class="form-control", required=false) }}
+                {% for item in form.caption.errors %}<small class="text-danger">{{ item }}</small><br> {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.subhead.label() }}
+                {{ form.subhead(class="form-control", required=false) }}
+                {% for item in form.subhead.errors %}<small class="text-danger">{{ item }}</small><br> {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.about.label() }}
+                {{ form.about(class="form-control", required=false, rows=5) }}
+                {% for item in form.about.errors %}<small class="text-danger">{{ item }}</small><br> {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.statement.label() }}
+                {{ form.statement(class="form-control", required=false, rows=5) }}
+                {% for item in form.statement.errors %}<small class="text-danger">{{ item }}</small><br> {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-info">提交</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {{ super() }}
+    <script type="text/javascript">
+        $(function () {
+            $("form").submit(function () {
+                $(this).find("button").append(
+                    '<div class="spinner-border spinner-border-sm" role="status">\n' +
+                    '  <span class="sr-only">Loading...</span>\n' +
+                    '</div>'
+                ).attr('disabled', true);
+            })
+        });
+    </script>
+{% endblock %}

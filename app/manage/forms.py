@@ -26,3 +26,16 @@ class UserForm(FlaskForm):
         self.email.data = self.user_obj.email
         self.phone_number.data = self.user_obj.phone_number
         self.resume.data = self.user_obj.resume
+
+
+class HomePageForm(FlaskForm):
+    caption = StringField('标题', validators=[DataRequired('请输入标题内容')])
+    subhead = TextAreaField('副标题', validators=[DataRequired('请输入副标题内容')])
+    about = TextAreaField('关于我们', validators=[DataRequired('请输入关于我们的内容')])
+    statement = TextAreaField('声明', validators=[DataRequired('请输入声明内容')])
+
+    def set_data(self, obj):
+        self.caption.data = obj.caption
+        self.subhead.data = obj.subhead
+        self.about.data = obj.about
+        self.statement.data = obj.statement
