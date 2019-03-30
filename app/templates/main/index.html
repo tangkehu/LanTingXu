@@ -57,7 +57,6 @@
                 {{ current_type }}
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" onclick="javascript: window.sessionStorage.services='#services'">
-                <a class="dropdown-item" href="{{ url_for('.index') }}">全部类别</a>
                 {% for item in type_list %}
                     <a class="dropdown-item" href="{{ url_for('.index', type_id=item.id) }}">{{ item.name }}</a>
                 {% endfor %}
@@ -155,7 +154,7 @@
 
             // 监听窗口滚动事件 商品数据分页无限懒加载瀑布流
             $(window).scroll(function () {
-                if (data_url && $(document).height() - $(window).height() - $(window).scrollTop() < 1888){
+                if (data_url && $(document).height() - $(window).height() - $(window).scrollTop() < 2000){
                     let $loading = $('.loading');
                     let $dataNull = $('.data-null');
                     let $errorLoad = $('.error-load');

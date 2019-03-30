@@ -11,12 +11,10 @@ from app.utils import permission_required
 @goods_bp.route('/<int:type_id>')
 @login_required
 def index(type_id=None):
-    if type_id:
-        current_type = GoodsType.query.get_or_404(type_id).name
-        goods_list = Goods.query.filter_by(type_id=type_id).order_by(Goods.create_time.desc()).all()
-    else:
-        current_type = "全部类别"
-        goods_list = Goods.query.order_by(Goods.create_time.desc()).all()
+    type_id = type_id if type_id else GoodsType.query.filter_by(name='汉服租赁').first().id if \
+        GoodsType.query.filter_by(name='汉服租赁').first() else GoodsType.query.first().id
+    current_type = GoodsType.query.get_or_404(type_id).name
+    goods_list = Goods.query.filter_by(type_id=type_id).order_by(Goods.create_time.desc()).all()
     type_list = GoodsType.query.all()
     return render_template('goods/index.html', goods_list=goods_list, type_list=type_list, current_type=current_type)
 
