@@ -11,8 +11,7 @@ from app.utils import permission_required
 @goods_bp.route('/<int:type_id>')
 @login_required
 def index(type_id=None):
-    type_id = type_id if type_id else GoodsType.query.filter_by(name='汉服租赁').first().id if \
-        GoodsType.query.filter_by(name='汉服租赁').first() else GoodsType.query.first().id
+    type_id = type_id if type_id else GoodsType.query.first().id
     current_type = GoodsType.query.get_or_404(type_id).name
     goods_list = Goods.query.filter_by(type_id=type_id).order_by(Goods.create_time.desc()).all()
     type_list = GoodsType.query.all()
