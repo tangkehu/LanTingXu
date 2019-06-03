@@ -8,8 +8,7 @@ from app.models import Goods, GoodsType, GoodsImg, HomePage
 @main_bp.route('/')
 @main_bp.route('/<int:type_id>')
 def index(type_id=None):
-    type_id = type_id if type_id else GoodsType.query.filter_by(name='汉服租赁').first().id if \
-        GoodsType.query.filter_by(name='汉服租赁').first() else GoodsType.query.first().id
+    type_id = type_id if type_id else GoodsType.query.first().id
     type_list = GoodsType.query.all()
     body = HomePage.query.first()
     current_type = GoodsType.query.get_or_404(type_id).name
