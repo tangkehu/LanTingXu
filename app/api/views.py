@@ -11,14 +11,12 @@ def wx_msg():
 
     msg = parse_xml(request.data)
     if isinstance(msg, MsgRequest) and msg.MsgType == 'text':
-        print(msg.__dict__())
         to_user = msg.FromUserName
         from_user = msg.ToUserName
         content = "感谢关注兰亭续文创工作室官方公众号，开业活动即将开始！敬请期待..."
         reply_msg = TextMsgResponse(to_user, from_user, content)
         return reply_msg.send()
     else:
-        print("暂且不处理")
         return "success"
 
 
@@ -65,10 +63,10 @@ class MsgResponse:
     """ 微信消息Response的xml格式生成 """
 
     def __init__(self, to_user_name, from_user_name):
-        self.__dict = dict()
-        self.__dict['ToUserName'] = to_user_name
-        self.__dict['FromUserName'] = from_user_name
-        self.__dict['CreateTime'] = int(time.time())
+        self._dict = dict()
+        self._dict['ToUserName'] = to_user_name
+        self._dict['FromUserName'] = from_user_name
+        self._dict['CreateTime'] = int(time.time())
 
     def send(self):
         return "success"
@@ -77,7 +75,7 @@ class MsgResponse:
 class TextMsgResponse(MsgResponse):
     def __init__(self, to_user_name, from_user_name, content):
         super(TextMsgResponse, self).__init__(to_user_name, from_user_name)
-        self.__dict['Content'] = content
+        self._dict['Content'] = content
 
     def send(self):
         xml_form = """
@@ -89,13 +87,13 @@ class TextMsgResponse(MsgResponse):
         <Content><![CDATA[{Content}]]></Content>
         </xml>
         """
-        return xml_form.format(**self.__dict)
+        return xml_form.format(**self._dict)
 
 
 class ImageMsgResponse(MsgResponse):
     def __init__(self, to_user_name, from_user_name, media_id):
         super(ImageMsgResponse, self).__init__(to_user_name, from_user_name)
-        self.__dict['MediaId'] = media_id
+        self._dict['MediaId'] = media_id
 
     def send(self):
         xml_form = """
@@ -109,4 +107,4 @@ class ImageMsgResponse(MsgResponse):
         </Image>
         </xml>
         """
-        return xml_form.format(**self.__dict)
+        return xml_form.format(**self._dict)
