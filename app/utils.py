@@ -1,5 +1,7 @@
 import os
 import uuid
+import json
+import requests
 from PIL import Image
 from functools import wraps
 from logging.handlers import SMTPHandler
@@ -74,3 +76,34 @@ def permission_required(permission):
             return fun(*args, **kwargs)
         return decorator_fun
     return decorator
+
+
+class TuringApi:
+    """ 图灵机器人API接口调用，当前仅支持文本 """
+
+    def __init__(self, text):
+        self.api = "http://openapi.tuling123.com/openapi/api/v2"
+        self.data = {
+            "reqType": 0,
+            "perception": {
+                "inputText": {
+                    "text": text
+                }
+            },
+            "userInfo": {
+                "apiKey": "3623b3ebe3ea4bf3b67e657563b20aa6",
+                "userId": "455570"
+            }
+        }
+        self.response = ''
+        self.is_errors = False
+        self.msg = ''
+
+        self.__req()
+
+    def __req(self):
+        self.response = requests.post(self.api, json.dumps(self.data)).json()
+        self.is_errors = False if "intentName" in self.response['intent'] else True
+        for item in self.response['results']:
+            if item['resultType'] == 'text':
+                self.msg = item['values']['text']
