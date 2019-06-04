@@ -2,6 +2,8 @@
 import time
 import xml.etree.ElementTree as ET
 from flask import request
+
+from app.utils import TuringApi
 from . import api_bp
 
 
@@ -14,6 +16,12 @@ def wx_msg():
         to_user = msg.FromUserName
         from_user = msg.ToUserName
         content = "感谢关注兰亭续文创工作室官方公众号，开业活动即将开始！敬请期待..."
+
+        # 图灵聊天
+        turing = TuringApi(msg.Content)
+        if not turing.is_errors and turing.msg != msg.Content:
+            content = turing.msg
+
         reply_msg = TextMsgResponse(to_user, from_user, content)
         return reply_msg.send()
     else:
@@ -49,7 +57,7 @@ class MsgRequest:
 class TextMsgRequest(MsgRequest):
     def __init__(self, xml_data):
         super(TextMsgRequest, self).__init__(xml_data)
-        self.Content = xml_data.find('Content').text.encode("utf-8")
+        self.Content = xml_data.find('Content').text  # .encode("utf-8")
 
 
 class ImageMsgRequest(MsgRequest):
