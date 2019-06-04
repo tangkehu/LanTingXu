@@ -96,14 +96,14 @@ class TuringApi:
             }
         }
         self.response = ''
-        self.is_errors = False
+        self.is_successful = False
         self.msg = ''
 
         self.__req()
 
     def __req(self):
         self.response = requests.post(self.api, json.dumps(self.data)).json()
-        self.is_errors = False if "intentName" in self.response['intent'] else True
         for item in self.response['results']:
             if item['resultType'] == 'text':
                 self.msg = item['values']['text']
+        self.is_successful = True if "intentName" in self.response['intent'] and self.msg else False
