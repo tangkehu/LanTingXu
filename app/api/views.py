@@ -1,7 +1,7 @@
 
 import time
 import xml.etree.ElementTree as ET
-from flask import request,url_for
+from flask import request, url_for
 
 from app.utils import TuringApi
 from app.models import WxUser
@@ -29,6 +29,7 @@ def wx_msg():
     if isinstance(msg, MsgRequest):
         to_user = msg.FromUserName
         from_user = msg.ToUserName
+        validate_time = WxUser.validate_time(to_user)  # 每间隔五分钟就补充推广消息
 
         if msg.MsgType == 'text':
             msg_content = msg.Content
@@ -39,11 +40,10 @@ def wx_msg():
                 # 图灵聊天
                 turing = TuringApi(msg_content)
                 if turing.is_successful and turing.msg != msg_content:
-                    rep_content = turing.msg
-
+                    rep_content = turing.msg if not validate_time else rep_content + '\n\n' + MsgContent.msg1
             return TextMsgResponse(to_user, from_user, rep_content).send()
 
-        return TextMsgResponse(to_user, from_user, MsgContent.msg1).send() if WxUser.validate_time(to_user) else ""
+        return TextMsgResponse(to_user, from_user, MsgContent.msg1).send() if validate_time else ""
 
     else:
         return "success"
