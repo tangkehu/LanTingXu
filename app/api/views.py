@@ -1,10 +1,24 @@
 
 import time
 import xml.etree.ElementTree as ET
-from flask import request,url_for
+from flask import request, url_for
 
 from app.utils import TuringApi
+from app.models import WxUser
 from . import api_bp
+
+
+class MsgContent:
+    msg1 = '''
+    感谢关注兰亭续文创工作室官方公众号\n
+    以花为媒，以茶代酒，以汉服为心意，以文创为名片，诚邀您来品来评\n
+    官网地址：https://www.lanting.live/，点击进入让我们真诚为您提供服务\n
+    电话：18328019529，地址：成都大学校园内附属幼儿园对面超市三楼306室 地铁4号线成都大学站D口100米\n
+    我们欢迎您的到来！\n
+    开业活动即将开始！敬请期待...\n\n
+    回复任意消息发现更多好玩
+    '''
+    msg2 = "官网地址：https://www.lanting.live/"
 
 
 @api_bp.route('/wx/msg', methods=['GET', 'POST'])
@@ -15,25 +29,21 @@ def wx_msg():
     if isinstance(msg, MsgRequest):
         to_user = msg.FromUserName
         from_user = msg.ToUserName
+        validate_time = WxUser.validate_time(to_user)  # 每间隔五分钟就补充推广消息
 
         if msg.MsgType == 'text':
             msg_content = msg.Content
-            rep_content = "感谢关注兰亭续文创工作室官方公众号，开业活动即将开始！敬请期待..."
-
+            rep_content = MsgContent.msg1
             if msg_content == '官网':
-                rep_content = "官网地址：https://www.lanting.live/"
-            elif msg_content == '服务':
-                return NewsMsgResponse(to_user, from_user).send()
+                rep_content = MsgContent.msg2
             else:
                 # 图灵聊天
                 turing = TuringApi(msg_content)
                 if turing.is_successful and turing.msg != msg_content:
-                    rep_content = turing.msg
-
+                    rep_content = turing.msg if not validate_time else rep_content + '\n\n' + MsgContent.msg1
             return TextMsgResponse(to_user, from_user, rep_content).send()
 
-        if msg.MsgType == 'event':
-            return NewsMsgResponse(to_user, from_user).send()
+        return TextMsgResponse(to_user, from_user, MsgContent.msg1).send() if validate_time else ""
 
     else:
         return "success"
@@ -52,6 +62,8 @@ def parse_xml(web_data):
             return TextMsgRequest(xml_data)
         elif msg_type == 'event':
             return EventMsgRequest(xml_data)
+        else:
+            return MsgRequest(xml_data)
 
 
 class MsgRequest:
