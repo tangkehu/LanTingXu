@@ -6,7 +6,7 @@ from app import db
 class WxUser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64))
-    last_time = db.Column(db.Date, default=datetime.now)
+    last_time = db.Column(db.DateTime, default=datetime.now)
     flag = db.Column(db.Boolean, default=False)
 
     @staticmethod
