@@ -1,9 +1,9 @@
 
 import time
-import requests
 import xml.etree.ElementTree as ET
 from flask import request, url_for
 
+from app.utils import TuringApi
 from app.models import WxUser
 from . import api_bp
 
@@ -19,14 +19,12 @@ class MsgContent:
     
     回复任意消息发现更多好玩。
     '''
-    msg2 = r'''    兰亭续文创工作室
-    小店：https://www.lanting.live/
-    电话：18328019529
-    地址：成都大学校园内附属幼儿园对面超市三楼306室 地铁4号线成都大学站D口100米
-    开业活动即将开始！敬请期待...
-    
-    回复任意消息发现更多好玩
-    '''
+    msg2 = "兰亭续文创工作室\n" \
+           "小店：https://www.lanting.live/\n" \
+           "电话：18328019529\n" \
+           "地址：成都大学校园内附属幼儿园对面超市三楼306室 地铁4号线成都大学站D口100米\n" \
+           "开业活动即将开始！敬请期待...\n\n" \
+           "回复任意消息发现更多好玩"
     msg3 = r'''官网地址：https://www.lanting.live/'''
 
 
@@ -47,9 +45,9 @@ def wx_msg():
                 rep_content = MsgContent.msg3
             else:
                 # 聊天
-                chat = requests.get('http://api.qingyunke.com/api.php?key=free&appid=0&msg={}'.format(msg_content)).json()
-                if chat['result'] == 0:
-                    rep_content = (chat['content'] + '\n\n' + MsgContent.msg2) if validate_time else chat['content']
+                turing_msg = TuringApi(msg_content).msg
+                if turing_msg:
+                    rep_content = (turing_msg + '\n' + MsgContent.msg2) if validate_time else turing_msg
 
         return TextMsgResponse(to_user, from_user, rep_content).send() if rep_content else "success"
 

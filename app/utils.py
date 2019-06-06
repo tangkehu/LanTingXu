@@ -1,5 +1,7 @@
 import os
 import uuid
+import json
+import requests
 from PIL import Image
 from functools import wraps
 from logging.handlers import SMTPHandler
@@ -75,3 +77,25 @@ def permission_required(permission):
         return decorator_fun
     return decorator
 
+
+class TuringApi:
+    """ 图灵机器人文字聊天 """
+
+    def __init__(self, text):
+        self.msg = ''
+
+        _data = {
+            'input_text': text,
+            'robot_id': "205892",
+            'user_info': {
+                'open_id': "87f78815-6d56-4c3c-be0c-336318afe239"
+            }
+        }
+        try:
+            rep = requests.post('http://open.turingapi.com/v1/openapi', json.dumps(_data)).json()
+        except Exception as e:
+            pass
+        else:
+            if rep.get('code') == 200 and rep.get('msg') == 'success':
+                for item in rep['result']['datas']:
+                    self.msg += item['value']+'\n'
