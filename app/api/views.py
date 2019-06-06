@@ -1,27 +1,30 @@
 
 import time
+import requests
 import xml.etree.ElementTree as ET
 from flask import request, url_for
 
-from app.utils import TuringApi
 from app.models import WxUser
 from . import api_bp
 
 
 class MsgContent:
-    msg1 = r'''    感谢关注兰亭续文创工作室官方公众号
-    以花为媒，以茶代酒，以汉服为心意，以文创为名片，诚邀您来品来评
-    官网地址：https://www.lanting.live/，点击进入让我们真诚为您提供服务
-    电话：18328019529，地址：成都大学校园内附属幼儿园对面超市三楼306室 地铁4号线成都大学站D口100米
+    msg1 = r'''    兰亭续文创工作室官方公众号感谢您的关注。
+    传承发扬兰亭之义，志趣相投，方得乐也。
+    以花为媒，以茶代酒，以汉服为心意，以文创为名片，诚邀您来品来评。
+    官网地址：https://www.lanting.live/，点击进入让我们真诚为您提供服务。
+    电话：18328019529，地址：成都大学校园内附属幼儿园对面超市三楼306室 地铁4号线成都大学站D口100米。
     我们欢迎您的到来！
-    开业活动即将开始！敬请期待...\n
-    回复任意消息发现更多好玩
+    开业活动即将开始！敬请期待...
+    
+    回复任意消息发现更多好玩。
     '''
     msg2 = r'''    兰亭续文创工作室
     小店：https://www.lanting.live/
     电话：18328019529
     地址：成都大学校园内附属幼儿园对面超市三楼306室 地铁4号线成都大学站D口100米
-    开业活动即将开始！敬请期待...\n
+    开业活动即将开始！敬请期待...
+    
     回复任意消息发现更多好玩
     '''
     msg3 = r'''官网地址：https://www.lanting.live/'''
@@ -43,10 +46,10 @@ def wx_msg():
             if msg_content == '官网':
                 rep_content = MsgContent.msg3
             else:
-                # 图灵聊天
-                turing = TuringApi(msg_content)
-                if turing.is_successful and turing.msg != msg_content:
-                    rep_content = (turing.msg+'\n\n'+MsgContent.msg2) if validate_time else turing.msg
+                # 聊天
+                chat = requests.get('http://api.qingyunke.com/api.php?key=free&appid=0&msg={}'.format(msg_content)).json()
+                if chat['result'] == 0:
+                    rep_content = (chat['content'] + '\n\n' + MsgContent.msg2) if validate_time else chat['content']
 
         return TextMsgResponse(to_user, from_user, rep_content).send() if rep_content else "success"
 

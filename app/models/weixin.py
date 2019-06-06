@@ -11,13 +11,15 @@ class WxUser(db.Model):
 
     @staticmethod
     def validate_time(username):
-        """ 验证最后一次的请求时间间隔是否超过5分钟, 超过为True """
+        """ 验证最后一次发送推广消息的时间间隔是否超过5分钟, 超过为True """
 
         user = WxUser.query.filter_by(username=username).first()
         if user:
-            last_time = user.last_time
-            user.update_time()
-            return True if (datetime.now() - last_time).total_seconds() > 300 else False
+            if (datetime.now() - user.last_time).total_seconds() > 300:
+                user.update_time()
+                return True
+            else:
+                return False
         else:
             db.session.add(WxUser(username=username))
             db.session.commit()
