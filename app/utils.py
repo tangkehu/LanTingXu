@@ -103,6 +103,7 @@ class TuringApi:
 
     def __req(self):
         self.response = requests.post(self.api, json.dumps(self.data)).json()
+        print(self.response)
         for item in self.response['results']:
             if item['resultType'] == 'text':
                 self.msg = item['values']['text']
