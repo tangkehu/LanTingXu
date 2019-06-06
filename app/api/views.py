@@ -1,9 +1,9 @@
 
 import time
+import requests
 import xml.etree.ElementTree as ET
 from flask import request, url_for
 
-from app.utils import TuringApi
 from app.models import WxUser
 from . import api_bp
 
@@ -46,10 +46,10 @@ def wx_msg():
             if msg_content == '官网':
                 rep_content = MsgContent.msg3
             else:
-                # 图灵聊天
-                turing = TuringApi(msg_content)
-                if turing.is_successful and turing.msg != msg_content:
-                    rep_content = (turing.msg+'\n\n'+MsgContent.msg2) if validate_time else turing.msg
+                # 聊天
+                chat = requests.get('http://api.qingyunke.com/api.php?key=free&appid=0&msg={}'.format(msg_content)).json()
+                if chat['result'] == 0:
+                    rep_content = (chat['content'] + '\n\n' + MsgContent.msg2) if validate_time else chat['content']
 
         return TextMsgResponse(to_user, from_user, rep_content).send() if rep_content else "success"
 
