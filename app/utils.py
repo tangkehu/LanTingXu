@@ -106,4 +106,4 @@ class TuringApi:
         for item in self.response['results']:
             if item['resultType'] == 'text':
                 self.msg = item['values']['text']
-        self.is_successful = True if "intentName" in self.response['intent'] and self.msg else False
+        self.is_successful = True if ("intentName" in self.response['intent'] and self.msg) else False
