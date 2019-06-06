@@ -46,6 +46,9 @@ def wx_msg():
             msg_content = msg.Content
             if msg_content == '官网':
                 rep_content = MsgContent.msg3
+            if msg_content == '开业活动':
+                validate_flag = WxUser.validate_flag(to_user)  # 检验是否已参加活动
+                rep_content = MsgContent.msg5 if validate_flag else MsgContent.msg4
             else:
                 # 聊天
                 turing_msg = TuringApi(msg_content).msg
