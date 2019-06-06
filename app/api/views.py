@@ -9,16 +9,22 @@ from . import api_bp
 
 
 class MsgContent:
-    msg1 = '''
-    感谢关注兰亭续文创工作室官方公众号\n
-    以花为媒，以茶代酒，以汉服为心意，以文创为名片，诚邀您来品来评\n
-    官网地址：https://www.lanting.live/，点击进入让我们真诚为您提供服务\n
-    电话：18328019529，地址：成都大学校园内附属幼儿园对面超市三楼306室 地铁4号线成都大学站D口100米\n
-    我们欢迎您的到来！\n
-    开业活动即将开始！敬请期待...\n\n
+    msg1 = r'''    感谢关注兰亭续文创工作室官方公众号
+    以花为媒，以茶代酒，以汉服为心意，以文创为名片，诚邀您来品来评
+    官网地址：https://www.lanting.live/，点击进入让我们真诚为您提供服务
+    电话：18328019529，地址：成都大学校园内附属幼儿园对面超市三楼306室 地铁4号线成都大学站D口100米
+    我们欢迎您的到来！
+    开业活动即将开始！敬请期待...\n
     回复任意消息发现更多好玩
     '''
-    msg2 = "官网地址：https://www.lanting.live/"
+    msg2 = r'''    兰亭续文创工作室
+    小店：https://www.lanting.live/
+    电话：18328019529
+    地址：成都大学校园内附属幼儿园对面超市三楼306室 地铁4号线成都大学站D口100米
+    开业活动即将开始！敬请期待...\n
+    回复任意消息发现更多好玩
+    '''
+    msg3 = r'''官网地址：https://www.lanting.live/'''
 
 
 @api_bp.route('/wx/msg', methods=['GET', 'POST'])
@@ -30,20 +36,19 @@ def wx_msg():
         to_user = msg.FromUserName
         from_user = msg.ToUserName
         validate_time = WxUser.validate_time(to_user)  # 每间隔五分钟就补充推广消息
+        rep_content = MsgContent.msg1 if validate_time else ''
 
         if msg.MsgType == 'text':
             msg_content = msg.Content
-            rep_content = MsgContent.msg1
             if msg_content == '官网':
-                rep_content = MsgContent.msg2
+                rep_content = MsgContent.msg3
             else:
                 # 图灵聊天
                 turing = TuringApi(msg_content)
                 if turing.is_successful and turing.msg != msg_content:
-                    rep_content = turing.msg if not validate_time else rep_content + '\n\n' + MsgContent.msg1
-            return TextMsgResponse(to_user, from_user, rep_content).send()
+                    rep_content = (turing.msg+'\n\n'+MsgContent.msg2) if validate_time else turing.msg
 
-        return TextMsgResponse(to_user, from_user, MsgContent.msg1).send() if validate_time else ""
+        return TextMsgResponse(to_user, from_user, rep_content).send() if rep_content else "success"
 
     else:
         return "success"
