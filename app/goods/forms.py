@@ -31,7 +31,6 @@ class GoodsForm(FlaskForm):
             raise ValidationError('该编号已被使用，请重新编号')
 
     def set_data(self, goods_obj):
-        self.goods_obj_id = goods_obj.id
         self.number.data = goods_obj.number
         self.name.data = goods_obj.name
         self.type.data = goods_obj.type_id or -1
