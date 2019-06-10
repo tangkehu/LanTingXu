@@ -27,7 +27,7 @@
       {% if item.goods %}
         {{ item.goods.name }}
         <br>
-        <small>编号：{{ item.goods_id }} &nbsp; 价格：&yen;{{ item.goods.price }} &nbsp; {% if item.goods.type_id %}类别：{{ item.goods.type.name }}{% endif %}</small>
+        <small>编号：{% if item.goods.number %}{{ item.goods.number }}{% else %}{{ item.goods_id }}{% endif %} &nbsp; 价格：&yen;{{ item.goods.price }} &nbsp; {% if item.goods.type_id %}类别：{{ item.goods.type.name }}{% endif %}</small>
         <br>
         <small class="float-right">
             <a href="javascript:" class="text-info text-decoration-none mr-2 alert_goods"
