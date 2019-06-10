@@ -57,6 +57,13 @@
                 </div>
             </div>
             <div class="form-group row">
+                {{ form.number.label(class="col-3 col-form-label") }}
+                <div class="col">
+                {{ form.number(class="form-control") }}
+                {% for item in form.number.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
+                </div>
+            </div>
+            <div class="form-group row">
                 {{ form.rent.label(class="col-3 col-form-label") }}
                 <div class="col">
                 {{ form.rent(class="form-control", type="number") }}

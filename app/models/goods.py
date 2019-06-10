@@ -9,6 +9,7 @@ from app.utils import random_filename, resize_img
 
 class Goods(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    number = db.Column(db.String(16))
     name = db.Column(db.String(128))
     rent = db.Column(db.Integer)
     price = db.Column(db.Integer)
@@ -29,6 +30,7 @@ class Goods(db.Model):
         self.name = name
         self.rent = rent
         self.price = rent  # 暂时在不改变系统情况下新增字段 2019年2月19日
+        self.number = kwargs.get('number')
         self.cash_pledge = kwargs.get('cash_pledge')
         self.size = kwargs.get('size')
         self.brand = kwargs.get('brand')
@@ -46,6 +48,7 @@ class Goods(db.Model):
         self.name = name
         self.rent = rent
         self.price = rent  # 暂时在不改变系统情况下新增字段 2019年2月19日
+        self.number = kwargs.get('number')
         self.cash_pledge = kwargs.get('cash_pledge')
         self.size = kwargs.get('size')
         self.brand = kwargs.get('brand')
