@@ -5,7 +5,7 @@ from sqlalchemy import cast, DATE, extract
 from flask_login import login_required
 from . import sales_bp
 from .forms import SalesOrderForm
-from ..models import Goods, SalesOrder
+from ..models import Goods, SalesOrder, GoodsType
 from ..utils import permission_required
 
 
@@ -72,9 +72,14 @@ def order_add_goods(order_id=None):
 
 
 @sales_bp.route('/goods_search/<int:order_id>', methods=['GET', 'POST'])
+@sales_bp.route('/goods_search/<int:order_id>/<int:type_id>', methods=['GET', 'POST'])
 @login_required
-def goods_search(order_id):
-    goods_list = []
+def goods_search(order_id, type_id=None):
+    type_id = type_id if type_id else GoodsType.query.first().id
+    current_type = GoodsType.query.get_or_404(type_id).name
+    goods_list = Goods.query.filter_by(type_id=type_id).order_by(Goods.create_time.desc()).all()
+    type_list = GoodsType.query.all()
+
     if request.method == "POST":
         search_word = request.form.get('search_word', '').strip()
         goods_list = Goods.query.filter_by(number=search_word).all()  # 默认查询编号
@@ -84,7 +89,10 @@ def goods_search(order_id):
             goods_list = Goods.query.filter_by(id=int(search_word)).all()
         else:
             goods_list = Goods.query.filter(Goods.name.like('%{}%'.format(search_word))).all()
-    return render_template('sales/search_goods.html', goods_list=goods_list, order_id=order_id)
+        return "success"
+
+    return render_template('sales/search_goods.html', goods_list=goods_list, type_list=type_list,
+                           current_type=current_type, order_id=order_id)
 
 
 @sales_bp.route('/order_update/<int:order_id>', methods=['GET', 'POST'])
