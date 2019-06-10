@@ -39,7 +39,7 @@
         <div class="col px-0 mr-3 border-bottom">
             {{ item.name }}
             <br>
-            <small>编号：{{ item.id }} &nbsp; 价格：&yen;{{ item.rent }} &nbsp; {% if item.type_id %}类别：{{ item.type.name }}{% endif %}</small>
+            <small>编号：{% if item.number %}{{ item.number }}{% else %}{{ item.id }}{% endif %} &nbsp; 价格：&yen;{{ item.rent }} &nbsp; {% if item.type_id %}类别：{{ item.type.name }}{% endif %}</small>
             <br>
             <span class="float-right">
                 <a href="javascript: void(0);" class="badge badge-pill badge-info append_goods"

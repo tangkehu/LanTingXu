@@ -76,8 +76,11 @@ def order_add_goods(order_id=None):
 def goods_search(order_id):
     goods_list = []
     if request.method == "POST":
-        search_word=request.form.get('search_word')
-        if search_word.isdigit():
+        search_word = request.form.get('search_word', '').strip()
+        goods_list = Goods.query.filter_by(number=search_word).all()  # 默认查询编号
+        if goods_list:
+            pass
+        elif search_word.isdigit():
             goods_list = Goods.query.filter_by(id=int(search_word)).all()
         else:
             goods_list = Goods.query.filter(Goods.name.like('%{}%'.format(search_word))).all()
