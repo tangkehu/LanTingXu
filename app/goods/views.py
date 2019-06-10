@@ -26,6 +26,7 @@ def update_goods(goods_id=None):
     """ 处理商品的添加和修改 """
     form = GoodsForm()
     goods = Goods.query.get_or_404(goods_id) if goods_id else None
+    form.goods_obj_id = goods.id if goods else None
 
     if request.method == 'GET':
         for item in GoodsImg.query.filter_by(status=False, user_id=current_user.id).all():
@@ -36,8 +37,9 @@ def update_goods(goods_id=None):
             form.set_data(goods)
 
     if form.validate_on_submit():
-        kwargs = {'type': form.type.data, 'cash_pledge': form.cash_pledge.data, 'size': form.size.data,
-                  'brand': form.brand.data, 'quantity': form.quantity.data, 'details': form.details.data}
+        kwargs = {'number': form.number.data, 'type': form.type.data, 'cash_pledge': form.cash_pledge.data,
+                  'size': form.size.data, 'brand': form.brand.data, 'quantity': form.quantity.data,
+                  'details': form.details.data}
         if goods is None:
             if GoodsImg.query.filter_by(status=False, user_id=current_user.id).first():
                 Goods().add(form.name.data, form.rent.data, **kwargs)

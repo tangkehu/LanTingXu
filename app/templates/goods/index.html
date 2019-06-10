@@ -40,7 +40,7 @@
                 <div class="col-4 col-md-3 col-xl-2 pr-0 py-0 img-box-me">
                     <a {% if current_user.can('system_manage') or current_user.id == item.user_id %}href="{{ url_for('.update_goods', goods_id=item.id) }}"{% endif %}>
                         <div class="rounded img_response_auto" data-src="{{ data_src }}">
-                            <span class="badge badge-pill badge-secondary">{{ item.id }}</span>
+                            <span class="badge badge-pill badge-secondary">{% if item.number %}{{ item.number }}{% else %}{{ item.id }}{% endif %}</span>
                         </div>
                     </a>
                 </div>

@@ -16,46 +16,85 @@
         </div>
     </div>
 
-    <div class="container">
+    <div class="container mb-5 pb-5">
 
-    <div class="row justify-content-center">
-        <div class="col col-lg-8 pb-4">
-            <form method="post">
-            <div class="input-group">
-                <input type="text" class="form-control border-info" placeholder="支持商品名和商品编号搜索..." name="search_word" required>
-                <div class="input-group-append">
-                    <button type="submit" class="btn btn-info"><i class="fas fa-search"></i> 搜索</button>
+        <div class="row justify-content-center">
+            <div class="col col-lg-8 pb-4">
+                <div class="input-group">
+                    <input id="search_word" type="text" class="form-control border-info" placeholder="支持商品名和商品编号搜索...">
+                    <div class="input-group-append">
+                        <button id="search_btn" type="button" class="btn btn-info"><i class="fas fa-search"></i> 搜索</button>
+                    </div>
                 </div>
             </div>
-            </form>
         </div>
-    </div>
 
-    {% for item in goods_list %}
-    <div class="row mb-3" id="goods_{{ item.id }}">
-        <div class="col-4 col-md-3 col-xl-2">
-            <div style="height: 0; padding-top: 100%; background-size: cover; background-position: center; background-image: url('{% if item.img.first() %}{{ url_for('static', filename='img_goods/'+item.img.first().filename_s) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}')"></div>
+{#    {% for item in goods_list %}#}
+{#    <div class="row mb-3" id="goods_{{ item.id }}">#}
+{#        <div class="col-4 col-md-3 col-xl-2">#}
+{#            <div style="height: 0; padding-top: 100%; background-size: cover; background-position: center; background-image: url('{% if item.img.first() %}{{ url_for('static', filename='img_goods/'+item.img.first().filename_s) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}')"></div>#}
+{#        </div>#}
+{#        <div class="col px-0 mr-3 border-bottom">#}
+{#            {{ item.name }}#}
+{#            <br>#}
+{#            <small>编号：{% if item.number %}{{ item.number }}{% else %}{{ item.id }}{% endif %} &nbsp; 价格：&yen;{{ item.rent }} &nbsp; {% if item.type_id %}类别：{{ item.type.name }}{% endif %}</small>#}
+{#            <br>#}
+{#            <span class="float-right">#}
+{#                <a href="javascript: void(0);" class="badge badge-pill badge-info append_goods"#}
+{#                   data-gid="{{ item.id }}">#}
+{#                    添加 <i class="fas fa-shopping-cart"></i>#}
+{#                </a>#}
+{#            </span>#}
+{#        </div>#}
+{#    </div>#}
+{#    {% else %}#}
+{#    <div class="row">#}
+{#        <div class="col text-center">#}
+{#            搜索结果什么也没有，请换个词重新搜索...#}
+{#        </div>#}
+{#    </div>#}
+{#    {% endfor %}#}
+
+        <div class="row mb-4">
+            <div class="col">
+                <div class="dropdown">
+                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" id="dropdownGoodsType">
+                        {{ current_type }}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownGoodsType">
+                        {% for item in type_list %}
+                            <a href="{{ url_for('.goods_search', order_id=order_id, type_id=item.id) }}" class="dropdown-item">{{ item.name }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col px-0 mr-3 border-bottom">
-            {{ item.name }}
-            <br>
-            <small>编号：{{ item.id }} &nbsp; 价格：&yen;{{ item.rent }} &nbsp; {% if item.type_id %}类别：{{ item.type.name }}{% endif %}</small>
-            <br>
-            <span class="float-right">
-                <a href="javascript: void(0);" class="badge badge-pill badge-info append_goods"
-                   data-gid="{{ item.id }}">
-                    添加 <i class="fas fa-shopping-cart"></i>
-                </a>
-            </span>
-        </div>
-    </div>
-    {% else %}
-    <div class="row">
-        <div class="col text-center">
-            搜索结果什么也没有，请换个词重新搜索...
-        </div>
-    </div>
-    {% endfor %}
+
+        {% for item in goods_list %}
+            {% set data_src = url_for('static', filename='img_goods/'+item.img.first().filename_s) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
+
+            <div class="row mb-3">
+                <div class="col-4 col-md-3 col-xl-2 pr-0 py-0 img-box-me">
+                    <div class="rounded img_response_auto" data-src="{{ data_src }}">
+                        <span class="badge badge-pill badge-secondary">{% if item.number %}{{ item.number }}{% else %}{{ item.id }}{% endif %}</span>
+                    </div>
+                </div>
+                <div class="col px-0 mx-3 border-bottom">
+                    {{ item.name }}
+                    <br>
+                    <small>价格：&yen;{{ item.rent }} &nbsp; {% if item.type_id %}类别：{{ item.type.name }}{% endif %}</small>
+                    <br>
+                    <small class="float-right">
+                        <a href="javascript: void(0);" class="badge badge-pill badge-info append_goods"
+                           data-gid="{{ item.id }}">
+                            添加 <i class="fas fa-shopping-cart"></i>
+                        </a>
+                    </small>
+                </div>
+            </div>
+        {% else %}
+            <div class="row"><div class="col">如你所见这里一无所有...</div> </div>
+        {% endfor %}
 
     </div>
 
@@ -76,7 +115,7 @@
                 beforeSend: showLoading,
                 success: function () {
                     hideLoading();
-                    window.location.href='{{ url_for('.order_add_goods', order_id=order_id) }}';
+                    showMsg('添加成功');
                 },
                 error: function (xhr) {
                     hideLoading();
@@ -84,6 +123,26 @@
                 }
             });
         });
+
+        $('#search_btn').click(function () {
+            $.ajax({
+                url: '{{ url_for('.goods_search', order_id=order_id) }}',
+                type: 'post',
+                data: {search_word: $('#search_word').val()},
+                beforeSend: showLoading,
+                success: function () {
+                    hideLoading();
+
+                    showMsg('搜索成功');
+                },
+                error: function (xhr) {
+                    hideLoading();
+                    showMsg(xhr.statusText);
+                }
+            });
+        });
+
+        $(window).scroll($('.img-box-me'), lazyLoadingMe).scroll();
     });
 
     </script>

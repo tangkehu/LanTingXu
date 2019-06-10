@@ -20,7 +20,7 @@ def index(type_id=None):
 def goods_list(tid=0, page=1):
     # 获取商品分页展示数据
     filters = [Goods.type_id == tid] if tid is not 0 else []
-    pagination = db.session.query(Goods.id, Goods.name, GoodsImg.filename_m).join(
+    pagination = db.session.query(Goods.id, Goods.name, GoodsImg.filename_m, Goods.number).join(
         GoodsImg, GoodsImg.goods_id == Goods.id).filter(*filters).group_by(Goods.id).order_by(
         Goods.create_time.desc()).paginate(page, current_app.config['PER_PAGE'], False)
     return jsonify({'items': list(pagination.items),
