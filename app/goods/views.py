@@ -26,7 +26,7 @@ def update_goods(goods_id=None):
     """ 处理商品的添加和修改 """
     form = GoodsForm()
     goods = Goods.query.get_or_404(goods_id) if goods_id else None
-    form.goods_obj_id = goods.id if Goods else None
+    form.goods_obj_id = goods.id if goods else None
 
     if request.method == 'GET':
         for item in GoodsImg.query.filter_by(status=False, user_id=current_user.id).all():

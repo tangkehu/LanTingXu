@@ -164,11 +164,12 @@
                         beforeSend: () => $loading.show(),
                         success: function (data) {
                             for (let v of data.items) {
+                                let number = v[3] ? v[3] : v[0];
                                 let $content = $(
                                     '<div class="col-6 col-md-4 col-xl-3 mb-3 pr-0 masonry-item">\n' +
                                     '  <a href="/goods_show/'+v[0]+'" onclick="setState()">\n' +
                                     '    <img data-src="/static/img_goods/'+v[2]+'" src="/static/img/no-image.jpg" class="img-fluid rounded lazy">\n' +
-                                    '    <span class="badge badge-pill badge-secondary" style="position: absolute; left:1.5rem; top:0.5rem;">'+v[0]+'</span>' +
+                                    '    <span class="badge badge-pill badge-secondary" style="position: absolute; left:1.5rem; top:0.5rem;">'+number+'</span>' +
                                     '  </a>' +
                                     '</div>'
                                 );
