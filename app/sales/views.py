@@ -3,9 +3,11 @@ from datetime import datetime
 from flask import render_template, redirect, url_for, request, flash, jsonify
 from sqlalchemy import cast, DATE, extract
 from flask_login import login_required
+
 from . import sales_bp
 from .forms import SalesOrderForm
-from ..models import Goods, SalesOrder, GoodsType
+from .. import db
+from ..models import Goods, SalesOrder, GoodsType, GoodsImg
 from ..utils import permission_required
 
 
@@ -82,14 +84,21 @@ def goods_search(order_id, type_id=None):
 
     if request.method == "POST":
         search_word = request.form.get('search_word', '').strip()
-        goods_list = Goods.query.filter_by(number=search_word).all()  # 默认查询编号
+        if not search_word:
+            return jsonify([])  # 搜索词无效则返回空
+
+        goods_query = db.session.query(Goods.id, Goods.number, Goods.name,
+                                       GoodsImg.filename_m, GoodsType.name, Goods.price).join(
+            GoodsImg, GoodsImg.goods_id == Goods.id).join(GoodsType, GoodsType.id == Goods.type_id)
+
+        goods_list = goods_query.filter(Goods.number == search_word).group_by(Goods.id).all()  # 默认查询编号
         if goods_list:
             pass
         elif search_word.isdigit():
-            goods_list = Goods.query.filter_by(id=int(search_word)).all()
+            goods_list = goods_query.filter(Goods.id == int(search_word)).group_by(Goods.id).all()
         else:
-            goods_list = Goods.query.filter(Goods.name.like('%{}%'.format(search_word))).all()
-        return "success"
+            goods_list = goods_query.filter(Goods.name.like('%{}%'.format(search_word))).group_by(Goods.id).all()
+        return jsonify(goods_list)
 
     return render_template('sales/search_goods.html', goods_list=goods_list, type_list=type_list,
                            current_type=current_type, order_id=order_id)
