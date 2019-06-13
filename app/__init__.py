@@ -40,9 +40,11 @@ def register_click(app):
     def deploy():
         """ 部署，部署前请创建数据库迁移脚本flask db migrate """
         # from .models import Permission
-        upgrade()
-
+        # upgrade()
         # Permission.update_permissions()  # 在有新权限的时候开启
+
+        from .models import WxUser
+        WxUser.init_flag()  # 更新毕业季活动
 
         click.echo(u'本次部署初始化成功')
 

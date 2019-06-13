@@ -49,3 +49,10 @@ class WxUser(db.Model):
         self.flag = True if self.flag is False else False
         db.session.add(self)
         db.session.commit()
+
+    @staticmethod
+    def init_flag():
+        for item in WxUser.query.filter_by(flag=True).all():
+            item.flag = False
+            db.session.add(item)
+        db.session.commit()
