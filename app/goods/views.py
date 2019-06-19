@@ -13,7 +13,7 @@ from app.utils import permission_required
 def index(type_id=None):
     type_id = type_id if type_id else GoodsType.query.first().id
     current_type = GoodsType.query.get_or_404(type_id).name
-    goods_list = Goods.query.filter_by(type_id=type_id).order_by(Goods.create_time.desc()).all()
+    goods_list = Goods.query.filter(Goods.type_id == type_id, Goods.status == True).order_by(Goods.create_time.desc()).all()
     type_list = GoodsType.query.all()
     return render_template('goods/index.html', goods_list=goods_list, type_list=type_list, current_type=current_type)
 
@@ -60,6 +60,14 @@ def update_goods(goods_id=None):
 @login_required
 def delete_goods():
     Goods.query.get_or_404(int(request.form.get('goods_id'))).delete()
+    return 'successful'
+
+
+@goods_bp.route('/alt_status', methods=['POST'])
+@permission_required('goods_manage')
+@login_required
+def alt_status():
+    Goods.query.get_or_404(int(request.form.get('goods_id'))).update_status()
     return 'successful'
 
 

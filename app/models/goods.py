@@ -18,6 +18,7 @@ class Goods(db.Model):
     size = db.Column(db.String(64))
     quantity = db.Column(db.Integer)
     details = db.Column(db.Text)
+    status = db.Column(db.Boolean, default=True)
     create_time = db.Column(db.DateTime, default=datetime.now)
     updata_time = db.Column(db.DateTime, default=datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -63,6 +64,12 @@ class Goods(db.Model):
         for item in self.img.all():
             item.delete()
         db.session.delete(self)
+        db.session.commit()
+
+    def update_status(self):
+        """ 商品的上下架 """
+        self.status = False if self.status else True
+        db.session.add(self)
         db.session.commit()
 
 
