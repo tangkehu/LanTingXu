@@ -52,7 +52,7 @@
                     <br>
                     <small class="float-right">
                         <a href="{{ url_for('.update_goods', goods_id=item.id) }}" class="text-info text-decoration-none mr-2">修改 <i class="fas fa-pen-square"></i> </a>
-                        <a href="javascript:void (0);" data-gid="{{ item.id }}" class="text-warning text-decoration-none mr-2 alt-status">下架 <i class="fas fa-pen-square"></i> </a>
+                        <a href="javascript:void (0);" data-gid="{{ item.id }}" class="text-warning text-decoration-none mr-2 alt-status">下架 <i class="fas fa-cart-arrow-down"></i> </a>
                         <a href="javascript:void (0);" data-toggle="modal" data-target="#goods-delete-modal" data-goodsid="{{ item.id }}" class="text-danger text-decoration-none">删除 <i class="fas fa-trash"></i> </a>
                     </small>
                     {% endif %}
