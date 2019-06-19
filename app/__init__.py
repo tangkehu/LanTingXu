@@ -43,8 +43,10 @@ def register_click(app):
         # upgrade()
         # Permission.update_permissions()  # 在有新权限的时候开启
 
-        from .models import WxUser
-        WxUser.init_flag()  # 更新毕业季活动
+        # 商品上下架状态初始化
+        from .models import Goods
+        for item in Goods.query.all():
+            item.update_status()
 
         click.echo(u'本次部署初始化成功')
 

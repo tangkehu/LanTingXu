@@ -79,7 +79,7 @@ def order_add_goods(order_id=None):
 def goods_search(order_id, type_id=None):
     type_id = type_id if type_id else GoodsType.query.first().id
     current_type = GoodsType.query.get_or_404(type_id).name
-    goods_list = Goods.query.filter_by(type_id=type_id).order_by(Goods.create_time.desc()).all()
+    goods_list = Goods.query.filter(Goods.type_id == type_id, Goods.status == True).order_by(Goods.create_time.desc()).all()
     type_list = GoodsType.query.all()
 
     if request.method == "POST":
