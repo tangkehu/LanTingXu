@@ -39,14 +39,12 @@ def register_click(app):
     @app.cli.command()
     def deploy():
         """ 部署，部署前请创建数据库迁移脚本flask db migrate """
-        # from .models import Permission
-        # upgrade()
-        # Permission.update_permissions()  # 在有新权限的时候开启
+        # upgrade()  # 数据库更新
 
-        # 商品上下架状态初始化
-        from .models import Goods
-        for item in Goods.query.all():
-            item.update_status()
+        # from .models import Role
+        # Role.insert_basic_role()  # 初始化系统时插入基础角色
+        # from .models import Permission
+        # Permission.update_permissions()  # 系统初始化时开启，或在有新权限的时候开启
 
         click.echo(u'本次部署初始化成功')
 

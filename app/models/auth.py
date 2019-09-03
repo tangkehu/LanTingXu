@@ -134,6 +134,7 @@ class Role(db.Model):
 
     @staticmethod
     def insert_basic_role():
+        """ 初始化系统时创建基础角色 """
         basic_role = [{'name': '超级管理员', 'details': '最高级的管理员'},
                       {'name': '普通用户', 'details': '普通注册用户'}]
         for item in basic_role:
@@ -187,6 +188,7 @@ class Permission(db.Model):
 
     @staticmethod
     def update_permissions():
+        """ 在有新权限的时候使用此方法更新权限 """
         update_status = False
         for item in current_app.config['PERMISSIONS']:
             if Permission.query.filter_by(name=item[0]).count() is 0:
