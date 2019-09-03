@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{# 设置footer置底的关键代码 #}
+{% block html_tag %}class="h-100"{% endblock %}
+{% block body_tag %}class="d-flex flex-column h-100"{% endblock %}
+
+{% block body %}
+    <main role="main" class="flex-shrink-0">
+    <div class="container">
+
+        <!-- logo部分 -->
+        <div class="row mt-3">
+            <div class="col">
+                <img src="{{ url_for('static', filename='img/lantinglogo.gif') }}" width="40rem" height="40rem"><span class="ml-2 align-middle font-weight-bold">兰亭续汉服生活馆</span>
+            </div>
+        </div>
+
+        <!-- 标头caption部分 -->
+        <div class="row rounded my-3 mx-0" style="height: 15rem; background: url('{{ url_for('static', filename='img/bg-masthead.jpg') }}') no-repeat; background-size: cover;">
+            <div class="h-100 w-100 rounded" style="background: rgba(0,0,0,0.4);">
+                <div class="row h-100 align-items-center text-white">
+                    <div class="col m-2">
+                        <p class="h4">{{ body.caption }}</p>
+                        <p>{{ body.subhead }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 导航条 -->
+        <ul class="nav nav-pills justify-content-center border-bottom border-warning mb-3">
+            {% for item in type_list %}
+                <li class="nav-item">
+                    <a class="nav-link {% if item.id == type_id %}text-warning{% else %}text-black-50{% endif %}"
+                       href="{{ url_for('.index_new', type_id=item.id) }}">{{ item.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="row masonry mr-0"></div>
+        <div class="row">
+            <div class="col-12 text-center loading" style="display: none;">
+                <div class="spinner-border" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+            <div class="col-12 text-center data-null" style="display: none;">
+                全部已加载...
+            </div>
+            <div class="col-12 text-center error-load" style="display: none;">
+                加载失败，请刷新页面重试...
+            </div>
+        </div>
+    </div>
+    </main>
+
+    <!-- footer部分 -->
+    <footer class="mt-auto py-3">
+      <div class="container">
+        <div class="small text-center text-muted">版权所有 &copy; 2018-2019 - 兰亭续文化创意工作室</div>
+        <div class="small text-center">
+            <a href="http://www.miitbeian.gov.cn/" class="text-muted">蜀ICP备18036635号</a> |
+            <a href="{{ url_for('goods_bp.index') }}" class="text-muted">后台管理系统</a>
+        </div>
+      </div>
+    </footer>
+
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+
+    $(function () {
+        let data_url;
+        let $loading = $('.loading');
+        let $dataNull = $('.data-null');
+        let $errorLoad = $('.error-load');
+        let $masonry = $('.masonry');
+
+        // 监听窗口滚动事件 商品数据分页瀑布流
+        $(window).scroll(function () {
+            if (data_url && $(document).height() - $(window).height() - $(window).scrollTop() < 200){
+                $.ajax({
+                    url: data_url,
+                    beforeSend: () => $loading.show(),
+                    success: function (data) {
+                        for (let v of data.items) {
+                            let number = v[3] ? v[3] : v[0];
+                            let $content = $(
+                                '<div class="col-6 col-md-4 col-xl-3 mb-3 pr-0 masonry-item">\n' +
+                                '  <a href="/goods_show/'+v[0]+'">\n' +
+                                '    <img src="/static/img_goods/'+v[2]+'" class="img-fluid rounded">\n' +
+                                '    <span class="badge badge-pill badge-secondary" style="position: absolute; left:1.5rem; top:0.5rem;">'+number+'</span>' +
+                                '  </a>' +
+                                '</div>'
+                            );
+                            $masonry.masonry({itemSelector: '.masonry-item'}).append($content).masonry('appended', $content);
+                        }
+                        if (data.items.length > 0) {
+                            $masonry.imagesLoaded( function () {
+                                $masonry.masonry('layout');
+                            });
+                        }
+                        if (!data.next) $dataNull.show();
+                        data_url = data.next;
+                    },
+                    error: () => $errorLoad.show(),
+                    complete: () => $loading.hide()
+                });
+                data_url = null;
+            } else {
+                if (!data_url) {
+                    $dataNull.show();
+                } else {
+                    $dataNull.hide();
+                }
+            }
+        });
+
+        // 监听商品点击事件记录当前页面状态
+        $masonry.on('click', 'a', function () {  //TODO: 保存当前页面状态可能有BUG
+            window.sessionStorage.content=$masonry.html();
+            window.sessionStorage.url=data_url;
+            window.sessionStorage.scroll=$(window).scrollTop();
+        });
+
+        // 加载之前浏览位置
+        if (window.sessionStorage.url !== undefined) {
+            data_url = window.sessionStorage.url === 'null' ? null : window.sessionStorage.url;
+            $masonry.html(window.sessionStorage.content);
+            $masonry.imagesLoaded( function () {
+                $masonry.masonry({itemSelector: '.masonry-item'});
+            });
+            $(window).scrollTop(parseInt(window.sessionStorage.scroll));
+            window.sessionStorage.clear();
+        } else {
+            data_url = '{{ url_for('.goods_list', tid=type_id, page=1) }}';  // 初始化url
+            $(window).scroll();
+        }
+    });
+
+    </script>
+{% endblock %}

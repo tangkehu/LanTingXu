@@ -43,5 +43,14 @@ def goods_no_price(goods_id=None):
                         'size': goods.size,
                         'quantity': goods.quantity,
                         'images': [item.filename_l for item in goods.img.all()]})
-    goods_list = Goods.query.order_by(Goods.create_time.desc()).all()
-    return render_template('main/goods_no_price.html', goods_list=goods_list)
+    goods_li = Goods.query.order_by(Goods.create_time.desc()).all()
+    return render_template('main/goods_no_price.html', goods_list=goods_li)
+
+
+@main_bp.route('/index_new')
+@main_bp.route('/index_new/<int:type_id>')
+def index_new(type_id=None):
+    body = HomePage.query.first()
+    type_id = type_id if type_id else GoodsType.query.first().id
+    type_list = GoodsType.query.all()
+    return render_template('main/index_new.html', body=body, type_id=type_id, type_list=type_list)
