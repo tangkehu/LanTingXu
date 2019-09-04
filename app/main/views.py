@@ -1,4 +1,4 @@
-from flask import render_template, jsonify, current_app, url_for
+from flask import render_template, jsonify, current_app, url_for, redirect
 
 from . import main_bp
 from app import db
@@ -7,13 +7,17 @@ from app.models import Goods, GoodsType, GoodsImg, HomePage
 
 @main_bp.route('/')
 @main_bp.route('/<int:type_id>')
+@main_bp.route('/index')
+@main_bp.route('/index/<int:type_id>')
 def index(type_id=None):
     type_id = type_id if type_id else GoodsType.query.first().id
     type_list = GoodsType.query.all()
     body = HomePage.query.first()
     current_type = GoodsType.query.get_or_404(type_id).name
-    return render_template('main/index.html',
-                           type_id=type_id, type_list=type_list, current_type=current_type, body=body)
+    return redirect(url_for('.index_new'))
+    # return render_template('main/blank.html')
+    # return render_template('main/index.html',
+    #                        type_id=type_id, type_list=type_list, current_type=current_type, body=body)
 
 
 @main_bp.route('/goods_list/<int:tid>/<int:page>')
