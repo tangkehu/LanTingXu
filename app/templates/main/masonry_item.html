@@ -1,0 +1,11 @@
+
+<div class="col-6 col-md-4 col-xl-3 mb-3 pr-0 masonry-item">
+    <a href="{{ url_for('.goods_show', goods_id=item[0]) }}">
+        <div class="rounded bg-secondary" style="height: 0; padding-bottom: {{ goods_img_ratio(item[2]) * 100 }}%;">
+            <img data-src="{{ url_for('static', filename='img_goods/'+item[2]) }}" class="img-fluid rounded lazy">
+            <span class="badge badge-pill badge-secondary" style="position: absolute; left:1.5rem; top:0.5rem;">
+                {% if item[3] %}{{ item[3] }}{% else %}{{ item[0] }}{% endif %}
+            </span>
+        </div>
+    </a>
+</div>

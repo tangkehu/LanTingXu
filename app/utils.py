@@ -6,7 +6,7 @@ from PIL import Image
 from functools import wraps
 from logging.handlers import SMTPHandler
 from flask_login import current_user
-from flask import abort
+from flask import abort, current_app
 
 
 def random_filename(filename):
@@ -36,6 +36,13 @@ def resize_img(path, filename, size: int):
         filename = prefix+'_'+str(size)+ext
         img.save(os.path.join(path, filename), optimize=True, quality=85)
         return filename
+
+
+def goods_img_ratio(filename):
+    img = Image.open(os.path.join(current_app.config['GOODS_IMG_PATH'], filename))
+    width = img.size[0]
+    height = img.size[1]
+    return height/width
 
 
 # Provide a class to allow SSL (Not TLS) connection for mail handlers by overloading the emit() method

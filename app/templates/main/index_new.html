@@ -91,30 +91,21 @@
         let $errorLoad = $('.error-load');
         let $masonry = $('.masonry');
 
+        // 初始化懒加载
+        let lazyLoadInstance = new LazyLoad({elements_selector: ".lazy"});
+
         // 监听窗口滚动事件 商品数据分页瀑布流
         $(window).scroll(function () {
-            if (data_url && $(document).height() - $(window).height() - $(window).scrollTop() < 500){
+            if (data_url && $(document).height() - $(window).height() - $(window).scrollTop() < 200){
                 $.ajax({
                     url: data_url,
                     beforeSend: () => $loading.show(),
                     success: function (data) {
                         for (let v of data.items) {
-                            let number = v[3] ? v[3] : v[0];
-                            let $content = $(
-                                '<div class="col-6 col-md-4 col-xl-3 mb-3 pr-0 masonry-item">\n' +
-                                '  <a href="/goods_show/'+v[0]+'">\n' +
-                                '    <img src="/static/img_goods/'+v[2]+'" class="img-fluid rounded">\n' +
-                                '    <span class="badge badge-pill badge-secondary" style="position: absolute; left:1.5rem; top:0.5rem;">'+number+'</span>' +
-                                '  </a>' +
-                                '</div>'
-                            );
+                            let $content = $(v);
                             $masonry.masonry({itemSelector: '.masonry-item'}).append($content).masonry('appended', $content);
                         }
-                        if (data.items.length > 0) {
-                            $masonry.imagesLoaded( function () {
-                                $masonry.masonry('layout');
-                            });
-                        }
+                        if (data.items.length > 0) lazyLoadInstance.update();
                         if (!data.next) $dataNull.show();
                         data_url = data.next;
                     },
@@ -137,9 +128,7 @@
             data_url = window.sessionStorage.url === 'null' ? null : window.sessionStorage.url;
             $('#masonry-content').html(window.sessionStorage.content);
             $masonry.masonry({itemSelector: '.masonry-item'});
-            $masonry.imagesLoaded( function () {
-                $masonry.masonry('layout');
-            });
+            lazyLoadInstance.update();
             $(window).scrollTop(parseInt(window.sessionStorage.scroll));
             window.sessionStorage.clear();
         } else {
