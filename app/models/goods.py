@@ -76,7 +76,7 @@ class Goods(db.Model):
 class GoodsType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
-    sequence = db.Column(db.Integer, default=2)
+    sequence = db.Column(db.Integer, default=1)
 
     goods = db.relationship('Goods', backref='type', lazy='dynamic')
 

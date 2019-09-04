@@ -8,7 +8,7 @@ from flask_migrate import Migrate, upgrade
 from flask_login import LoginManager
 
 from config import config
-from .utils import SSLSMTPHandler
+from .utils import SSLSMTPHandler, goods_img_ratio
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -45,12 +45,6 @@ def register_click(app):
         # Role.insert_basic_role()  # 初始化系统时插入基础角色
         # from .models import Permission
         # Permission.update_permissions()  # 系统初始化时开启，或在有新权限的时候开启
-
-        from .models import GoodsType  # 初始化商品类型次序
-        for item in GoodsType.query.all():
-            item.sequence = 2
-            db.session.add(item)
-        db.session.commit()
 
         click.echo(u'本次部署初始化成功')
 
@@ -91,8 +85,8 @@ def register_errors(app):
 
 def register_template_context(app):
     @app.context_processor
-    def inject_bootcdn():
-        return dict(bootcdn=app.config['BOOT_CDN'])
+    def inject_context():
+        return dict(bootcdn=app.config['BOOT_CDN'], goods_img_ratio=goods_img_ratio)
 
 
 def register_logging(app):
