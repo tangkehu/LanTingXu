@@ -11,11 +11,12 @@ from app.utils import permission_required
 @goods_bp.route('/<int:type_id>')
 @login_required
 def index(type_id=None):
-    type_id = type_id if type_id else GoodsType.query.first().id
-    current_type = GoodsType.query.get_or_404(type_id).name
-    goods_list = Goods.query.filter(Goods.type_id == type_id, Goods.status == True).order_by(Goods.create_time.desc()).all()
+    """ :param type_id: 当其为0时表示类型为已下架商品 """
+    type_id = GoodsType.query.first().id if type_id is None else type_id
+    params = [Goods.type_id == type_id, Goods.status == True] if type_id else [Goods.status == False]
+    goods_list = Goods.query.filter(*params).order_by(Goods.create_time.desc()).all()
     type_list = GoodsType.query.all()
-    return render_template('goods/index.html', goods_list=goods_list, type_list=type_list, current_type=current_type)
+    return render_template('goods/index.html', goods_list=goods_list, type_list=type_list, type_id=type_id)
 
 
 @goods_bp.route('/update_goods', methods=['GET', 'POST'])
