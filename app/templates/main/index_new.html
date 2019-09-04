@@ -6,17 +6,18 @@
 
 {% block body %}
     <main role="main" class="flex-shrink-0">
-    <div class="container">
 
+    <!-- 主体上半部分 -->
+    <div class="container">
         <!-- logo部分 -->
-        <div class="row mt-3">
+        <div class="row my-2">
             <div class="col">
                 <img src="{{ url_for('static', filename='img/lantinglogo.gif') }}" width="40rem" height="40rem"><span class="ml-2 align-middle font-weight-bold">兰亭续汉服生活馆</span>
             </div>
         </div>
 
         <!-- 标头caption部分 -->
-        <div class="row rounded my-3 mx-0" style="height: 15rem; background: url('{{ url_for('static', filename='img/bg-masthead.jpg') }}') no-repeat; background-size: cover;">
+        <div class="row rounded mx-0" style="height: 15rem; background: url('{{ url_for('static', filename='img/bg-masthead.jpg') }}') no-repeat; background-size: cover;">
             <div class="h-100 w-100 rounded" style="background: rgba(0,0,0,0.4);">
                 <div class="row h-100 align-items-center text-white">
                     <div class="col m-2">
@@ -28,16 +29,22 @@
         </div>
 
         <!-- 导航条 -->
-        <ul class="nav nav-pills justify-content-center border-bottom border-warning mb-3">
+        <ul class="nav justify-content-center">
             {% for item in type_list %}
                 <li class="nav-item">
-                    <a class="nav-link {% if item.id == type_id %}text-warning{% else %}text-black-50{% endif %}"
+                    <a class="nav-link {% if item.id == type_id %}text-warning  border-bottom border-warning{% else %}text-black-50{% endif %}"
                        href="{{ url_for('.index_new', type_id=item.id) }}">{{ item.name }}</a>
                 </li>
             {% endfor %}
         </ul>
+    </div>
+
+    <!-- 瀑布流布局内容 -->
+    <div class="container mt-4" id="masonry-content">
 
         <div class="row masonry mr-0"></div>
+
+        <!-- 瀑布流内容加载消息提示部分 -->
         <div class="row">
             <div class="col-12 text-center loading" style="display: none;">
                 <div class="spinner-border" role="status">
@@ -79,7 +86,7 @@
 
         // 监听窗口滚动事件 商品数据分页瀑布流
         $(window).scroll(function () {
-            if (data_url && $(document).height() - $(window).height() - $(window).scrollTop() < 200){
+            if (data_url && $(document).height() - $(window).height() - $(window).scrollTop() < 500){
                 $.ajax({
                     url: data_url,
                     beforeSend: () => $loading.show(),
@@ -108,18 +115,12 @@
                     complete: () => $loading.hide()
                 });
                 data_url = null;
-            } else {
-                if (!data_url) {
-                    $dataNull.show();
-                } else {
-                    $dataNull.hide();
-                }
             }
         });
 
         // 监听商品点击事件记录当前页面状态
-        $masonry.on('click', 'a', function () {  //TODO: 保存当前页面状态可能有BUG
-            window.sessionStorage.content=$masonry.html();
+        $('#masonry-content').on('click', 'a', function () {
+            window.sessionStorage.content=$('#masonry-content').html();
             window.sessionStorage.url=data_url;
             window.sessionStorage.scroll=$(window).scrollTop();
         });
@@ -127,9 +128,10 @@
         // 加载之前浏览位置
         if (window.sessionStorage.url !== undefined) {
             data_url = window.sessionStorage.url === 'null' ? null : window.sessionStorage.url;
-            $masonry.html(window.sessionStorage.content);
+            $('#masonry-content').html(window.sessionStorage.content);
+            $masonry.masonry({itemSelector: '.masonry-item'});
             $masonry.imagesLoaded( function () {
-                $masonry.masonry({itemSelector: '.masonry-item'});
+                $masonry.masonry('layout');
             });
             $(window).scrollTop(parseInt(window.sessionStorage.scroll));
             window.sessionStorage.clear();

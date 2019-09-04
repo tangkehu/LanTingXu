@@ -7,6 +7,6 @@
         {% if current_user.can('system_manage') %}
         <a class="nav-link text-info" href="{{ url_for('manage_bp.user') }}" style="line-height: 16px; font-size: 12px;"><i class="fas fa-cog lead"></i><br>后台 </a>
         {% endif %}
-        <a class="nav-link text-info" href="{{ url_for('main_bp.index') }}" style="line-height: 16px; font-size: 12px;"><i class="fas fa-home lead"></i><br>主页 </a>
+        <a class="nav-link text-info" href="{{ url_for('main_bp.index_new') }}" style="line-height: 16px; font-size: 12px;"><i class="fas fa-home lead"></i><br>主页 </a>
     </nav>
 </div>
