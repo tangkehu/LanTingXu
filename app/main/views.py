@@ -51,6 +51,6 @@ def goods_no_price(goods_id=None):
 @main_bp.route('/index_new/<int:type_id>')
 def index_new(type_id=None):
     body = HomePage.query.first()
-    type_id = type_id if type_id else GoodsType.query.first().id
+    type_id = type_id if type_id else GoodsType.query.filter_by(sequence=1).first().id
     type_list = GoodsType.query.all()
     return render_template('main/index_new.html', body=body, type_id=type_id, type_list=type_list)

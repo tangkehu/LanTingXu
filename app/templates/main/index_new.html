@@ -12,7 +12,9 @@
         <!-- logo部分 -->
         <div class="row my-2">
             <div class="col">
-                <img src="{{ url_for('static', filename='img/lantinglogo.gif') }}" width="40rem" height="40rem"><span class="ml-2 align-middle font-weight-bold">兰亭续汉服生活馆</span>
+                <a href="{{ url_for('.index_new') }}">
+                <img src="{{ url_for('static', filename='img/lantinglogo.gif') }}" width="40rem" height="40rem"><span class="ml-2 align-middle font-weight-bold text-dark">兰亭续汉服生活馆</span>
+                </a>
             </div>
         </div>
 
@@ -31,7 +33,7 @@
         <!-- 导航条 -->
         <ul class="nav justify-content-center">
             {% for item in type_list %}
-                <li class="nav-item">
+                <li class="nav-item order-{{ item.sequence }}">
                     <a class="nav-link {% if item.id == type_id %}text-warning  border-bottom border-warning{% else %}text-black-50{% endif %}"
                        href="{{ url_for('.index_new', type_id=item.id) }}">{{ item.name }}</a>
                 </li>

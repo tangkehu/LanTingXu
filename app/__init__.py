@@ -46,6 +46,12 @@ def register_click(app):
         # from .models import Permission
         # Permission.update_permissions()  # 系统初始化时开启，或在有新权限的时候开启
 
+        from .models import GoodsType  # 初始化商品类型次序
+        for item in GoodsType.query.all():
+            item.sequence = 2
+            db.session.add(item)
+        db.session.commit()
+
         click.echo(u'本次部署初始化成功')
 
 

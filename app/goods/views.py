@@ -12,7 +12,7 @@ from app.utils import permission_required
 @login_required
 def index(type_id=None):
     """ :param type_id: 当其为0时表示类型为已下架商品 """
-    type_id = GoodsType.query.first().id if type_id is None else type_id
+    type_id = GoodsType.query.filter_by(sequence=1).first().id if type_id is None else type_id
     params = [Goods.type_id == type_id, Goods.status == True] if type_id else [Goods.status == False]
     goods_list = Goods.query.filter(*params).order_by(Goods.create_time.desc()).all()
     type_list = GoodsType.query.all()
