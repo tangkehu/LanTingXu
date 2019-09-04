@@ -127,7 +127,6 @@
         if (window.sessionStorage.url !== undefined) {
             data_url = window.sessionStorage.url === 'null' ? null : window.sessionStorage.url;
             $('#masonry-content').html(window.sessionStorage.content);
-            $masonry.masonry({itemSelector: '.masonry-item'});
             lazyLoadInstance.update();
             $(window).scrollTop(parseInt(window.sessionStorage.scroll));
             window.sessionStorage.clear();
