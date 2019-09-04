@@ -1,11 +1,17 @@
 {% extends "base.html" %}
 
 {% block body %}
-    <div class="border-bottom shadow-sm mb-4">
+    <div class="border-bottom shadow-sm">
         <div class="container py-2">
             <div class="row">
                 <div class="col">
                     <span class="lead">商品管理</span>
+                </div>
+                <div class="col text-right">
+                    {% if current_user.can('goods_manage') %}
+                        <span class="lead"></span> <!-- 用来撑行高的 -->
+                        <a href="{{ url_for('.update_goods', type_id=type_id) }}" class="text-info"><i class="fas fa-plus"></i> 新商品</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -13,32 +19,26 @@
 
     <div class="container mb-5 pb-5">
 
-        <div class="row mb-4">
-            <div class="col">
-                <div class="dropdown">
-                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" id="dropdownGoodsType">
-                        {{ current_type }}
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownGoodsType">
-                        {% for item in type_list %}
-                            <a href="{{ url_for('.index', type_id=item.id) }}" class="dropdown-item">{{ item.name }}</a>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-            {% if current_user.can('goods_manage') %}
-            <div class="col text-right text-nowrap">
-                <a href="{{ url_for('.update_goods') }}" class="btn btn-outline-info"><i class="fas fa-plus"></i> 新商品</a>
-            </div>
-            {% endif %}
-        </div>
+        <!-- 二级导航条 -->
+        <ul class="nav justify-content-center mb-4">
+            {% for item in type_list %}
+                <li class="nav-item order-{{ item.sequence }}">
+                    <a class="nav-link {% if item.id == type_id %}text-info  border-bottom border-info{% else %}text-black-50{% endif %}"
+                       href="{{ url_for('.index', type_id=item.id) }}">{{ item.name }}</a>
+                </li>
+            {% endfor %}
+            <li class="nav-item order-last">
+                <a class="nav-link {% if type_id == 0 %}text-info  border-bottom border-info{% else %}text-black-50{% endif %}"
+                   href="{{ url_for('.index', type_id=0) }}">已下架</a>
+            </li>
+        </ul>
 
         {% for item in goods_list %}
             {% set data_src = url_for('static', filename='img_goods/'+item.img.first().filename_s) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
 
             <div class="row mb-3" id="goods_{{ item.id }}">
                 <div class="col-4 col-md-3 col-xl-2 pr-0 py-0 img-box-me">
-                    <a {% if current_user.can('system_manage') or current_user.id == item.user_id %}href="{{ url_for('.update_goods', goods_id=item.id) }}"{% endif %}>
+                    <a {% if current_user.can('system_manage') or current_user.id == item.user_id %}href="{{ url_for('.update_goods', type_id=type_id, goods_id=item.id) }}"{% endif %}>
                         <div class="rounded img_response_auto" data-src="{{ data_src }}">
                             <span class="badge badge-pill badge-secondary">{% if item.number %}{{ item.number }}{% else %}{{ item.id }}{% endif %}</span>
                         </div>
@@ -51,15 +51,21 @@
                     {% if current_user.can('system_manage') or current_user.id == item.user_id %}
                     <br>
                     <small class="float-right">
-                        <a href="{{ url_for('.update_goods', goods_id=item.id) }}" class="text-info text-decoration-none mr-2">修改 <i class="fas fa-pen-square"></i> </a>
-                        <a href="javascript:void (0);" data-gid="{{ item.id }}" class="text-warning text-decoration-none mr-2 alt-status">下架 <i class="fas fa-cart-arrow-down"></i> </a>
+                        <a href="{{ url_for('.update_goods', type_id=type_id, goods_id=item.id) }}" class="text-info text-decoration-none mr-2">修改 <i class="fas fa-pen-square"></i> </a>
+                        <a href="javascript:void (0);" data-gid="{{ item.id }}" class="text-warning text-decoration-none mr-2 alt-status">
+                            {% if item.status %}
+                                下架 <i class="fas fa-cart-arrow-down"></i>
+                            {% else %}
+                                上架 <i class="fas fa-arrow-up"></i>
+                            {% endif %}
+                        </a>
                         <a href="javascript:void (0);" data-toggle="modal" data-target="#goods-delete-modal" data-goodsid="{{ item.id }}" class="text-danger text-decoration-none">删除 <i class="fas fa-trash"></i> </a>
                     </small>
                     {% endif %}
                 </div>
             </div>
         {% else %}
-            <div class="row"><div class="col">如你所见这里一无所有...</div> </div>
+            <div class="row"><div class="col text-center">这里什么也没有...</div> </div>
         {% endfor %}
 
     </div>
@@ -128,7 +134,7 @@
                 success: function (data) {
                     $("#goods_"+goods_id.toString()).remove();
                     hideLoading();
-                    showMsg('下架成功。');
+                    showMsg('操作成功。');
                 },
                 error: function () {
                     showMsg('该商品已被删除。');

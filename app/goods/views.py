@@ -11,24 +11,30 @@ from app.utils import permission_required
 @goods_bp.route('/<int:type_id>')
 @login_required
 def index(type_id=None):
-    type_id = type_id if type_id else GoodsType.query.first().id
-    current_type = GoodsType.query.get_or_404(type_id).name
-    goods_list = Goods.query.filter(Goods.type_id == type_id, Goods.status == True).order_by(Goods.create_time.desc()).all()
+    """ :param type_id: 当其为0时表示类型为已下架商品 """
+    type_id = GoodsType.query.filter_by(sequence=1).first().id if type_id is None else type_id
+    params = [Goods.type_id == type_id, Goods.status == True] if type_id else [Goods.status == False]
+    goods_list = Goods.query.filter(*params).order_by(Goods.create_time.desc()).all()
     type_list = GoodsType.query.all()
-    return render_template('goods/index.html', goods_list=goods_list, type_list=type_list, current_type=current_type)
+    return render_template('goods/index.html', goods_list=goods_list, type_list=type_list, type_id=type_id)
 
 
-@goods_bp.route('/update_goods', methods=['GET', 'POST'])
-@goods_bp.route('/update_goods/<int:goods_id>', methods=['GET', 'POST'])
+@goods_bp.route('/update_goods/<int:type_id>', methods=['GET', 'POST'])
+@goods_bp.route('/update_goods/<int:type_id>/<int:goods_id>', methods=['GET', 'POST'])
 @permission_required('goods_manage')
 @login_required
-def update_goods(goods_id=None):
-    """ 处理商品的添加和修改 """
+def update_goods(type_id, goods_id=None):
+    """ 处理商品的添加和修改
+     :param type_id: 用于定位返回页面的位置
+     :param goods_id: 商品ID
+     """
     form = GoodsForm()
     goods = Goods.query.get_or_404(goods_id) if goods_id else None
     form.goods_obj_id = goods.id if goods else None
 
     if request.method == 'GET':
+        if type_id > 0:
+            form.type.data = type_id
         for item in GoodsImg.query.filter_by(status=False, user_id=current_user.id).all():
             # 清理未关联的商品图
             item.delete()
@@ -44,13 +50,13 @@ def update_goods(goods_id=None):
             if GoodsImg.query.filter_by(status=False, user_id=current_user.id).first():
                 Goods().add(form.name.data, form.rent.data, **kwargs)
                 flash('商品添加成功。')
-                return redirect(url_for('.index'))
+                return redirect(url_for('.index', type_id=form.type.data))
             else:
                 flash('请添加商品图。')
         else:
             goods.edit(form.name.data, form.rent.data, **kwargs)
             flash('商品修改成功。')
-            return redirect(url_for('.index')+'#goods_{}'.format(goods_id))
+            return redirect(url_for('.index', type_id=type_id)+'#goods_{}'.format(goods_id))
 
     return render_template('goods/update_goods.html', form=form, goods=goods)
 

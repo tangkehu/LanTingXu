@@ -1,4 +1,4 @@
-from flask import render_template, jsonify, current_app, url_for
+from flask import render_template, jsonify, current_app, url_for, redirect
 
 from . import main_bp
 from app import db
@@ -7,13 +7,17 @@ from app.models import Goods, GoodsType, GoodsImg, HomePage
 
 @main_bp.route('/')
 @main_bp.route('/<int:type_id>')
+@main_bp.route('/index')
+@main_bp.route('/index/<int:type_id>')
 def index(type_id=None):
     type_id = type_id if type_id else GoodsType.query.first().id
     type_list = GoodsType.query.all()
     body = HomePage.query.first()
     current_type = GoodsType.query.get_or_404(type_id).name
-    return render_template('main/index.html',
-                           type_id=type_id, type_list=type_list, current_type=current_type, body=body)
+    return redirect(url_for('.index_new'))
+    # return render_template('main/blank.html')
+    # return render_template('main/index.html',
+    #                        type_id=type_id, type_list=type_list, current_type=current_type, body=body)
 
 
 @main_bp.route('/goods_list/<int:tid>/<int:page>')
@@ -43,5 +47,14 @@ def goods_no_price(goods_id=None):
                         'size': goods.size,
                         'quantity': goods.quantity,
                         'images': [item.filename_l for item in goods.img.all()]})
-    goods_list = Goods.query.order_by(Goods.create_time.desc()).all()
-    return render_template('main/goods_no_price.html', goods_list=goods_list)
+    goods_li = Goods.query.order_by(Goods.create_time.desc()).all()
+    return render_template('main/goods_no_price.html', goods_list=goods_li)
+
+
+@main_bp.route('/index_new')
+@main_bp.route('/index_new/<int:type_id>')
+def index_new(type_id=None):
+    body = HomePage.query.first()
+    type_id = type_id if type_id else GoodsType.query.filter_by(sequence=1).first().id
+    type_list = GoodsType.query.all()
+    return render_template('main/index_new.html', body=body, type_id=type_id, type_list=type_list)
