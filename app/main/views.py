@@ -14,8 +14,8 @@ def index(type_id=None):
     type_list = GoodsType.query.all()
     body = HomePage.query.first()
     current_type = GoodsType.query.get_or_404(type_id).name
-    return redirect(url_for('.index_new'))
-    # return render_template('main/blank.html')
+    # return redirect(url_for('.index_new'))
+    return render_template('main/blank.html')
     # return render_template('main/index.html',
     #                        type_id=type_id, type_list=type_list, current_type=current_type, body=body)
 

@@ -86,20 +86,21 @@
 
     $(function () {
         let data_url;
-        let $loading = $('.loading');
-        let $dataNull = $('.data-null');
-        let $errorLoad = $('.error-load');
-        let $masonry = $('.masonry');
+        let ajax_flg = true;  // 标识是否可以进行ajax请求，如果上一次ajax请求完成了则可以进行下一次的请求了
 
         // 初始化懒加载
         let lazyLoadInstance = new LazyLoad({elements_selector: ".lazy"});
 
         // 监听窗口滚动事件 商品数据分页瀑布流
         $(window).scroll(function () {
-            if (data_url && $(document).height() - $(window).height() - $(window).scrollTop() < 200){
+            if (data_url && ajax_flg && $(document).height() - $(window).height() - $(window).scrollTop() < 200){
+                let $loading = $('.loading');
+                let $dataNull = $('.data-null');
+                let $errorLoad = $('.error-load');
+                let $masonry = $('.masonry');
                 $.ajax({
                     url: data_url,
-                    beforeSend: () => $loading.show(),
+                    beforeSend: function () { $loading.show(); ajax_flg = false },
                     success: function (data) {
                         for (let v of data.items) {
                             let $content = $(v);
@@ -110,9 +111,8 @@
                         data_url = data.next;
                     },
                     error: () => $errorLoad.show(),
-                    complete: () => $loading.hide()
+                    complete: function () { $loading.hide(); ajax_flg = true }
                 });
-                data_url = null;
             }
         });
 
