@@ -1,11 +1,26 @@
-{% extends 'base.html' %}
+{#{% extends 'base.html' %}#}
+{##}
+{#{% block body %}#}
+<!doctype html>
+<html lang="zh-CN" class="h-100">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/font-awesome/5.8.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.2.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.bootcss.com/vanilla-lazyload/11.0.5/lazyload.min.js"></script>
+</head>
 
-{% block body %}
+<body class="h-100 d-flex flex-column">
 
 <nav class="navbar justify-content-center shadow">
     <div class="navbar-brand">
         <img src="{{ url_for('static', filename='img/lantinglogo.gif') }}" width="30" height="30" class="d-inline-block align-top" alt="lanting.live">
-        兰亭续文创工作室 <small class="text-muted">汉服租赁</small>
+{#        兰亭续文创工作室 <small class="text-muted">汉服租赁</small>#}
+        兰亭续个人相册 <small class="text-muted">汉服</small>
     </div>
 </nav>
 
@@ -19,10 +34,11 @@
                 <span class="badge badge-pill badge-secondary">{{ item.id }}</span>
             </div>
             </a>
-            <p class="text-truncate text-dark"><small>{{ item.name }}</small></p>
+{#            <p class="text-truncate text-dark"><small>{{ item.name }}</small></p>#}
         </div>
         {% else %}
-            <div class="col">当前暂无商品图.</div>
+{#            <div class="col">当前暂无商品图.</div>#}
+            <div class="col">当前暂无.</div>
         {% endfor %}
     </div>
 
@@ -33,15 +49,22 @@
           <div class="modal-body">
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-info btn-block" data-dismiss="modal">知了</button>
+            <button type="button" class="btn btn-info btn-block" data-dismiss="modal">关闭</button>
           </div>
         </div>
       </div>
     </div>
 </div>
-{% endblock %}
 
-{% block script %}
+		<footer class="mt-auto py-3">
+		  <div class="container text-center">
+		    <span class="text-muted"><a href="http://www.miitbeian.gov.cn/" class="text-muted">蜀ICP备18036635号</a></span>
+		  </div>
+		</footer>
+
+{#{% endblock %}#}
+{##}
+{#{% block script %}#}
 <script type="text/javascript">
 
 $("#goods-no-price-modal").on("show.bs.modal", function (event) {
@@ -57,10 +80,10 @@ $("#goods-no-price-modal").on("show.bs.modal", function (event) {
         },
         success: function (data) {
             let html_str = '';
-            if (data.name) { html_str += '<span class="lead font-weight-bold">'+data.name+'</span><br>' }
-            if (data.cash_pledge) { html_str += '押金：'+data.cash_pledge+'<br>' }
-            if (data.size) { html_str += '尺码：'+data.size+'<br>'}
-            if (data.quantity) { html_str += '库存：'+data.quantity+'<br>' }
+            {#if (data.name) { html_str += '<span class="lead font-weight-bold">'+data.name+'</span><br>' }#}
+            {#if (data.cash_pledge) { html_str += '押金：'+data.cash_pledge+'<br>' }#}
+            {#if (data.size) { html_str += '尺码：'+data.size+'<br>'}#}
+            {#if (data.quantity) { html_str += '库存：'+data.quantity+'<br>' }#}
             if (data.images) {
                 for (one in data.images) {
                     html_str += '<img class="img-fluid rounded mt-2" width=100% src="/static/img_goods/'+data.images[one]+'">'
@@ -69,7 +92,8 @@ $("#goods-no-price-modal").on("show.bs.modal", function (event) {
             modal.find('.modal-body').html(html_str)
         },
         error: function (data) {
-            let html_str = '未找到该商品详情.';
+            {#let html_str = '未找到该商品详情.';#}
+            let html_str = '未找到相关相册.';
             modal.find('.modal-body').html(html_str)
         }
     });
@@ -109,4 +133,6 @@ $(function () {
 })
 
 </script>
-{% endblock %}
+{#{% endblock %}#}
+</body>
+</html>
