@@ -1,6 +1,4 @@
-{#{% extends 'base.html' %}#}
-{##}
-{#{% block body %}#}
+
 <!doctype html>
 <html lang="zh-CN" class="h-100">
 <head>
@@ -12,6 +10,7 @@
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/twitter-bootstrap/4.2.1/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.bootcss.com/vanilla-lazyload/11.0.5/lazyload.min.js"></script>
+    <title>兰亭续个人相册</title>
 </head>
 
 <body class="h-100 d-flex flex-column">
@@ -31,7 +30,7 @@
             <a data-toggle="modal" data-target="#goods-no-price-modal" data-goodsid="{{ item.id }}">
             <div data-imageurl="{% if item.img.first() %}{{ url_for('static', filename='img_goods/'+item.img.first().filename_m) }}{% else %}{{ url_for('static', filename='img/no-image.jpg') }}{% endif %}"
                  style="padding-bottom: 100%; height: 0; background-size: cover; background-position: center;" class="rounded img_delay">
-                <span class="badge badge-pill badge-secondary">{{ item.id }}</span>
+{#                <span class="badge badge-pill badge-secondary">{{ item.id }}</span>#}
             </div>
             </a>
 {#            <p class="text-truncate text-dark"><small>{{ item.name }}</small></p>#}
@@ -58,13 +57,10 @@
 
 		<footer class="mt-auto py-3">
 		  <div class="container text-center">
-		    <span class="text-muted"><a href="http://www.miitbeian.gov.cn/" class="text-muted">蜀ICP备18036635号</a></span>
+		    <span class="text-muted"><a href="http://www.beian.miit.gov.cn/" class="text-muted">蜀ICP备18036635号</a></span>
 		  </div>
 		</footer>
 
-{#{% endblock %}#}
-{##}
-{#{% block script %}#}
 <script type="text/javascript">
 
 $("#goods-no-price-modal").on("show.bs.modal", function (event) {
@@ -72,7 +68,7 @@ $("#goods-no-price-modal").on("show.bs.modal", function (event) {
     let goods_id = $item.data('goodsid');
     let modal = $(this);
     $.ajax({
-        url: "{{ url_for('.goods_no_price') }}/"+goods_id,
+        url: "{{ url_for('.resist_regulation') }}/"+goods_id,
         type: 'get',
         beforeSend: function(){
             modal.find('.modal-body').html('<div class="spinner-border" role="status">' +
@@ -133,6 +129,5 @@ $(function () {
 })
 
 </script>
-{#{% endblock %}#}
 </body>
 </html>
