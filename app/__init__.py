@@ -86,7 +86,7 @@ def register_errors(app):
 def register_template_context(app):
     @app.context_processor
     def inject_context():
-        return dict(bootcdn=app.config['BOOT_CDN'], goods_img_ratio=goods_img_ratio)
+        return dict(bootcdn=app.config['BOOT_CDN'], goods_img_ratio=goods_img_ratio, SYS_NAME=app.config['SYS_NAME'])
 
 
 def register_logging(app):
