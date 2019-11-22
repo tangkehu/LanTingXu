@@ -14,6 +14,8 @@ def index(type_id=None):
     """ :param type_id: 当其为0时表示类型为已下架商品 """
     type_id = GoodsType.query.filter_by(sequence=1).first().id if type_id is None else type_id
     params = [Goods.type_id == type_id, Goods.status == True] if type_id else [Goods.status == False]
+    if not current_user.can('system_manage'):
+        params.append(Goods.user_id == current_user.id)
     goods_list = Goods.query.filter(*params).order_by(Goods.create_time.desc()).all()
     type_list = GoodsType.query.all()
     return render_template('goods/index.html', goods_list=goods_list, type_list=type_list, type_id=type_id)
