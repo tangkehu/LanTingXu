@@ -3,7 +3,7 @@
 <div class="row justify-content-center fixed-bottom mb-2">
     <nav class="nav rounded-pill border px-4" style="background: rgba(255, 255, 255, 0.8);">
         <a class="nav-link text-info" href="{{ url_for('goods_bp.index') }}" style="line-height: 16px; font-size: 12px;"><i class="fas fa-store lead"></i><br>商品 </a>
-        <a class="nav-link text-info" href="{{ url_for('sales_bp.index') }}" style="line-height: 16px; font-size: 12px;"><i class="fas fa-server lead"></i><br>订单 </a>
+{#        <a class="nav-link text-info" href="{{ url_for('sales_bp.index') }}" style="line-height: 16px; font-size: 12px;"><i class="fas fa-server lead"></i><br>订单 </a>#}
         {% if current_user.can('system_manage') %}
         <a class="nav-link text-info" href="{{ url_for('manage_bp.user') }}" style="line-height: 16px; font-size: 12px;"><i class="fas fa-cog lead"></i><br>后台 </a>
         {% endif %}

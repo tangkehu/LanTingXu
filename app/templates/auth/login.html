@@ -69,7 +69,7 @@
 {#      </div>#}
         {{ form.submit(class="btn btn-lg btn-info btn-block") }}
         <p class="mt-2 small">还没有账号？点击这里<a href="{{ url_for('.register') }}">注册</a>一个吧！</p>
-        <p class="mt-5 mb-3 text-muted">&copy; 兰亭续文创工作室</p>
+        <p class="mt-5 mb-3 text-muted">&copy; {{ SYS_NAME }}</p>
     </form>
 
     {% include "_navbar.html" %}

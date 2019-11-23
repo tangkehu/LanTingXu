@@ -93,7 +93,7 @@
     </style>
 {% endblock %}
 
-{% block title %}兰亭续后台管理系统{% endblock %}
+{% block title %}{{ SYS_NAME }}后台管理系统{% endblock %}
 
 {% block body %}
     <!-- Navigation -->
@@ -103,10 +103,10 @@
     <nav id="sidebar-wrapper">
       <ul class="sidebar-nav">
         <li class="sidebar-brand">
-          <a href="{{ url_for('.user') }}">兰亭续管理系统</a>
+          <a href="{{ url_for('.user') }}">后台管理系统</a>
         </li>
         <li class="sidebar-nav-item">
-          <a href="{{ url_for('main_bp.index_new') }}"><i class="fas fa-home"></i> 兰亭续官网</a>
+{#          <a href="{{ url_for('main_bp.index_new') }}"><i class="fas fa-home"></i> {{ SYS_NAME }}</a>#}
           <a href="{{ url_for('.user') }}"><i class="fas fa-users"></i> 用户管理</a>
           <a href="{{ url_for('.role') }}"><i class="fas fa-user-tag"></i> 角色管理</a>
           <a href="{{ url_for('.goods_type') }}"><i class="fas fa-store"></i> 商品类型管理</a>

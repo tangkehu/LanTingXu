@@ -7,6 +7,7 @@ if os.path.exists(dotenv_path):
 
 
 class Config:
+    SYS_NAME = u'汉服租赁网'
     SECRET_KEY = os.getenv('FLASK_SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False  # 不追踪对象的修改，减少内存使用
     GOODS_IMG_PATH = os.path.join(os.getcwd(), 'app'+os.sep+'static'+os.sep+'img_goods')
