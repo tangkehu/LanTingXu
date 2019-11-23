@@ -32,7 +32,7 @@ def goods_list(tid=0, page=1):
     filters = [Goods.type_id == tid, Goods.status == True] if tid is not 0 else [Goods.status == True]
     pagination = db.session.query(Goods.id, Goods.name, GoodsImg.filename_m, Goods.number).join(
         GoodsImg, GoodsImg.goods_id == Goods.id).filter(*filters).group_by(Goods.id).order_by(
-        Goods.create_time.desc()).paginate(page, current_app.config['PER_PAGE'], False)
+        Goods.price.asc()).paginate(page, current_app.config['PER_PAGE'], False)
     return jsonify({'items': [render_template('main/masonry_item.html', item=item) for item in pagination.items],
                     'next': url_for('.goods_list', tid=tid, page=pagination.next_num) if pagination.next_num else None})
 
