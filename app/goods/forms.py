@@ -27,7 +27,7 @@ class GoodsForm(FlaskForm):
             raise ValidationError('请选择类别')
 
     def validate_number(self, field):
-        if Goods.query.filter(Goods.id != self.goods_obj_id, Goods.number == field.data).first():
+        if field.data and Goods.query.filter(Goods.id != self.goods_obj_id, Goods.number == field.data).first():
             raise ValidationError('该编号已被使用，请重新编号')
 
     def set_data(self, goods_obj):
