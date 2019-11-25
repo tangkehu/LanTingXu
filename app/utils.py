@@ -39,9 +39,14 @@ def resize_img(path, filename, size: int):
 
 
 def goods_img_ratio(filename):
-    img = Image.open(os.path.join(current_app.config['GOODS_IMG_PATH'], filename))
-    width = img.size[0]
-    height = img.size[1]
+    try:
+        img = Image.open(os.path.join(current_app.config['GOODS_IMG_PATH'], filename))
+        width = img.size[0]
+        height = img.size[1]
+    except Exception as e:
+        current_app.logger.info(str(e))
+        width = 100
+        height = 100
     return height/width
 
 
