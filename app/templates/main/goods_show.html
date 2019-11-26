@@ -29,6 +29,7 @@
                     {% if goods.size %}尺码：{{ goods.size }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
                     {% if goods.quantity %}库存：{{ goods.quantity }}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}
                 </p>
+                <p><a href="{{ url_for('user_bp.index', uid=goods.user_id) }}" class="text-muted"> >> {{ goods.user.username }} </a></p>
                 <hr>
                 {% for item in goods.img.all() %}
                     <img src="{{ url_for('static', filename='img_goods/'+item.filename_l) }}" width="100%" class="img-fluid rounded mb-2">
