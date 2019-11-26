@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{# 设置footer置底的关键代码 #}
+{% block html_tag %}class="h-100"{% endblock %}
+{% block body_tag %}class="d-flex flex-column h-100"{% endblock %}
+
+{% block body %}
+    <main role="main" class="flex-shrink-0">
+
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-10 pr-0"><p class="h5 text-truncate">{{ user_obj.username }}</p></div>
+            <div class="col-2 pl-0 text-right">
+{#                <div class="dropdown dropleft">#}
+{#                  <button class="btn btn-outline-warning btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>#}
+{#                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">#}
+{#                    <a class="dropdown-item" href="#">Action</a>#}
+{#                    <a class="dropdown-item" href="#">Another action</a>#}
+{#                    <a class="dropdown-item" href="#">Something else here</a>#}
+{#                  </div>#}
+{#                </div>#}
+                <a href="/" class="text-decoration-none text-muted">主页</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-3">
+        <!-- 导航条 -->
+        <nav class="nav">
+            <a class="nav-link px-0 pb-0 mr-2 order-0 {% if type_id %}text-black-50{% else %}text-warning  border-bottom border-warning{% endif %}"
+               href="{{ url_for('.index', uid=user_obj.id) }}">首页</a>
+            {% for item in TYPE_LI %}
+            <a class="nav-link px-0 pb-0 mr-2 order-{{ item.sequence }} {% if item.id == type_id %}text-warning  border-bottom border-warning{% else %}text-black-50{% endif %}"
+               href="{{ url_for('.index', uid=user_obj.id, tid=item.id) }}">{{ item.name }}</a>
+            {% endfor %}
+        </nav>
+    </div>
+
+    <div class="container mb-3">
+        <!-- 标头caption部分 -->
+        <div class="row rounded mx-0" style="height: 10rem; background: url('{{ url_for('static', filename='img/bg-masthead.jpg') }}') no-repeat; background-size: cover;">
+            <div class="h-100 w-100 rounded" style="background: rgba(0,0,0,0.4);">
+                <div class="row h-100 align-items-center text-white">
+                    <div class="col m-2">
+                        <p class="h4">{{ user_obj.resume }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            {% set goods_li = user_obj.goods.filter_by(type_id=type_id, status=True).all() if type_id else user_obj.goods.filter_by(status=True).all() %}
+            {% for item in goods_li %}
+                {% set data_src = url_for('static', filename='img_goods/'+item.img.first().filename_m) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
+
+                <div class="col-12 col-sm-6 col-lg-4 mb-4">
+                <a href="{{ url_for('main_bp.goods_show', goods_id=item.id) }}" class="text-decoration-none">
+                    <div class="rounded-top img_response_auto" style="background-image: url('{{ data_src }}')"></div>
+                    <div class="shadow rounded-bottom p-2">
+                        <p class="m-0 text-truncate text-dark">{{ item.name }}</p>
+                        <p class="m-0 text-warning">
+                            <small>&yen;</small>{{ item.price }}
+                            <small class="float-right text-muted">No. {{ item.number }}</small>
+                        </p>
+                    </div>
+                </a>
+                </div>
+            {% else %}
+                <div class="col">
+                    这里暂时是空的哟...
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="pb-5"></div>  <!-- 撑底部高度 -->
+
+    </main>
+
+    <!-- footer部分 -->
+    <footer class="mt-auto py-3">
+      <div class="container">
+        <div class="small text-center text-muted">版权所有 &copy; 2018-2019 - {{ SYS_NAME }}</div>
+        <div class="small text-center">
+            <a href="http://www.beian.miit.gov.cn/" class="text-muted">蜀ICP备18036635号</a> |
+            <a href="{{ url_for('goods_bp.index') }}" class="text-muted">后台管理系统</a>
+        </div>
+      </div>
+    </footer>
+
+{% endblock %}
+

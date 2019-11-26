@@ -68,6 +68,9 @@ def register_blueprints(app):
     from .sales import sales_bp
     app.register_blueprint(sales_bp, url_prefix='/sales')
 
+    from .user import user_bp
+    app.register_blueprint(user_bp, url_prefix='/user')
+
 
 def register_errors(app):
     @app.errorhandler(403)
@@ -84,9 +87,18 @@ def register_errors(app):
 
 
 def register_template_context(app):
+    """ 注册全局变量以供jinja2模板使用 """
+
     @app.context_processor
     def inject_context():
-        return dict(bootcdn=app.config['BOOT_CDN'], goods_img_ratio=goods_img_ratio, SYS_NAME=app.config['SYS_NAME'])
+        from .models import GoodsType
+
+        return dict(
+            bootcdn=app.config['BOOT_CDN'],   # 是否启用boot cdn
+            goods_img_ratio=goods_img_ratio,   # 商品比例计算方法
+            SYS_NAME=app.config['SYS_NAME'],  # 系统名称
+            TYPE_LI=GoodsType.query.all()  # 商品类型列表
+        )
 
 
 def register_logging(app):
