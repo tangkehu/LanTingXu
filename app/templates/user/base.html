@@ -19,7 +19,7 @@
 {#                    <a class="dropdown-item" href="#">Something else here</a>#}
 {#                  </div>#}
 {#                </div>#}
-                <a href="/" class="text-decoration-none text-muted">主页</a>
+                <a href="{{ url_for('main_bp.index') }}" class="text-decoration-none text-muted">主页</a>
             </div>
         </div>
     </div>
@@ -31,11 +31,12 @@
                href="{{ url_for('.index', uid=user_obj.id) }}">首页</a>
             {% for item in TYPE_LI %}
             <a class="nav-link px-0 pb-0 mr-2 order-{{ item.sequence }} {% if item.id == type_id %}text-warning  border-bottom border-warning{% else %}text-black-50{% endif %}"
-               href="{{ url_for('.index', uid=user_obj.id, tid=item.id) }}">{{ item.name }}</a>
+               href="{{ url_for('.index', uid=user_obj.id) }}?tid={{ item.id }}">{{ item.name }}</a>
             {% endfor %}
         </nav>
     </div>
 
+    {% if not type_id %}
     <div class="container mb-3">
         <!-- 标头caption部分 -->
         <div class="row rounded mx-0" style="height: 10rem; background: url('{{ url_for('static', filename='img/bg-masthead.jpg') }}') no-repeat; background-size: cover;">
@@ -48,16 +49,16 @@
             </div>
         </div>
     </div>
+    {% endif %}
 
     <div class="container">
         <div class="row">
-            {% set goods_li = user_obj.goods.filter_by(type_id=type_id, status=True).all() if type_id else user_obj.goods.filter_by(status=True).all() %}
             {% for item in goods_li %}
                 {% set data_src = url_for('static', filename='img_goods/'+item.img.first().filename_m) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
 
                 <div class="col-12 col-sm-6 col-lg-4 mb-4">
                 <a href="{{ url_for('main_bp.goods_show', goods_id=item.id) }}" class="text-decoration-none">
-                    <div class="rounded-top img_response_auto" style="background-image: url('{{ data_src }}')"></div>
+                    <div class="rounded-top img_response_auto lazyload" data-src="{{ data_src }}"></div>
                     <div class="shadow rounded-bottom p-2">
                         <p class="m-0 text-truncate text-dark">{{ item.name }}</p>
                         <p class="m-0 text-warning">
@@ -92,3 +93,8 @@
 
 {% endblock %}
 
+{% block script %}
+    <script type="text/javascript">
+        new LazyLoad({elements_selector: ".lazyload"});  // 初始化懒加载
+    </script>
+{% endblock %}
