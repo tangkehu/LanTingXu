@@ -2,11 +2,12 @@
 <!-- 底部导航条 -->
 <div class="row justify-content-center fixed-bottom mb-2">
     <nav class="nav rounded-pill border px-4" style="background: rgba(255, 255, 255, 0.8);">
+        {% if current_user.is_authenticated %}
         <a class="nav-link text-info" href="{{ url_for('goods_bp.index') }}" style="line-height: 16px; font-size: 12px;"><i class="fas fa-store lead"></i><br>商品 </a>
-{#        <a class="nav-link text-info" href="{{ url_for('sales_bp.index') }}" style="line-height: 16px; font-size: 12px;"><i class="fas fa-server lead"></i><br>订单 </a>#}
-        {% if current_user.can('system_manage') %}
-        <a class="nav-link text-info" href="{{ url_for('manage_bp.user') }}" style="line-height: 16px; font-size: 12px;"><i class="fas fa-cog lead"></i><br>后台 </a>
+        <a class="nav-link text-info" href="{{ url_for('user_bp.index', uid=current_user.id) }}" style="line-height: 16px; font-size: 12px;"><i class="fas fa-home lead"></i><br>主页 </a>
+        {% else %}
+        <a class="nav-link text-info" href="{{ url_for('main_bp.index') }}" style="line-height: 16px; font-size: 12px;"><i class="fas fa-home lead"></i><br>主页 </a>
         {% endif %}
-        <a class="nav-link text-info" href="{% if current_user.is_authenticated %}{{ url_for('user_bp.index', uid=current_user.id) }} {% else %} {{ url_for('main_bp.index') }} {% endif %}" style="line-height: 16px; font-size: 12px;"><i class="fas fa-home lead"></i><br>主页 </a>
+{#        <a class="nav-link text-info" href="{{ url_for('sales_bp.index') }}" style="line-height: 16px; font-size: 12px;"><i class="fas fa-server lead"></i><br>订单 </a>#}
     </nav>
 </div>
