@@ -52,13 +52,14 @@
     {% endif %}
 
     <div class="container">
+        <!-- 商品展示部分 -->
         <div class="row">
             {% for item in goods_li %}
                 {% set data_src = url_for('static', filename='img_goods/'+item.img.first().filename_m) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
 
                 <div class="col-12 col-sm-6 col-lg-4 mb-4">
                 <a href="{{ url_for('main_bp.goods_show', goods_id=item.id) }}" class="text-decoration-none">
-                    <div class="rounded-top img_response_auto lazyload" data-src="{{ data_src }}"></div>
+                    <div class="rounded-top img_response_auto lazy" data-src="{{data_src}}"></div>
                     <div class="shadow rounded-bottom p-2">
                         <p class="m-0 text-truncate text-dark">{{ item.name }}</p>
                         <p class="m-0 text-warning">
@@ -95,6 +96,9 @@
 
 {% block script %}
     <script type="text/javascript">
-        new LazyLoad({elements_selector: ".lazyload"});  // 初始化懒加载
+        new LazyLoad({  // 初始化懒加载
+            elements_selector: ".lazy",
+            load_delay: 300
+        });
     </script>
 {% endblock %}

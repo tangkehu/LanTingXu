@@ -37,9 +37,9 @@
             {% set data_src = url_for('static', filename='img_goods/'+item.img.first().filename_s) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
 
             <div class="row mb-3" id="goods_{{ item.id }}">
-                <div class="col-4 col-md-3 col-xl-2 pr-0 py-0 img-box-me">
+                <div class="col-4 col-md-3 col-xl-2 pr-0 py-0">
                     <a {% if current_user.can('goods_manage') %}href="{{ url_for('.update_goods', type_id=type_id, goods_id=item.id) }}"{% endif %}>
-                        <div class="rounded img_response_auto" data-src="{{ data_src }}">
+                        <div class="rounded img_response_auto lazy" data-src="{{ data_src }}">
                             <span class="badge badge-pill badge-secondary">{% if item.number %}{{ item.number }}{% else %}{{ item.id }}{% endif %}</span>
                         </div>
                     </a>
@@ -144,7 +144,10 @@
             })
         });
 
-        $(window).scroll($('.img-box-me'), lazyLoadingMe).scroll();
+        new LazyLoad({  // 初始化图片懒加载
+            elements_selector: ".lazy",
+            load_delay: 300
+        })
 
     });
 

@@ -94,10 +94,10 @@ def register_template_context(app):
         from .models import GoodsType
 
         return dict(
-            bootcdn=app.config['BOOT_CDN'],   # 是否启用boot cdn
-            goods_img_ratio=goods_img_ratio,   # 商品比例计算方法
+            BOOT_CDN=app.config['BOOT_CDN'],   # 是否启用boot cdn
             SYS_NAME=app.config['SYS_NAME'],  # 系统名称
-            TYPE_LI=GoodsType.query.all()  # 商品类型列表
+            TYPE_LI=GoodsType.query.all(),  # 商品类型列表
+            goods_img_ratio=goods_img_ratio  # 商品比例计算方法
         )
 
 
