@@ -15,7 +15,7 @@
     </div>
 
     <div class="container mb-5 pb-5" style="margin-top: 4rem;">
-        <div class="row">
+        <div class="row justify-content-center">
             <div class="col col-md-10 col-xl-8">
                 <p class="h4">{{ goods.name }}</p>
                 <p>
@@ -38,6 +38,19 @@
                 <p>{% if goods.details %}{{ goods.details }}{% endif %}</p>
             </div>
         </div>
+    </div>
+
+    <!-- 底部菜单 -->
+    <div class="row justify-content-center fixed-bottom mb-2">
+        <nav class="nav rounded-pill border" style="background: rgba(255, 255, 255, 0.8);">
+            <a class="nav-link text-warning border-right" href="{{ url_for('user_bp.index', uid=goods.user_id) }}">
+                <i class="fas fa-store"></i> 查看更多
+            </a>
+            <a class="nav-link text-danger" href="javascript:"
+               onclick="showMsg('联系电话：{{ goods.user.phone_number }}<br><br><a href=\'tel:{{ goods.user.phone_number }}\' class=\'text-info\'><i class=\'fas fa-phone\'></i>  直接呼叫电话</a>')">
+                <i class="fas fa-shopping-cart"></i> 我要租赁
+            </a>
+        </nav>
     </div>
 </main>
 {% endblock %}
