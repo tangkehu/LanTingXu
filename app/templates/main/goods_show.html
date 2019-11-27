@@ -47,7 +47,7 @@
                 <i class="fas fa-store"></i> 查看更多
             </a>
             <a class="nav-link text-danger" href="javascript:"
-               onclick="showMsg('联系电话：{{ goods.user.phone_number }}<br><br><a href=\'tel:{{ goods.user.phone_number }}\' class=\'text-info\'><i class=\'fas fa-phone\'></i>  直接呼叫电话</a>')">
+               onclick="showMsg('{% if goods.user.phone_number %}联系电话：{{ goods.user.phone_number }}<br><br><a href=\'tel:{{ goods.user.phone_number }}\' class=\'text-info\'><i class=\'fas fa-phone\'></i>  直接呼叫电话</a>{% else %}暂无联系方式{% endif %}')">
                 <i class="fas fa-shopping-cart"></i> 我要租赁
             </a>
         </nav>
