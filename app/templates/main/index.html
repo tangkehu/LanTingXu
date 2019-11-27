@@ -11,9 +11,15 @@
     <div class="border-bottom shadow-sm">
     <div class="container">
         <div class="row my-3">
-            <div class="col">
+            <div class="col-10">
                 <a href="{{ url_for('.index_new') }}" class="text-decoration-none">
                 <img src="{{ url_for('static', filename='img/lantinglogo.gif') }}" width="40rem" height="40rem"><span class="ml-2 align-middle font-weight-bold text-dark">{{ SYS_NAME }}</span>
+                </a>
+            </div>
+            <div class="col-2 pl-0 text-right">
+                <a href="{{ url_for('goods_bp.index') }}"
+                   class="text-decoration-none align-middle font-weight-bold text-dark" style="line-height: 2.5rem;">
+                    <i class="fas fa-user"></i>
                 </a>
             </div>
         </div>
@@ -22,7 +28,6 @@
 
     <!-- 主体上半部分 -->
     <div class="container mt-4">
-
         <!-- 标头caption部分 -->
         <div class="row rounded mx-0" style="height: 15rem; background: url('{{ url_for('static', filename='img/bg-masthead.jpg') }}') no-repeat; background-size: cover;">
             <div class="h-100 w-100 rounded" style="background: rgba(0,0,0,0.4);">
@@ -34,12 +39,14 @@
                 </div>
             </div>
         </div>
+    </div>
 
+    <div class="container sticky-top bg-white">
         <!-- 导航条 -->
-        <ul class="nav justify-content-center mt-3">
+        <ul class="nav pt-2 pb-3">
             {% for item in type_list %}
                 <li class="nav-item order-{{ item.sequence }}">
-                    <a class="nav-link {% if item.id == type_id %}text-warning  border-bottom border-warning{% else %}text-black-50{% endif %}"
+                    <a class="nav-link pb-0 px-0 mr-2 {% if item.id == type_id %}text-warning  border-bottom border-warning{% else %}text-black-50{% endif %}"
                        href="{{ url_for('.index_new', type_id=item.id) }}">{{ item.name }}</a>
                 </li>
             {% endfor %}
@@ -47,7 +54,7 @@
     </div>
 
     <!-- 瀑布流布局内容 -->
-    <div class="container mt-4" id="masonry-content">
+    <div class="container" id="masonry-content">
 
         <div class="row masonry mr-0"></div>
 
@@ -69,15 +76,7 @@
     </main>
 
     <!-- footer部分 -->
-    <footer class="mt-auto py-3">
-      <div class="container">
-        <div class="small text-center text-muted">版权所有 &copy; 2018-2019 - {{ SYS_NAME }}</div>
-        <div class="small text-center">
-            <a href="http://www.beian.miit.gov.cn/" class="text-muted">蜀ICP备18036635号</a> |
-            <a href="{{ url_for('goods_bp.index') }}" class="text-muted">后台管理系统</a>
-        </div>
-      </div>
-    </footer>
+    {% include '_footer.html' %}
 
 {% endblock %}
 

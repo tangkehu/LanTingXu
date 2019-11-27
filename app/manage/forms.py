@@ -21,6 +21,10 @@ class UserForm(FlaskForm):
         if User.query.filter(User.id != self.user_obj.id, User.username == field.data).count() > 0:
             raise ValidationError('该用户名已被使用')
 
+    def validate_email(self, field):
+        if User.query.filter(User.id != self.user_obj.id, User.email == field.data).count() > 0:
+            raise ValidationError('该邮箱已被使用')
+
     def set_data(self):
         self.username.data = self.user_obj.username
         self.email.data = self.user_obj.email
