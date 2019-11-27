@@ -20,15 +20,15 @@
     <div class="container mb-5 pb-5">
 
         <!-- 二级导航条 -->
-        <ul class="nav justify-content-center mb-4">
+        <ul class="nav pt-2 pb-3 mb-2 sticky-top bg-white">
             {% for item in type_list %}
                 <li class="nav-item order-{{ item.sequence }}">
-                    <a class="nav-link {% if item.id == type_id %}text-info  border-bottom border-info{% else %}text-black-50{% endif %}"
+                    <a class="nav-link px-0 pb-0 mr-2 {% if item.id == type_id %}text-info  border-bottom border-info{% else %}text-black-50{% endif %}"
                        href="{{ url_for('.index', type_id=item.id) }}">{{ item.name }}</a>
                 </li>
             {% endfor %}
             <li class="nav-item order-last">
-                <a class="nav-link {% if type_id == 0 %}text-info  border-bottom border-info{% else %}text-black-50{% endif %}"
+                <a class="nav-link px-0 pb-0 mr-2 {% if type_id == 0 %}text-info  border-bottom border-info{% else %}text-black-50{% endif %}"
                    href="{{ url_for('.index', type_id=0) }}">已下架</a>
             </li>
         </ul>
