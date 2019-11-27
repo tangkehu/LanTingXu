@@ -9,7 +9,7 @@
 
     <div class="container mt-3">
         <div class="row">
-            <div class="col-10 pr-0"><p class="h5 text-truncate">{{ user_obj.username }}</p></div>
+            <div class="col-10 pr-0"><p class="h5 text-truncate font-weight-bolder">{{ user_obj.username }}</p></div>
             <div class="col-2 pl-0 text-right">
 {#                <div class="dropdown dropleft">#}
 {#                  <button class="btn btn-outline-warning btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>#}
@@ -24,20 +24,8 @@
         </div>
     </div>
 
-    <div class="container mb-3">
-        <!-- 导航条 -->
-        <nav class="nav">
-            <a class="nav-link px-0 pb-0 mr-2 order-0 {% if type_id %}text-black-50{% else %}text-warning  border-bottom border-warning{% endif %}"
-               href="{{ url_for('.index', uid=user_obj.id) }}">首页</a>
-            {% for item in TYPE_LI %}
-            <a class="nav-link px-0 pb-0 mr-2 order-{{ item.sequence }} {% if item.id == type_id %}text-warning  border-bottom border-warning{% else %}text-black-50{% endif %}"
-               href="{{ url_for('.index', uid=user_obj.id) }}?tid={{ item.id }}">{{ item.name }}</a>
-            {% endfor %}
-        </nav>
-    </div>
-
     {% if not type_id %}
-    <div class="container mb-3">
+    <div class="container my-3">
         <!-- 标头caption部分 -->
         <div class="row rounded mx-0" style="height: 10rem; background: url('{{ url_for('static', filename='img/bg-masthead.jpg') }}') no-repeat; background-size: cover;">
             <div class="h-100 w-100 rounded" style="background: rgba(0,0,0,0.4);">
@@ -50,6 +38,18 @@
         </div>
     </div>
     {% endif %}
+
+    <div class="container mb-3">
+        <!-- 导航条 -->
+        <nav class="nav">
+            <a class="nav-link px-0 pb-0 mr-2 order-0 {% if type_id %}text-black-50{% else %}text-warning  border-bottom border-warning{% endif %}"
+               href="{{ url_for('.index', uid=user_obj.id) }}">首页</a>
+            {% for item in TYPE_LI %}
+            <a class="nav-link px-0 pb-0 mr-2 order-{{ item.sequence }} {% if item.id == type_id %}text-warning  border-bottom border-warning{% else %}text-black-50{% endif %}"
+               href="{{ url_for('.index', uid=user_obj.id) }}?tid={{ item.id }}">{{ item.name }}</a>
+            {% endfor %}
+        </nav>
+    </div>
 
     <div class="container">
         <!-- 商品展示部分 -->
