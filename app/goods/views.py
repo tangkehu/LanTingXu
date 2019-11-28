@@ -4,21 +4,24 @@ from flask_login import login_required, current_user
 from . import goods_bp
 from .forms import GoodsForm
 from app.models import GoodsImg, Goods, GoodsType
-from app.utils import permission_required
+from app.utils import permission_required, goods_order_map
 
 
 @goods_bp.route('/')
-@goods_bp.route('/<int:type_id>')
 @login_required
-def index(type_id=None):
-    """ :param type_id: 当其为0时表示类型为已下架商品 """
-    type_id = GoodsType.query.filter_by(sequence=1).first().id if type_id is None else type_id
+def index():
+    """
+    tid: 当其为0时表示类型为已下架商品
+    order: 表示排序方式
+    """
+    args = request.args.to_dict()
+    type_id = int(args.get('tid', GoodsType.query.filter_by(sequence=1).first().id))
+    order_way = args.get('order', 'date_down')
     params = [Goods.type_id == type_id, Goods.status == True] if type_id else [Goods.status == False]
     if not current_user.can('system_manage'):
         params.append(Goods.user_id == current_user.id)
-    goods_list = Goods.query.filter(*params).order_by(Goods.create_time.desc()).all()
-    type_list = GoodsType.query.all()
-    return render_template('goods/index.html', goods_list=goods_list, type_list=type_list, type_id=type_id)
+    goods_list = Goods.query.filter(*params).order_by(goods_order_map(order_way, 0)).all()
+    return render_template('goods/index.html', goods_list=goods_list, type_id=type_id, order_way=order_way)
 
 
 @goods_bp.route('/update_goods/<int:type_id>', methods=['GET', 'POST'])

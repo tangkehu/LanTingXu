@@ -19,19 +19,38 @@
 
     <div class="container mb-5 pb-5">
 
-        <!-- 二级导航条 -->
-        <ul class="nav pt-2 pb-3 mb-2 sticky-top bg-white flex-nowrap text-nowrap overflow-auto nav-scroll-me">
-            {% for item in type_list %}
+        <!-- 导航条 -->
+        <ul class="nav pt-2 pb-3 sticky-top bg-white flex-nowrap text-nowrap overflow-auto nav-scroll-me">
+            {% for item in TYPE_LI %}
                 <li class="nav-item order-{{ item.sequence }}">
                     <a class="nav-link px-0 pb-0 mr-3 {% if item.id == type_id %}text-info  border-bottom border-info{% else %}text-black-50{% endif %}"
-                       href="{{ url_for('.index', type_id=item.id) }}">{{ item.name }}</a>
+                       href="{{ url_for('.index') }}?tid={{ item.id }}&order={{ order_way }}">{{ item.name }}</a>
                 </li>
             {% endfor %}
             <li class="nav-item order-last">
                 <a class="nav-link px-0 pb-0 mr-3 {% if type_id == 0 %}text-info  border-bottom border-info{% else %}text-black-50{% endif %}"
-                   href="{{ url_for('.index', type_id=0) }}">已下架</a>
+                   href="{{ url_for('.index') }}?tid=0&order={{ order_way }}">已下架</a>
             </li>
         </ul>
+
+        <!-- 排序部分 -->
+        <div class="row mb-3">
+            <div class="col">
+                <div class="dropdown small">
+                  <a class="dropdown-toggle text-muted" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ goods_order_map(order_way, 1) }}
+                  </a>
+
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                      {% for one in goods_order_map(li=True) %}
+                        <a class="dropdown-item small text-muted"
+                           href="{{ url_for('.index') }}?tid={{ type_id }}&order={{ one[0] }}">{{ one[1] }}</a>
+                        <div class="dropdown-divider m-0"></div>
+                      {% endfor %}
+                  </div>
+                </div>
+            </div>
+        </div>
 
         {% for item in goods_list %}
             {% set data_src = url_for('static', filename='img_goods/'+item.img.first().filename_s) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
