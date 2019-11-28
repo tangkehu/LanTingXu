@@ -50,6 +50,19 @@ def goods_img_ratio(filename):
     return height/width
 
 
+def goods_order_map(way='flow', index=1, li=False):
+    """ 商品排序MAP，按不同的方式获取相应的内容 """
+    from .models import Goods
+    order_dic = {
+        'flow': (Goods.view_count.desc(), '综合排序'),
+        'date_up': (Goods.updata_time.asc(), '时间升序'),
+        'date_down': (Goods.updata_time.desc(), '时间降序'),
+        'price_up': (Goods.price.asc(), '价格升序'),
+        'price_down': (Goods.price.desc(), '价格降序')
+    }
+    return order_dic[way][index] if li is False else [(one, order_dic[one][1]) for one in order_dic]
+
+
 # Provide a class to allow SSL (Not TLS) connection for mail handlers by overloading the emit() method
 class SSLSMTPHandler(SMTPHandler):
     def emit(self, record):

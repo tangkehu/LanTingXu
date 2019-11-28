@@ -8,7 +8,7 @@ from flask_migrate import Migrate, upgrade
 from flask_login import LoginManager
 
 from config import config
-from .utils import SSLSMTPHandler, goods_img_ratio
+from .utils import SSLSMTPHandler, goods_img_ratio, goods_order_map
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -45,6 +45,13 @@ def register_click(app):
         # Role.insert_basic_role()  # 初始化系统时插入基础角色
         # from .models import Permission
         # Permission.update_permissions()  # 系统初始化时开启，或在有新权限的时候开启
+
+        from .models import Goods
+
+        for one in Goods.query.all():
+            one.view_count = 0
+            db.session.add(one)
+        db.session.commit()
 
         click.echo(u'本次部署初始化成功')
 
@@ -97,7 +104,8 @@ def register_template_context(app):
             BOOT_CDN=app.config['BOOT_CDN'],   # 是否启用boot cdn
             SYS_NAME=app.config['SYS_NAME'],  # 系统名称
             TYPE_LI=GoodsType.query.all(),  # 商品类型列表
-            goods_img_ratio=goods_img_ratio  # 商品比例计算方法
+            goods_img_ratio=goods_img_ratio,  # 商品比例计算方法
+            goods_order_map=goods_order_map  # 商品排序MAP
         )
 
 

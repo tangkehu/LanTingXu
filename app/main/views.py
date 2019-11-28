@@ -1,29 +1,44 @@
-from flask import render_template, jsonify, current_app, url_for
+from flask import render_template, jsonify, current_app, url_for, request, redirect
 
 from . import main_bp
 from app import db
-from app.models import Goods, GoodsType, GoodsImg, HomePage
+from app.models import Goods, GoodsType, GoodsImg, HomePage, PvCount
+from app.utils import goods_order_map
 
 
 @main_bp.route('/')
-@main_bp.route('/<int:type_id>')
 @main_bp.route('/index')
-@main_bp.route('/index/<int:type_id>')
-def index(type_id=None):
+def index():
+    """
+    tid: 商品类型
+    order: 排序方式
+    view: 展示方式
+    """
+    PvCount.add_home_count()
     body = HomePage.query.first()
-    type_id = type_id if type_id else GoodsType.query.filter_by(sequence=1).first().id
-    type_list = GoodsType.query.all()
-    return render_template('main/index.html', body=body, type_id=type_id, type_list=type_list)
+    args = request.args.to_dict()
+    tid = int(args.get('tid', GoodsType.query.order_by(GoodsType.sequence.asc()).first().id))
+    order_way = args.get('order', 'flow')
+    view_type = {'big': 'small', 'small': 'big'}[args.get('view', 'big')]
+    params = [Goods.status == True, Goods.type_id == tid]
+    goods_li = Goods.query.filter(*params).order_by(goods_order_map(order_way, 0)).all()
+    return render_template('main/index.html', body=body, type_id=tid, order_way=order_way, view_type=view_type,
+                           goods_li=goods_li)
 
 
 @main_bp.route('/index_new')
-@main_bp.route('/index_new/<int:type_id>')
-def index_new(type_id=None):
-    """ 备用首页 """
-    body = HomePage.query.first()
-    type_id = type_id if type_id else GoodsType.query.filter_by(sequence=1).first().id
-    type_list = GoodsType.query.all()
-    return render_template('main/index.html', body=body, type_id=type_id, type_list=type_list)
+def index_new():
+    return redirect(url_for('.index'))
+
+# @main_bp.route('/index_new')
+# @main_bp.route('/index_new/<int:type_id>')
+# def index_new(type_id=None):
+#     """ 备用首页 """
+#     PvCount.add_home_count()
+#     body = HomePage.query.first()
+#     type_id = type_id if type_id else GoodsType.query.filter_by(sequence=1).first().id
+#     type_list = GoodsType.query.all()
+#     return render_template('main/index.html', body=body, type_id=type_id, type_list=type_list)
 
 
 @main_bp.route('/goods_list/<int:tid>/<int:page>')
@@ -40,6 +55,7 @@ def goods_list(tid=0, page=1):
 @main_bp.route('/goods_show/<int:goods_id>')
 def goods_show(goods_id):
     goods = Goods.query.get_or_404(goods_id)
+    goods.add_view_count()
     return render_template('main/goods_show.html', goods=goods)
 
 
