@@ -41,11 +41,11 @@
 
     <div class="container pt-2 pb-3 sticky-top bg-white">
         <!-- 导航条 -->
-        <nav class="nav">
-            <a class="nav-link px-0 pb-0 mr-2 order-0 {% if type_id %}text-black-50{% else %}text-warning  border-bottom border-warning{% endif %}"
+        <nav class="nav flex-nowrap text-nowrap overflow-auto nav-scroll-me">
+            <a class="nav-link px-0 pb-0 mr-3 order-0 {% if type_id %}text-black-50{% else %}text-warning  border-bottom border-warning{% endif %}"
                href="{{ url_for('.index', uid=user_obj.id) }}">首页</a>
             {% for item in TYPE_LI %}
-            <a class="nav-link px-0 pb-0 mr-2 order-{{ item.sequence }} {% if item.id == type_id %}text-warning  border-bottom border-warning{% else %}text-black-50{% endif %}"
+            <a class="nav-link px-0 pb-0 mr-3 order-{{ item.sequence }} {% if item.id == type_id %}text-warning  border-bottom border-warning{% else %}text-black-50{% endif %}"
                href="{{ url_for('.index', uid=user_obj.id) }}?tid={{ item.id }}">{{ item.name }}</a>
             {% endfor %}
         </nav>
