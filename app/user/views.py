@@ -13,17 +13,20 @@ def index(uid):
     """
     tid: 商品类型，当其为0时表示首页
     order: 排序方式
+    view: 展示方式
     """
     user_obj = User.query.get_or_404(uid)
     args = request.args.to_dict()
     tid = int(args.get('tid', 0))
     order_way = args.get('order', 'flow')
+    view_type = {'big': 'small', 'small': 'big'}[args.get('view', 'big')]
 
     params = [Goods.status == True, ]
     if tid:
         params.append(Goods.type_id == tid)
     goods_li = user_obj.goods.filter(*params).order_by(_order(order_way, 0)).all()
-    return render_template('user/index.html', user_obj=user_obj, type_id=tid, order_way=order_way, goods_li=goods_li)
+    return render_template('user/index.html', user_obj=user_obj, type_id=tid, order_way=order_way, view_type=view_type,
+                           goods_li=goods_li)
 
 
 @user_bp.route('/account', methods=['GET', 'POST'])

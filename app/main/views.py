@@ -12,15 +12,18 @@ def index():
     """
     tid: 商品类型
     order: 排序方式
+    view: 展示方式
     """
     PvCount.add_home_count()
     body = HomePage.query.first()
     args = request.args.to_dict()
     tid = int(args.get('tid', GoodsType.query.order_by(GoodsType.sequence.asc()).first().id))
     order_way = args.get('order', 'flow')
+    view_type = {'big': 'small', 'small': 'big'}[args.get('view', 'big')]
     params = [Goods.status == True, Goods.type_id == tid]
     goods_li = Goods.query.filter(*params).order_by(goods_order_map(order_way, 0)).all()
-    return render_template('main/index.html', body=body, type_id=tid, order_way=order_way, goods_li=goods_li)
+    return render_template('main/index.html', body=body, type_id=tid, order_way=order_way, view_type=view_type,
+                           goods_li=goods_li)
 
 
 @main_bp.route('/index_new')
