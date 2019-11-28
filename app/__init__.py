@@ -8,7 +8,7 @@ from flask_migrate import Migrate, upgrade
 from flask_login import LoginManager
 
 from config import config
-from .utils import SSLSMTPHandler, goods_img_ratio
+from .utils import SSLSMTPHandler, goods_img_ratio, goods_order_map
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -104,7 +104,8 @@ def register_template_context(app):
             BOOT_CDN=app.config['BOOT_CDN'],   # 是否启用boot cdn
             SYS_NAME=app.config['SYS_NAME'],  # 系统名称
             TYPE_LI=GoodsType.query.all(),  # 商品类型列表
-            goods_img_ratio=goods_img_ratio  # 商品比例计算方法
+            goods_img_ratio=goods_img_ratio,  # 商品比例计算方法
+            goods_order_map=goods_order_map  # 商品排序MAP
         )
 
 

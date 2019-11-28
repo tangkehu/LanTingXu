@@ -43,12 +43,33 @@
         <!-- 导航条 -->
         <nav class="nav flex-nowrap text-nowrap overflow-auto nav-scroll-me">
             <a class="nav-link px-0 pb-0 mr-3 order-0 {% if type_id %}text-black-50{% else %}text-warning  border-bottom border-warning{% endif %}"
-               href="{{ url_for('.index', uid=user_obj.id) }}">首页</a>
+               href="{{ url_for('.index', uid=user_obj.id) }}?tid=0&order={{ order_way }}">首页</a>
             {% for item in TYPE_LI %}
             <a class="nav-link px-0 pb-0 mr-3 order-{{ item.sequence }} {% if item.id == type_id %}text-warning  border-bottom border-warning{% else %}text-black-50{% endif %}"
-               href="{{ url_for('.index', uid=user_obj.id) }}?tid={{ item.id }}">{{ item.name }}</a>
+               href="{{ url_for('.index', uid=user_obj.id) }}?tid={{ item.id }}&order={{ order_way }}">{{ item.name }}</a>
             {% endfor %}
         </nav>
+    </div>
+
+    <div class="container mb-3">
+        <!-- 排序部分 -->
+        <div class="row">
+            <div class="col">
+                <div class="dropdown small">
+                  <a class="dropdown-toggle text-muted" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ goods_order_map(order_way, 1) }}
+                  </a>
+
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                      {% for one in goods_order_map(li=True) %}
+                        <a class="dropdown-item small text-muted"
+                           href="{{ url_for('.index', uid=user_obj.id) }}?tid={{ type_id }}&order={{ one[0] }}">{{ one[1] }}</a>
+                        <div class="dropdown-divider m-0"></div>
+                      {% endfor %}
+                  </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="container">
