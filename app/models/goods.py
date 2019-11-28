@@ -18,6 +18,7 @@ class Goods(db.Model):
     size = db.Column(db.String(64))
     quantity = db.Column(db.Integer)
     details = db.Column(db.Text)
+    view_count = db.Column(db.Integer, default=0)
     status = db.Column(db.Boolean, default=True)
     create_time = db.Column(db.DateTime, default=datetime.now)
     updata_time = db.Column(db.DateTime, default=datetime.now)
@@ -69,6 +70,11 @@ class Goods(db.Model):
     def update_status(self):
         """ 商品的上下架 """
         self.status = False if self.status else True
+        db.session.add(self)
+        db.session.commit()
+
+    def add_view_count(self):
+        self.view_count += 1
         db.session.add(self)
         db.session.commit()
 

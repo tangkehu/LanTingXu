@@ -2,7 +2,7 @@
 from flask import render_template, request, jsonify, abort, redirect, url_for, flash
 from flask_login import current_user
 
-from app.models import User, Role, Permission, GoodsType, HomePage
+from app.models import User, Role, Permission, GoodsType, HomePage, PvCount
 from . import manage_bp
 from .forms import UserForm, HomePageForm
 
@@ -14,6 +14,12 @@ def before_request():
         return redirect(url_for('auth_bp.login'))
     if not current_user.can('system_manage'):
         abort(403)
+
+
+@manage_bp.route('/statistics')
+def statistics():
+    data = PvCount.get_charts_data()
+    return render_template('manage/statistics.html', data=data)
 
 
 @manage_bp.route('/user', methods=['GET', 'POST'])

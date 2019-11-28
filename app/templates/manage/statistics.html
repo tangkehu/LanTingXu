@@ -1,0 +1,53 @@
+{% extends "manage/base.html" %}
+
+{% block content %}
+    <div class="jumbotron jumbotron-fluid bg-info">
+        <div class="container">
+            <h3 class="text-white"><i class="fas fa-chart-line"></i> 流量统计</h3>
+        </div>
+    </div>
+
+    <div class="container mb-5 pb-5">
+        <div class="row">
+            <div class="col">
+                <div id="home-flow" class="w-100" style="height: 20rem;"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {{ super() }}
+
+    <script type="text/javascript">
+    $(function () {
+
+        var homeChart = echarts.init(document.getElementById('home-flow'));
+        var homeOption = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            title: {
+                text: '访问量趋势图',
+                left: 'center'
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: {{ data['date']|tojson|safe }}
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: {{ data['home_count']|tojson|safe }},
+                type: 'line',
+                areaStyle: {},
+                color: '#73b9bc'
+            }]
+        };
+
+        homeChart.setOption(homeOption);
+    });
+    </script>
+{% endblock %}

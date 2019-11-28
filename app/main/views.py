@@ -2,7 +2,7 @@ from flask import render_template, jsonify, current_app, url_for
 
 from . import main_bp
 from app import db
-from app.models import Goods, GoodsType, GoodsImg, HomePage
+from app.models import Goods, GoodsType, GoodsImg, HomePage, PvCount
 
 
 @main_bp.route('/')
@@ -10,6 +10,7 @@ from app.models import Goods, GoodsType, GoodsImg, HomePage
 @main_bp.route('/index')
 @main_bp.route('/index/<int:type_id>')
 def index(type_id=None):
+    PvCount.add_home_count()
     body = HomePage.query.first()
     type_id = type_id if type_id else GoodsType.query.filter_by(sequence=1).first().id
     type_list = GoodsType.query.all()
@@ -20,6 +21,7 @@ def index(type_id=None):
 @main_bp.route('/index_new/<int:type_id>')
 def index_new(type_id=None):
     """ 备用首页 """
+    PvCount.add_home_count()
     body = HomePage.query.first()
     type_id = type_id if type_id else GoodsType.query.filter_by(sequence=1).first().id
     type_list = GoodsType.query.all()
@@ -40,6 +42,7 @@ def goods_list(tid=0, page=1):
 @main_bp.route('/goods_show/<int:goods_id>')
 def goods_show(goods_id):
     goods = Goods.query.get_or_404(goods_id)
+    goods.add_view_count()
     return render_template('main/goods_show.html', goods=goods)
 
 
