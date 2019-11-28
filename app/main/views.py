@@ -1,4 +1,4 @@
-from flask import render_template, jsonify, current_app, url_for, request
+from flask import render_template, jsonify, current_app, url_for, request, redirect
 
 from . import main_bp
 from app import db
@@ -27,14 +27,18 @@ def index():
 
 
 @main_bp.route('/index_new')
-@main_bp.route('/index_new/<int:type_id>')
-def index_new(type_id=None):
-    """ 备用首页 """
-    PvCount.add_home_count()
-    body = HomePage.query.first()
-    type_id = type_id if type_id else GoodsType.query.filter_by(sequence=1).first().id
-    type_list = GoodsType.query.all()
-    return render_template('main/index.html', body=body, type_id=type_id, type_list=type_list)
+def index_new():
+    return redirect(url_for('.index'))
+
+# @main_bp.route('/index_new')
+# @main_bp.route('/index_new/<int:type_id>')
+# def index_new(type_id=None):
+#     """ 备用首页 """
+#     PvCount.add_home_count()
+#     body = HomePage.query.first()
+#     type_id = type_id if type_id else GoodsType.query.filter_by(sequence=1).first().id
+#     type_list = GoodsType.query.all()
+#     return render_template('main/index.html', body=body, type_id=type_id, type_list=type_list)
 
 
 @main_bp.route('/goods_list/<int:tid>/<int:page>')
