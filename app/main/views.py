@@ -1,20 +1,26 @@
-from flask import render_template, jsonify, current_app, url_for
+from flask import render_template, jsonify, current_app, url_for, request
 
 from . import main_bp
 from app import db
 from app.models import Goods, GoodsType, GoodsImg, HomePage, PvCount
+from app.utils import goods_order_map
 
 
 @main_bp.route('/')
-@main_bp.route('/<int:type_id>')
 @main_bp.route('/index')
-@main_bp.route('/index/<int:type_id>')
-def index(type_id=None):
+def index():
+    """
+    tid: 商品类型
+    order: 排序方式
+    """
     PvCount.add_home_count()
     body = HomePage.query.first()
-    type_id = type_id if type_id else GoodsType.query.filter_by(sequence=1).first().id
-    type_list = GoodsType.query.all()
-    return render_template('main/index.html', body=body, type_id=type_id, type_list=type_list)
+    args = request.args.to_dict()
+    tid = int(args.get('tid', GoodsType.query.order_by(GoodsType.sequence.asc()).first().id))
+    order_way = args.get('order', 'flow')
+    params = [Goods.status == True, Goods.type_id == tid]
+    goods_li = Goods.query.filter(*params).order_by(goods_order_map(order_way, 0)).all()
+    return render_template('main/index.html', body=body, type_id=tid, order_way=order_way, goods_li=goods_li)
 
 
 @main_bp.route('/index_new')

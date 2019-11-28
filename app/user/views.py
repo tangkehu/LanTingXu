@@ -11,7 +11,8 @@ from . import user_bp
 @user_bp.route('/<int:uid>')
 def index(uid):
     """
-    接受的http get 参数包括 tid, order
+    tid: 商品类型，当其为0时表示首页
+    order: 排序方式
     """
     user_obj = User.query.get_or_404(uid)
     args = request.args.to_dict()
@@ -22,7 +23,7 @@ def index(uid):
     if tid:
         params.append(Goods.type_id == tid)
     goods_li = user_obj.goods.filter(*params).order_by(_order(order_way, 0)).all()
-    return render_template('user/base.html', user_obj=user_obj, type_id=tid, order_way=order_way, goods_li=goods_li)
+    return render_template('user/index.html', user_obj=user_obj, type_id=tid, order_way=order_way, goods_li=goods_li)
 
 
 @user_bp.route('/account', methods=['GET', 'POST'])

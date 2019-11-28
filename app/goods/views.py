@@ -15,7 +15,7 @@ def index():
     order: 表示排序方式
     """
     args = request.args.to_dict()
-    type_id = int(args.get('tid', GoodsType.query.filter_by(sequence=1).first().id))
+    type_id = int(args.get('tid', GoodsType.query.order_by(GoodsType.sequence.asc()).first().id))
     order_way = args.get('order', 'date_down')
     params = [Goods.type_id == type_id, Goods.status == True] if type_id else [Goods.status == False]
     if not current_user.can('system_manage'):
