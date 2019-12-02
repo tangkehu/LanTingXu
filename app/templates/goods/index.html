@@ -52,6 +52,20 @@
             </div>
         </div>
 
+        {% if not current_user.can('goods_manage') %}
+            <div class="row mb-3">
+                <div class="col-12 text-center">
+                    联系平台官方<b>免费</b>获取商品入驻权限！<br><br>
+                    长按识别以下二维码关注官方微信公众号联系我们<br>
+                    公众号更有最新资讯、近期上新、最近活动、优惠信息等更多内容<br>
+                    欢迎关注
+                </div>
+                <div class="col-8 offset-2 text-center">
+                    <img class="img-fluid" src="{{ url_for('static', filename='img/mp_weixin.jpg') }}">
+                </div>
+            </div>
+        {% endif %}
+
         {% for item in goods_list %}
             {% set data_src = url_for('static', filename='img_goods/'+item.img.first().filename_s) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
 
