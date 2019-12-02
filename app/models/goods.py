@@ -11,7 +11,6 @@ class Goods(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     number = db.Column(db.String(16))
     name = db.Column(db.String(128))
-    rent = db.Column(db.Integer)
     price = db.Column(db.Integer)
     cash_pledge = db.Column(db.Integer)
     brand = db.Column(db.String(64))
@@ -28,10 +27,9 @@ class Goods(db.Model):
     img = db.relationship('GoodsImg', backref='goods', lazy='dynamic')
     orders = db.relationship('RelationOrderGoods', backref='goods', lazy='dynamic')
 
-    def add(self, name, rent, user=current_user, **kwargs):
+    def add(self, name, price, user=current_user, **kwargs):
         self.name = name
-        self.rent = rent
-        self.price = rent  # 暂时在不改变系统情况下新增字段 2019年2月19日
+        self.price = price  # 暂时在不改变系统情况下新增字段 2019年2月19日
         self.number = kwargs.get('number')
         self.cash_pledge = kwargs.get('cash_pledge')
         self.size = kwargs.get('size')
@@ -46,10 +44,9 @@ class Goods(db.Model):
         for item in GoodsImg.query.filter_by(status=False, user_id=user.id).all():
             item.alter_status()
 
-    def edit(self, name, rent, **kwargs):
+    def edit(self, name, price, **kwargs):
         self.name = name
-        self.rent = rent
-        self.price = rent  # 暂时在不改变系统情况下新增字段 2019年2月19日
+        self.price = price  # 暂时在不改变系统情况下新增字段 2019年2月19日
         self.number = kwargs.get('number')
         self.cash_pledge = kwargs.get('cash_pledge')
         self.size = kwargs.get('size')

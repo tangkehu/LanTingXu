@@ -64,10 +64,10 @@
                 </div>
             </div>
             <div class="form-group row">
-                {{ form.rent.label(class="col-3 col-form-label") }}
+                {{ form.price.label(class="col-3 col-form-label") }}
                 <div class="col">
-                {{ form.rent(class="form-control", type="number") }}
-                {% for item in form.rent.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
+                {{ form.price(class="form-control", type="number") }}
+                {% for item in form.price.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
                 </div>
             </div>
             <div class="form-group row">
