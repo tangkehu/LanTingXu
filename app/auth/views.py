@@ -12,7 +12,8 @@ def login():
         return redirect(url_for('main_bp.index'))
     form = LoginForm()
     if form.validate_on_submit():
-        login_user(User.query.filter_by(email=form.email.data).first(), True)
+        # login_user(User.query.filter_by(email=form.email.data).first(), True)
+        login_user(form.user, True)
         return redirect(request.args.get('next') or url_for('main_bp.index'))
     return render_template('auth/login.html', form=form)
 

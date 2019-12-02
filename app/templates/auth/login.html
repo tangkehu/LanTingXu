@@ -56,11 +56,11 @@
         <img class="mb-4" src="{{ url_for('static', filename='img/lantinglogo.gif') }}" alt="" width="72" height="72">
 {#      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>#}
         {{ form.csrf_token() }}
-        {{ form.email.label(class="sr-only") }}
-        {{ form.email(class='form-control', placeholder="请输入邮箱账号") }}
+        {{ form.account.label(class="sr-only") }}
+        {{ form.account(class='form-control', placeholder="邮箱或手机号码或用户名") }}
         {{ form.password.label(class="sr-only") }}
         {{ form.password(class="form-control", placeholder="请输入登陆密码") }}
-        {% for error in form.email.errors %}<small class="text-danger float-left">{{ error }}</small><br>{% endfor %}
+        {% for error in form.account.errors %}<small class="text-danger float-left">{{ error }}</small><br>{% endfor %}
         {% for error in form.password.errors %}<small class="text-danger float-left">{{ error }}</small><br>{% endfor %}
 {#      <div class="checkbox mb-3">#}
 {#        <label>#}
