@@ -1,28 +1,23 @@
 
-from flask import render_template, request, jsonify, abort, redirect, url_for, flash
-from flask_login import current_user
+from flask import render_template, request, jsonify, redirect, url_for, flash
+from flask_login import login_required
 
 from app.models import User, Role, Permission, GoodsType, HomePage, PvCount
+from app.utils import permission_required
 from . import manage_bp
 from .forms import UserForm, HomePageForm
 
 
-@manage_bp.before_request
-def before_request():
-    if not current_user.is_authenticated:
-        flash('请先登录。')
-        return redirect(url_for('auth_bp.login'))
-    if not current_user.can('system_manage'):
-        abort(403)
-
-
 @manage_bp.route('/statistics')
+@login_required
+@permission_required('system_manage')
 def statistics():
     data = PvCount.get_charts_data()
     return render_template('manage/statistics.html', data=data)
 
 
 @manage_bp.route('/user', methods=['GET', 'POST'])
+@permission_required('system_manage')
 def user():
     """ 用户查看，用户密码修改 """
     if request.method == 'POST':
@@ -34,6 +29,7 @@ def user():
 
 
 @manage_bp.route('/user_update/<int:user_id>', methods=['GET', 'POST'])
+@permission_required('system_manage')
 def user_update(user_id):
     the_user = User.query.get_or_404(user_id)
     form = UserForm(the_user)
@@ -49,12 +45,14 @@ def user_update(user_id):
 
 
 @manage_bp.route('/user_delete', methods=['POST'])
+@permission_required('system_manage')
 def user_delete():
     User.query.get_or_404(int(request.form.get('user_id', 0))).delete()
     return 'successful'
 
 
 @manage_bp.route('/user_role/<user_id>', methods=['GET', 'POST'])
+@permission_required('system_manage')
 def user_role(user_id):
     the_user = User.query.get_or_404(int(user_id))
 
@@ -72,6 +70,7 @@ def user_role(user_id):
 
 
 @manage_bp.route('/role', methods=['GET', 'POST'])
+@permission_required('system_manage')
 def role():
     """ 用户角色的查看、添加和修改。 """
     if request.method == 'POST':
@@ -93,12 +92,14 @@ def role():
 
 
 @manage_bp.route('/role_delete', methods=['POST'])
+@permission_required('system_manage')
 def role_delete():
     Role.query.get_or_404(int(request.form.get('role_id', 0))).delete()
     return 'successful'
 
 
 @manage_bp.route('/permission/<role_id>', methods=['GET', 'POST'])
+@permission_required('system_manage')
 def permission(role_id):
     """ 角色权限的添加和移除 """
     result = []
@@ -122,6 +123,7 @@ def permission(role_id):
 
 
 @manage_bp.route('/goods_type', methods=['GET', 'POST'])
+@permission_required('system_manage')
 def goods_type():
     if request.method == "POST":
         type_id = request.form.get('type_id', 0) or -1
@@ -143,12 +145,14 @@ def goods_type():
 
 
 @manage_bp.route('/goods_type_delete', methods=['POST'])
+@permission_required('system_manage')
 def goods_type_delete():
     GoodsType.query.get_or_404(int(request.form.get('type_id', 0))).delete()
     return 'successful'
 
 
 @manage_bp.route('/homepage', methods=['GET', 'POST'])
+@permission_required('system_manage')
 def homepage():
     form = HomePageForm()
     obj = HomePage.query.first()
