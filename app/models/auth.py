@@ -44,7 +44,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     phone_number = db.Column(db.String(14))
     resume = db.Column(db.Text)
-    create_time = db.Column(db.DateTime, default=datetime.utcnow)
+    create_time = db.Column(db.DateTime, default=datetime.now)
 
     goods = db.relationship('Goods', backref='user', lazy='dynamic')
     goods_img = db.relationship('GoodsImg', backref='user', lazy='dynamic')

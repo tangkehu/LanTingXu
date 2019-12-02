@@ -2,7 +2,7 @@
 from flask import render_template, request, flash, redirect, url_for
 from flask_login import current_user, login_required
 
-from app.models import User, Goods
+from app.models import User, Goods, PvCount
 from app.manage.forms import UserForm
 from app.utils import goods_order_map as _order
 from . import user_bp
@@ -15,6 +15,7 @@ def index(uid):
     order: 排序方式
     view: 展示方式
     """
+    PvCount.add_home_count()
     user_obj = User.query.get_or_404(uid)
     args = request.args.to_dict()
     tid = int(args.get('tid', 0))

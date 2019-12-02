@@ -10,7 +10,7 @@ class GoodsForm(FlaskForm):
     name = StringField('商品名', validators=[DataRequired('请输入商品名'), Length(1, 64, '商品名不超过64个字符')])
     type = SelectField('类别', validators=[DataRequired('请选择类别')], coerce=int)
     number = StringField('编号', validators=[Length(-1, 16, '编号不超过16个字符')])
-    rent = IntegerField('价格', validators=[DataRequired('请输入商品价格')])
+    price = IntegerField('价格', validators=[DataRequired('请输入商品价格')])
     cash_pledge = IntegerField('押金', validators=[Optional()])
     size = StringField('尺码', validators=[Length(-1, 64, '尺码内容不超过64个字符')])
     brand = StringField('品牌', validators=[Length(-1, 64, '品牌名不超过64个字符')])
@@ -34,7 +34,7 @@ class GoodsForm(FlaskForm):
         self.number.data = goods_obj.number
         self.name.data = goods_obj.name
         self.type.data = goods_obj.type_id or -1
-        self.rent.data = goods_obj.rent
+        self.price.data = goods_obj.price
         self.cash_pledge.data = goods_obj.cash_pledge
         self.size.data = goods_obj.size
         self.brand.data = goods_obj.brand

@@ -7,7 +7,7 @@ from app.models import User
 
 
 class LoginForm(FlaskForm):
-    email = StringField('邮箱', validators=[DataRequired('请输入正确的邮箱地址'), Email('请输入正确的邮箱地址')])
+    account = StringField('账号', validators=[DataRequired('请输入正确的账号')])
     password = PasswordField('密码', validators=[DataRequired('请输入密码')])
     submit = SubmitField('登录')
 
@@ -15,8 +15,12 @@ class LoginForm(FlaskForm):
         super(LoginForm, self).__init__(*args, **kwargs)
         self.user = None
 
-    def validate_email(self, field):
+    def validate_account(self, field):
         user_ = User.query.filter_by(email=field.data).first()
+        if not user_:
+            user_ = User.query.filter_by(username=field.data).first()
+        if not user_:
+            user_ = User.query.filter_by(phone_number=field.data).first()
         if user_:
             self.user = user_
         else:

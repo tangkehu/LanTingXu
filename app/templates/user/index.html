@@ -9,17 +9,17 @@
 
     <div class="container mt-3">
         <div class="row">
-            <div class="col-10 pr-0"><p class="h5 text-truncate font-weight-bolder">{{ user_obj.username }}</p></div>
-            <div class="col-2 pl-0 text-right">
-{#                <div class="dropdown dropleft">#}
-{#                  <button class="btn btn-outline-warning btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>#}
-{#                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">#}
-{#                    <a class="dropdown-item" href="#">Action</a>#}
-{#                    <a class="dropdown-item" href="#">Another action</a>#}
-{#                    <a class="dropdown-item" href="#">Something else here</a>#}
-{#                  </div>#}
-{#                </div>#}
-                <a href="{{ url_for('main_bp.index') }}" class="text-decoration-none text-muted">主页</a>
+            <div class="col-9 pr-0">
+                <p class="h5 text-truncate font-weight-bolder"
+                   onclick="showMsg('点击右上角即可进行分享<br><br>' +
+                           '或复制以下链接进行分享：<br>' +
+                           '{{ url_for('.index', uid=user_obj.id, _external=True) }}<br><br>' +
+                           '或长按该主页二维码可保存为图片进行分享<br><img class=\'img-fluid\' src=\'http://qr.topscan.com/api.php?text={{ url_for('.index', uid=user_obj.id, _external=True) }}\'>')">
+                    {% if user_obj.username %}{{ user_obj.username }}{% else %}{{ user_obj.email }}{% endif %}
+                </p>
+            </div>
+            <div class="col-3 pl-0 text-right">
+                <a href="{{ url_for('main_bp.index') }}" class="text-decoration-none text-warning">进入官网</a>
             </div>
         </div>
     </div>
@@ -31,7 +31,9 @@
             <div class="h-100 w-100 rounded" style="background: rgba(0,0,0,0.4);">
                 <div class="row h-100 align-items-center text-white">
                     <div class="col m-2">
-                        <p class="h4">{{ user_obj.resume }}</p>
+                        <p class="h4">
+                            {% if user_obj.resume %}{{ user_obj.resume }}{% else %}还没有编辑个人介绍哟...{% endif %}
+                        </p>
                     </div>
                 </div>
             </div>

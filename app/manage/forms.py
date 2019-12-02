@@ -7,10 +7,10 @@ from app.models import User
 
 
 class UserForm(FlaskForm):
-    username = StringField('用户名', validators=[Length(-1, 8, '用户名不超过8个字符')])
+    username = StringField('用户名', validators=[Length(-1, 16, '用户名不超过16个字符')])
     email = StringField('邮箱', validators=[DataRequired('请输入正确的邮箱地址'), Email('请输入正确的邮箱地址')])
-    password = PasswordField('新密码')
-    phone_number = StringField('手机号码', validators=[Length(-1, 14, '手机号码不超过14个字符'), Regexp(r'^\d*?$', message='请输入正确的手机号码')])
+    password = StringField('新密码')
+    phone_number = StringField('手机号码', validators=[Length(-1, 11, '手机号码不超过11个字符'), Regexp(r'^\d*?$', message='请输入正确的手机号码')])
     resume = TextAreaField('简介', validators=[Length(-1, 500, '简介不超过500个字符')])
 
     def __init__(self, user_obj, *args, **kwargs):
@@ -24,6 +24,10 @@ class UserForm(FlaskForm):
     def validate_email(self, field):
         if User.query.filter(User.id != self.user_obj.id, User.email == field.data).count() > 0:
             raise ValidationError('该邮箱已被使用')
+
+    def validate_phone_number(self, field):
+        if field.data and User.query.filter(User.id != self.user_obj.id, User.phone_number == field.data).count() > 0:
+            raise ValidationError('该手机号码已被使用')
 
     def set_data(self):
         self.username.data = self.user_obj.username

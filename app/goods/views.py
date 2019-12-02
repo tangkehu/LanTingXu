@@ -53,13 +53,13 @@ def update_goods(type_id, goods_id=None):
                   'details': form.details.data}
         if goods is None:
             if GoodsImg.query.filter_by(status=False, user_id=current_user.id).first():
-                Goods().add(form.name.data, form.rent.data, **kwargs)
+                Goods().add(form.name.data, form.price.data, **kwargs)
                 flash('商品添加成功。')
                 return redirect(url_for('.index', type_id=form.type.data))
             else:
                 flash('请添加商品图。')
         else:
-            goods.edit(form.name.data, form.rent.data, **kwargs)
+            goods.edit(form.name.data, form.price.data, **kwargs)
             flash('商品修改成功。')
             return redirect(url_for('.index', type_id=type_id)+'#goods_{}'.format(goods_id))
 

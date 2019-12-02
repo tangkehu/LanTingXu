@@ -1,8 +1,7 @@
-from flask import render_template, jsonify, current_app, url_for, request, redirect
+from flask import render_template, url_for, request, redirect
 
 from . import main_bp
-from app import db
-from app.models import Goods, GoodsType, GoodsImg, HomePage, PvCount
+from app.models import Goods, GoodsType, HomePage, PvCount
 from app.utils import goods_order_map
 
 
@@ -26,9 +25,17 @@ def index():
                            goods_li=goods_li)
 
 
+@main_bp.route('/goods_show/<int:goods_id>')
+def goods_show(goods_id):
+    goods = Goods.query.get_or_404(goods_id)
+    goods.add_view_count()
+    return render_template('main/goods_show.html', goods=goods)
+
+
 @main_bp.route('/index_new')
 def index_new():
     return redirect(url_for('.index'))
+
 
 # @main_bp.route('/index_new')
 # @main_bp.route('/index_new/<int:type_id>')
@@ -41,22 +48,16 @@ def index_new():
 #     return render_template('main/index.html', body=body, type_id=type_id, type_list=type_list)
 
 
-@main_bp.route('/goods_list/<int:tid>/<int:page>')
-def goods_list(tid=0, page=1):
-    # 获取商品分页展示数据
-    filters = [Goods.type_id == tid, Goods.status == True] if tid is not 0 else [Goods.status == True]
-    pagination = db.session.query(Goods.id, Goods.name, GoodsImg.filename_m, Goods.number).join(
-        GoodsImg, GoodsImg.goods_id == Goods.id).filter(*filters).group_by(Goods.id).order_by(
-        Goods.price.asc()).paginate(page, current_app.config['PER_PAGE'], False)
-    return jsonify({'items': [render_template('main/masonry_item.html', item=item) for item in pagination.items],
-                    'next': url_for('.goods_list', tid=tid, page=pagination.next_num) if pagination.next_num else None})
-
-
-@main_bp.route('/goods_show/<int:goods_id>')
-def goods_show(goods_id):
-    goods = Goods.query.get_or_404(goods_id)
-    goods.add_view_count()
-    return render_template('main/goods_show.html', goods=goods)
+# 分页展示部分代码——备用
+# @main_bp.route('/goods_list/<int:tid>/<int:page>')
+# def goods_list(tid=0, page=1):
+#     # 获取商品分页展示数据
+#     filters = [Goods.type_id == tid, Goods.status == True] if tid is not 0 else [Goods.status == True]
+#     pagination = db.session.query(Goods.id, Goods.name, GoodsImg.filename_m, Goods.number).join(
+#         GoodsImg, GoodsImg.goods_id == Goods.id).filter(*filters).group_by(Goods.id).order_by(
+#         Goods.price.asc()).paginate(page, current_app.config['PER_PAGE'], False)
+#     return jsonify({'items': [render_template('main/masonry_item.html', item=item) for item in pagination.items],
+#                     'next': url_for('.goods_list', tid=tid, page=pagination.next_num) if pagination.next_num else None})
 
 
 # @main_bp.route('/')
