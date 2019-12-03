@@ -46,7 +46,7 @@
                     <div class="form-group row">
                         {{ form.resume.label(class="col-3 pr-0 col-form-label") }}
                         <div class="col pl-0">
-                        {{ form.resume(class="form-control", rows="5") }}
+                        {{ form.resume(class="form-control", rows="5", placeholder="此项内容将展示至个人主页") }}
                         {% for item in form.resume.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
                         </div>
                     </div>

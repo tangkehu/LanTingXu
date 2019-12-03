@@ -15,7 +15,7 @@
                            '或复制以下链接进行分享：<br>' +
                            '{{ url_for('.index', uid=user_obj.id, _external=True) }}<br><br>' +
                            '或长按该主页二维码可保存为图片进行分享<br><img class=\'img-fluid\' src=\'http://qr.topscan.com/api.php?text={{ url_for('.index', uid=user_obj.id, _external=True) }}\'>')">
-                    {% if user_obj.username %}{{ user_obj.username }}{% else %}{{ user_obj.email }}{% endif %}
+                    <span {% if user_obj.id == current_user.id %}data-toggle="tooltip" data-placement="bottom" title="点击标题可生成分享二维码"{% endif %}>{% if user_obj.username %}{{ user_obj.username }}{% else %}{{ user_obj.email }}{% endif %}</span>
                 </p>
             </div>
             <div class="col-3 pl-0 text-right">
@@ -32,7 +32,7 @@
                 <div class="row h-100 align-items-center text-white">
                     <div class="col m-2">
                         <p class="h4">
-                            {% if user_obj.resume %}{{ user_obj.resume }}{% else %}还没有编辑个人介绍哟...{% endif %}
+                            {% if user_obj.resume %}{{ user_obj.resume }}{% else %}{% if user_obj.id == current_user.id %}这里是您的个人空间，可在账号编辑处修改此处展示的文字内容哟.{% else %}还没有编辑个人介绍哟...{% endif %}{% endif %}
                         </p>
                     </div>
                 </div>
@@ -71,10 +71,12 @@
                   </div>
                 </div>
             </div>
+
+            <!-- 排版部分 -->
             <div class="col text-right">
                 <a href="{{ url_for('.index', uid=user_obj.id) }}?tid={{ type_id }}&order={{ order_way }}&view={{ view_type }}"
                    class="text-muted text-decoration-none">
-                    <i class="fas fa-atom"></i>
+                    <i class="fas fa-th-list"></i>
                 </a>
             </div>
         </div>
@@ -136,9 +138,15 @@
 
 {% block script %}
     <script type="text/javascript">
-        new LazyLoad({  // 初始化懒加载
-            elements_selector: ".lazy",
-            load_delay: 300
+        $(function () {
+            new LazyLoad({  // 初始化懒加载
+                elements_selector: ".lazy",
+                load_delay: 300
+            });
+            $('[data-toggle="tooltip"]').tooltip('show');
+            setTimeout(function () {
+                $('[data-toggle="tooltip"]').tooltip('dispose');
+            }, 3000)
         });
     </script>
 {% endblock %}
