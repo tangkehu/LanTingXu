@@ -52,9 +52,9 @@
 {#            <a class="nav-link text-warning border-right" href="{{ url_for('user_bp.index', uid=goods.user_id) }}">#}
 {#                <i class="fas fa-store"></i> 查看更多#}
 {#            </a>#}
-            <a class="nav-link text-danger" href="javascript:"
-               onclick="showMsg('<b>联系方式</b><br>邮箱：{{ goods.user.email }}<br>{% if goods.user.phone_number %}电话：{{ goods.user.phone_number }}&nbsp;&nbsp;<a href=\'tel:{{ goods.user.phone_number }}\' class=\'text-info\'><i class=\'fas fa-phone\'></i>  拨打</a>{% endif %}')">
-                <i class="fas fa-shopping-cart"></i> 我要预定
+            <a class="nav-link text-info" href="javascript:"
+               onclick="showMsg('<b>联系方式</b><br>{{ goods.user.username }}<br>邮箱：{{ goods.user.email }}<br>{% if goods.user.phone_number %}电话：{{ goods.user.phone_number }}&nbsp;&nbsp;<a href=\'tel:{{ goods.user.phone_number }}\' class=\'text-info\'><i class=\'fas fa-phone\'></i>  拨打</a>{% endif %}')">
+                <i class="fas fa-comments"></i> 我要预定
             </a>
         </nav>
     </div>
