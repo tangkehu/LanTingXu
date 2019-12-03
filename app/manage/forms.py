@@ -7,7 +7,7 @@ from app.models import User
 
 
 class UserForm(FlaskForm):
-    username = StringField('用户名', validators=[Length(-1, 16, '用户名不超过16个字符')])
+    username = StringField('用户名', validators=[DataRequired('请输入用户名'), Length(1, 16, '用户名不超过16个字符')])
     email = StringField('邮箱', validators=[DataRequired('请输入正确的邮箱地址'), Email('请输入正确的邮箱地址')])
     password = StringField('新密码')
     phone_number = StringField('手机号码', validators=[Length(-1, 11, '手机号码不超过11个字符'), Regexp(r'^\d*?$', message='请输入正确的手机号码')])
