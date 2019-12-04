@@ -36,9 +36,7 @@ def user_update(user_id):
     if request.method == 'GET':
         form.set_data()
     if form.validate_on_submit():
-        kwargs = {'username': form.username.data, 'email': form.email.data, 'phone_number': form.phone_number.data,
-                  'resume': form.resume.data}
-        the_user.edit(**kwargs)
+        the_user.edit(**form.data)
         flash('账户信息修改成功！')
         return redirect(url_for('.user'))
     return render_template('manage/update_user.html', form=form)

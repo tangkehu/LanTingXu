@@ -40,9 +40,7 @@ def account():
         form.set_data()
 
     if form.validate_on_submit():
-        kwargs = {'username': form.username.data, 'email': form.email.data, 'phone_number': form.phone_number.data,
-                  'resume': form.resume.data, 'password': form.password.data}
-        user_obj.edit(**kwargs)
+        user_obj.edit(**form.data)
         flash('账号信息修改成功！')
         return redirect(url_for('.account'))
 

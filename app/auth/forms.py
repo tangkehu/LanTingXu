@@ -16,14 +16,13 @@ class LoginForm(FlaskForm):
         self.user = None
 
     def validate_account(self, field):
-        user_ = User.query.filter_by(email=field.data).first()
-        if not user_:
-            user_ = User.query.filter_by(username=field.data).first()
-        if not user_:
-            user_ = User.query.filter_by(phone_number=field.data).first()
-        if user_:
-            self.user = user_
-        else:
+        _filter = [User.email, User.username, User.phone_number, User.wei_number, User.qq_number]
+        for one in _filter:
+            user_ = User.query.filter(one == field.data).first()
+            if user_:
+                self.user = user_
+                break
+        if not self.user:
             raise ValidationError('该账号不存在')
 
     def validate_password(self, field):

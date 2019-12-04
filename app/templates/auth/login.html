@@ -57,7 +57,7 @@
 {#      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>#}
         {{ form.csrf_token() }}
         {{ form.account.label(class="sr-only") }}
-        {{ form.account(class='form-control', placeholder="邮箱或手机号码或用户名") }}
+        {{ form.account(class='form-control', placeholder="邮箱/用户名/手机/微信/QQ登录") }}
         {{ form.password.label(class="sr-only") }}
         {{ form.password(class="form-control", placeholder="请输入登陆密码") }}
         {% for error in form.account.errors %}<small class="text-danger float-left">{{ error }}</small><br>{% endfor %}

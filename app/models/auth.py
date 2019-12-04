@@ -43,6 +43,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
     phone_number = db.Column(db.String(14))
+    wei_number = db.Column(db.String(32))
+    qq_number = db.Column(db.String(16))
     resume = db.Column(db.Text)
     create_time = db.Column(db.DateTime, default=datetime.now)
 
@@ -87,6 +89,8 @@ class User(UserMixin, db.Model):
         self.username = kwargs.get('username')
         self.email = kwargs.get('email')
         self.phone_number = kwargs.get('phone_number')
+        self.wei_number = kwargs.get('wei_number')
+        self.qq_number = kwargs.get('qq_number')
         self.resume = kwargs.get('resume')
         if kwargs.get('password'):
             self.password = kwargs.get('password')

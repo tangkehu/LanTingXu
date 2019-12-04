@@ -11,6 +11,8 @@ class UserForm(FlaskForm):
     email = StringField('邮箱', validators=[DataRequired('请输入正确的邮箱地址'), Email('请输入正确的邮箱地址')])
     password = StringField('新密码')
     phone_number = StringField('手机号码', validators=[Length(-1, 11, '手机号码不超过11个字符'), Regexp(r'^\d*?$', message='请输入正确的手机号码')])
+    wei_number = StringField('微信号', validators=[Length(-1, 32, '微信号码不超过32个字符')])
+    qq_number = StringField('QQ号', validators=[Length(-1, 16, 'QQ号码不超过16个字符')])
     resume = TextAreaField('简介', validators=[Length(-1, 500, '简介不超过500个字符')])
 
     def __init__(self, user_obj, *args, **kwargs):
@@ -29,10 +31,20 @@ class UserForm(FlaskForm):
         if field.data and User.query.filter(User.id != self.user_obj.id, User.phone_number == field.data).count() > 0:
             raise ValidationError('该手机号码已被使用')
 
+    def validate_wei_number(self, field):
+        if field.data and User.query.filter(User.id != self.user_obj.id, User.wei_number == field.data).count() > 0:
+            raise ValidationError('该微信号码已被使用')
+
+    def validate_qq_number(self, field):
+        if field.data and User.query.filter(User.id != self.user_obj.id, User.qq_number == field.data).count() > 0:
+            raise ValidationError('该QQ号码已被使用')
+
     def set_data(self):
         self.username.data = self.user_obj.username
         self.email.data = self.user_obj.email
         self.phone_number.data = self.user_obj.phone_number
+        self.wei_number.data = self.user_obj.wei_number
+        self.qq_number.data = self.user_obj.qq_number
         self.resume.data = self.user_obj.resume
 
 

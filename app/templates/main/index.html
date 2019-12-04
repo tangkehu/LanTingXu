@@ -130,12 +130,12 @@
 
     <!-- 底部菜单 -->
     <div class="row justify-content-end fixed-bottom mb-5">
-        <nav class="nav border rounded-circle mr-4" style="background: rgba(255, 255, 255, 0.8);">
-            <a class="nav-link text-warning" href="javascript:"
+        <div class="col text-right">
+            <a class="text-warning mr-3 h3" href="javascript:"
                onclick="showMsg('长按识别以下二维码关注官方微信公众号【汉服租赁网】联系我们。<br>公众号有最新资讯、近期上新、最近活动、优惠信息等更多内容。<br><img class=\'img-fluid\' src=\'{{ url_for('static', filename='img/mp_weixin.jpg') }}\'>')">
                 <i class="fas fa-comments"></i>
             </a>
-        </nav>
+        </div>
     </div>
 
     <div class="pb-5"></div>  <!-- 撑底部高度 -->

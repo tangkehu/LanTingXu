@@ -35,6 +35,16 @@
                     {% for item in form.phone_number.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
                 </div>
                 <div class="form-group">
+                    {{ form.wei_number.label }}
+                    {{ form.wei_number(class="form-control") }}
+                    {% for item in form.wei_number.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
+                </div>
+                <div class="form-group">
+                    {{ form.qq_number.label }}
+                    {{ form.qq_number(class="form-control") }}
+                    {% for item in form.qq_number.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
+                </div>
+                <div class="form-group">
                     {{ form.resume.label }}
                     {{ form.resume(class="form-control", rows="5") }}
                     {% for item in form.resume.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
