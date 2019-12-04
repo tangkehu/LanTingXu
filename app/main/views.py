@@ -1,4 +1,5 @@
-from flask import render_template, url_for, request, redirect
+import os
+from flask import render_template, url_for, request, redirect, send_file
 
 from . import main_bp
 from app.models import Goods, GoodsType, HomePage, PvCount
@@ -35,6 +36,16 @@ def goods_show(goods_id):
 @main_bp.route('/index_new')
 def index_new():
     return redirect(url_for('.index'))
+
+
+@main_bp.route('/robots.txt')
+def robots():
+    return send_file(os.path.join(os.getcwd(), 'robots.txt'))
+
+
+@main_bp.route('/favicon.ico')
+def favicon():
+    return send_file(os.path.join(os.getcwd(), 'favicon.ico'))
 
 
 # @main_bp.route('/index_new')
