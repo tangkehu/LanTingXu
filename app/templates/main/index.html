@@ -13,7 +13,7 @@
         <div class="row my-3">
             <div class="col-10">
                 <a href="{{ url_for('.index') }}" class="text-decoration-none">
-                <img src="{{ url_for('static', filename='img/lantinglogo.gif') }}" width="40rem" height="40rem"><span class="ml-2 align-middle font-weight-bold text-dark">{{ SYS_NAME }}</span>
+                <img alt="{{ SYS_NAME }}" src="{{ url_for('static', filename='img/lantinglogo.gif') }}" width="40rem" height="40rem"><span class="ml-2 align-middle font-weight-bold text-dark">{{ SYS_NAME }}</span>
                 </a>
             </div>
             <div class="col-2 pl-0 text-right">
@@ -87,11 +87,14 @@
         <div class="row">
             {% for item in goods_li %}
                 {% set data_src = url_for('static', filename='img_goods/'+item.img.first().filename_m) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
+                {% set data_src_lg = url_for('static', filename='img_goods/'+item.img.first().filename_l) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
 
                 {% if view_type == 'small' %}
                 <div class="col-12 col-sm-6 col-lg-4 mb-4">
                     <a href="{{ url_for('main_bp.goods_show', goods_id=item.id) }}" class="text-decoration-none">
-                        <div class="rounded-top img_response_auto lazy" data-src="{{data_src}}"></div>
+                        <div class="rounded-top img_response_auto lazy" data-src="{{ data_src_lg }}">
+                            <img src="{{ data_src }}" alt="{{ item.name }}" class="img-fluid" width="100%" style="opacity: 0;">
+                        </div>
                         <div class="shadow rounded-bottom p-2">
                             <p class="m-0 text-truncate text-dark">{{ item.name }}</p>
                             <p class="m-0 text-warning">
@@ -106,7 +109,9 @@
                     <a href="{{ url_for('main_bp.goods_show', goods_id=item.id) }}" class="text-decoration-none">
                         <div class="row">
                             <div class="col-5 col-sm-4 col-lg-3 pr-0">
-                                <div class="rounded shadow img_response_auto lazy" data-src="{{data_src}}"></div>
+                                <div class="rounded shadow img_response_auto lazy" data-src="{{ data_src }}">
+                                    <img src="{{ data_src }}" alt="{{ item.name }}" class="img-fluid" width="100%" style="opacity: 0;">
+                                </div>
                             </div>
                             <div class="col">
                                     <p class="m-0 text-dark">{{ item.name }}</p>
@@ -130,12 +135,12 @@
 
     <!-- 底部菜单 -->
     <div class="row justify-content-end fixed-bottom mb-5">
-        <nav class="nav border rounded-circle mr-4" style="background: rgba(255, 255, 255, 0.8);">
-            <a class="nav-link text-warning" href="javascript:"
+        <div class="col text-right">
+            <a class="text-warning mr-3 h3" href="javascript:"
                onclick="showMsg('长按识别以下二维码关注官方微信公众号【汉服租赁网】联系我们。<br>公众号有最新资讯、近期上新、最近活动、优惠信息等更多内容。<br><img class=\'img-fluid\' src=\'{{ url_for('static', filename='img/mp_weixin.jpg') }}\'>')">
                 <i class="fas fa-comments"></i>
             </a>
-        </nav>
+        </div>
     </div>
 
     <div class="pb-5"></div>  <!-- 撑底部高度 -->

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Allow: /user/
+Allow: /user/1
+Allow: /goods_show/
+Allow: /index

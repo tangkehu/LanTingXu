@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ SYS_NAME }}-{{ goods.name }}{% endblock %}
+{% block title %}{{ goods.name }}-{{ SYS_NAME }}{% endblock %}
 
 {% block body %}
 <main role="main">
@@ -53,7 +53,7 @@
 {#                <i class="fas fa-store"></i> 查看更多#}
 {#            </a>#}
             <a class="nav-link text-info" href="javascript:"
-               onclick="showMsg('<b>联系方式</b><br>{{ goods.user.username }}<br>邮箱：{{ goods.user.email }}<br>{% if goods.user.phone_number %}电话：{{ goods.user.phone_number }}&nbsp;&nbsp;<a href=\'tel:{{ goods.user.phone_number }}\' class=\'text-info\'><i class=\'fas fa-phone\'></i>  拨打</a>{% endif %}')">
+               onclick="showMsg('<b>联系方式</b><br>{{ goods.user.username }}<br>邮箱：{{ goods.user.email }}<br>{% if goods.user.phone_number %}电话：{{ goods.user.phone_number }}&nbsp;&nbsp;<a href=\'tel:{{ goods.user.phone_number }}\' class=\'text-info\'><i class=\'fas fa-phone\'></i>  拨打</a>{% endif %}{% if goods.user.wei_number %}<br>微信：{{ goods.user.wei_number }}{% endif %}{% if goods.user.qq_number %}<br>Q&nbsp;&nbsp;Q：{{ goods.user.qq_number }}{% endif %}')">
                 <i class="fas fa-comments"></i> 我要预定
             </a>
         </nav>
