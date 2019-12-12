@@ -1,5 +1,6 @@
 import os
 from flask import render_template, url_for, request, redirect, send_file
+from sqlalchemy import or_
 
 from . import main_bp
 from app.models import Goods, GoodsType, HomePage, PvCount
@@ -31,6 +32,23 @@ def goods_show(goods_id):
     goods = Goods.query.get_or_404(goods_id)
     goods.add_view_count()
     return render_template('main/goods_show.html', goods=goods)
+
+
+@main_bp.route('/search')
+def search():
+    """
+    word: 搜索关键词
+    order: 排序方式
+    """
+    word = request.args.get('word', '')
+    order_way = request.args.get('order', 'flow')
+    params = [Goods.status == True]
+    if word:
+        params.append(or_(Goods.name.like('%{}%'.format(word)), Goods.number.like('%{}%'.format(word))))
+    else:
+        params.append(Goods.id == 0)
+    goods = Goods.query.filter(*params).order_by(goods_order_map(order_way, 0)).all()
+    return render_template('main/search.html', goods=goods, word=word, order_way=order_way)
 
 
 @main_bp.route('/index_new')

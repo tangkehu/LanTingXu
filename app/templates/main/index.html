@@ -11,12 +11,16 @@
     <div class="border-bottom shadow-sm">
     <div class="container">
         <div class="row my-3">
-            <div class="col-10">
+            <div class="col-7 pr-0">
                 <a href="{{ url_for('.index') }}" class="text-decoration-none">
                 <img alt="{{ SYS_NAME }}" src="{{ url_for('static', filename='img/lantinglogo.gif') }}" width="40rem" height="40rem"><span class="ml-2 align-middle font-weight-bold text-dark">{{ SYS_NAME }}</span>
                 </a>
             </div>
-            <div class="col-2 pl-0 text-right">
+            <div class="col-5 pl-0 text-right">
+                <a href="{{ url_for('main_bp.search') }}"
+                   class="text-decoration-none text-secondary rounded-pill pr-5 pl-2 mr-2 border align-middle">
+                    <i class="fas fa-search small"></i>
+                </a>
                 <a href="{{ url_for('goods_bp.index') }}"
                    class="text-decoration-none align-middle font-weight-bold text-dark" style="line-height: 2.5rem;">
                     <i class="fas fa-user"></i>
@@ -32,7 +36,7 @@
         <div class="row rounded mx-0" style="height: 10rem; background: url('{{ url_for('static', filename='img/bg-masthead.jpg') }}') no-repeat; background-size: cover;">
             <div class="h-100 w-100 rounded" style="background: rgba(0,0,0,0.4);">
                 <div class="row h-100 align-items-center text-white">
-                    <div class="col m-2">
+                    <div id="self-animate" class="col m-2">
                         <p class="h4">{{ body.caption }}</p>
                         <p>{{ body.subhead }}</p>
                     </div>
@@ -86,15 +90,13 @@
         <!-- 商品展示部分 -->
         <div class="row">
             {% for item in goods_li %}
-                {% set data_src = url_for('static', filename='img_goods/'+item.img.first().filename_m) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
-                {% set data_src_s = url_for('static', filename='img_goods/'+item.img.first().filename_s) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
+                {% set data_src_m = url_for('static', filename='img_goods/'+item.img.first().filename_m) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
+                {% set data_src_l = url_for('static', filename='img_goods/'+item.img.first().filename_l) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
 
                 {% if view_type == 'small' %}
                 <div class="col-12 col-sm-6 col-lg-4 mb-4">
                     <a href="{{ url_for('main_bp.goods_show', goods_id=item.id) }}" class="text-decoration-none">
-                        <div class="rounded-top img_response_auto lazy" data-src="{{ data_src }}">
-                            <img src="{{ data_src_s }}" alt="{{ item.name }}" class="img-fluid" width="100%" style="opacity: 0;">
-                        </div>
+                        <div class="rounded-top img_response_auto lazy" data-src="{{ data_src_l }}"></div>
                         <div class="shadow rounded-bottom p-2">
                             <p class="m-0 text-truncate text-dark">{{ item.name }}</p>
                             <p class="m-0 text-warning">
@@ -109,9 +111,7 @@
                     <a href="{{ url_for('main_bp.goods_show', goods_id=item.id) }}" class="text-decoration-none">
                         <div class="row">
                             <div class="col-5 col-sm-4 col-lg-3 pr-0">
-                                <div class="rounded shadow img_response_auto lazy" data-src="{{ data_src }}">
-                                    <img src="{{ data_src_s }}" alt="{{ item.name }}" class="img-fluid" width="100%" style="opacity: 0;">
-                                </div>
+                                <div class="rounded shadow img_response_auto lazy" data-src="{{ data_src_m }}"></div>
                             </div>
                             <div class="col">
                                     <p class="m-0 text-dark">{{ item.name }}</p>
@@ -158,5 +158,9 @@
             elements_selector: ".lazy",
             load_delay: 300
         });
+
+        setInterval(function () {
+            $('#self-animate').fadeOut(2000).fadeIn(2000);
+        }, 10000);
     </script>
 {% endblock %}
