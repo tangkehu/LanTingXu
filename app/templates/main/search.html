@@ -38,11 +38,32 @@
         </div>
     </div>
 
+    <div class="container mb-3">
+        <!-- 排序部分 -->
+        <div class="row">
+            <div class="col">
+                <div class="dropdown small">
+                  <a class="dropdown-toggle text-muted" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ goods_order_map(order_way, 1) }}
+                  </a>
+
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                      {% for one in goods_order_map(li=True) %}
+                        <a class="dropdown-item small text-muted"
+                           href="{{ url_for('main_bp.search') }}?word={{ word }}&order={{ one[0] }}">{{ one[1] }}</a>
+                        <div class="dropdown-divider m-0"></div>
+                      {% endfor %}
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <!-- 商品展示部分 -->
         <div class="row">
             {% for item in goods %}
-                {% set data_src = url_for('static', filename='img_goods/'+item.img.first().filename_m) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
+                {% set data_src = url_for('static', filename='img_goods/'+item.img.first().filename_l) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
 
                 <div class="col-12 col-sm-6 col-lg-4 mb-4">
                     <a href="{{ url_for('main_bp.goods_show', goods_id=item.id) }}" class="text-decoration-none">

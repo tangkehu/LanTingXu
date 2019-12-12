@@ -38,15 +38,17 @@ def goods_show(goods_id):
 def search():
     """
     word: 搜索关键词
+    order: 排序方式
     """
     word = request.args.get('word', '')
+    order_way = request.args.get('order', 'flow')
     params = [Goods.status == True]
     if word:
         params.append(or_(Goods.name.like('%{}%'.format(word)), Goods.number.like('%{}%'.format(word))))
     else:
         params.append(Goods.id == 0)
-    goods = Goods.query.filter(*params).all()
-    return render_template('main/search.html', goods=goods, word=word)
+    goods = Goods.query.filter(*params).order_by(goods_order_map(order_way, 0)).all()
+    return render_template('main/search.html', goods=goods, word=word, order_way=order_way)
 
 
 @main_bp.route('/index_new')
