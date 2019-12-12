@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{# 设置footer置底的关键代码 #}
+{% block html_tag %}class="h-100"{% endblock %}
+{% block body_tag %}class="d-flex flex-column h-100"{% endblock %}
+
+{% block body %}
+    <main role="main" class="flex-shrink-0">
+
+    <div class="container mt-4">
+        <!-- 标题 -->
+        <div class="row">
+            <div class="col">
+                <a href="{{ url_for('main_bp.index') }}" class="text-decoration-none text-secondary h3">
+                    <i class="fas fa-arrow-left text-muted"></i>
+                </a>
+                <span class="ml-2 h3">
+                    商品搜索
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5">
+        <!-- 搜索框部分 -->
+        <div class="row">
+            <div class="col">
+                <div class="input-group">
+                  <input type="text" class="form-control border-warning" value="{{ word }}">
+                  <div class="input-group-append">
+                    <button class="btn btn-warning text-white" type="button"
+                            onclick="location.href='{{ url_for('main_bp.search') }}?word='+$('input').val()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 商品展示部分 -->
+        <div class="row">
+            {% for item in goods %}
+                {% set data_src = url_for('static', filename='img_goods/'+item.img.first().filename_m) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
+
+                <div class="col-12 col-sm-6 col-lg-4 mb-4">
+                    <a href="{{ url_for('main_bp.goods_show', goods_id=item.id) }}" class="text-decoration-none">
+                        <div class="rounded-top img_response_auto lazy" data-src="{{ data_src }}"></div>
+                        <div class="shadow rounded-bottom p-2">
+                            <p class="m-0 text-truncate text-dark">{{ item.name }}</p>
+                            <p class="m-0 text-warning">
+                                <small>&yen;</small>{{ item.price }}
+                                <small class="float-right text-muted">No. {{ item.number }}</small>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+
+            {% else %}
+                <div class="col">
+                    未搜索到相关内容...
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="pb-5"></div>  <!-- 撑底部高度 -->
+
+    </main>
+
+    <!-- footer部分 -->
+    {% include '_footer.html' %}
+
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+        new LazyLoad({  // 初始化懒加载
+            elements_selector: ".lazy",
+            load_delay: 300
+        });
+    </script>
+{% endblock %}
