@@ -17,10 +17,10 @@
                 </a>
             </div>
             <div class="col-5 pl-0 text-right">
-                <span class="rounded-pill pr-5 pl-2 mr-2 border align-middle"
-                      onclick="location.href='{{ url_for('main_bp.search') }}'">
-                    <i class="fas fa-search small align-middle"></i>
-                </span>
+                <a href="{{ url_for('main_bp.search') }}"
+                   class="text-decoration-none text-secondary rounded-pill pr-5 pl-2 mr-2 border align-middle">
+                    <i class="fas fa-search small"></i>
+                </a>
                 <a href="{{ url_for('goods_bp.index') }}"
                    class="text-decoration-none align-middle font-weight-bold text-dark" style="line-height: 2.5rem;">
                     <i class="fas fa-user"></i>
