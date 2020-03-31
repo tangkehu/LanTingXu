@@ -15,13 +15,15 @@ def random_filename(filename):
     return uuid.uuid4().hex + ext
 
 
-def resize_img(path, filename, size: int):
+def resize_img(path, filename, size: int, file_obj=None, save_flg=False):
     """ 根据给定大小对图片进行百分比缩小 """
     prefix, ext = os.path.splitext(filename)
-    img = Image.open(os.path.join(path, filename))
+    img = Image.open(file_obj) if file_obj else Image.open(os.path.join(path, filename))
     width = img.size[0]
     height = img.size[1]
     if width <= size or height <= size:
+        if save_flg:
+            img.save(os.path.join(path, filename), optimize=True, quality=85)
         return filename
     else:
         if width < height:

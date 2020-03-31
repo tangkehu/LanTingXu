@@ -11,6 +11,7 @@ class Config:
     SECRET_KEY = os.getenv('FLASK_SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False  # 不追踪对象的修改，减少内存使用
     GOODS_IMG_PATH = os.path.join(os.getcwd(), 'app'+os.sep+'static'+os.sep+'img_goods')
+    BG_IMG_PATH = os.path.join(os.getcwd(), 'app'+os.sep+'static'+os.sep+'img_bg')
     PER_PAGE = 20  # 分页查询的每页数据量设置
     ADMINS = ['lantingxuapplet@163.com']
     BOOT_CDN = True  # 是否使用免费快速的bootcdn服务
