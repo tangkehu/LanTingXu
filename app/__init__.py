@@ -46,10 +46,10 @@ def register_click(app):
         # from .models import Permission
         # Permission.update_permissions()  # 系统初始化时开启，或在有新权限的时候开启
 
-        from .models import Goods
+        from .models import User
 
-        for one in Goods.query.all():
-            one.view_count = 0
+        for one in User.query.all():
+            one.bg_image = '../img/bg-masthead.jpg'
             db.session.add(one)
         db.session.commit()
 

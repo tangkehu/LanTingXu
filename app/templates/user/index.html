@@ -27,7 +27,11 @@
     {% if not type_id %}
     <div class="container mt-3">
         <!-- 标头caption部分 -->
-        <div class="row rounded mx-0" style="height: 10rem; background: url('{{ url_for('static', filename='img/bg-masthead.jpg') }}') no-repeat; background-size: cover;">
+        <div {% if user_obj.id == current_user.id %} onclick="bgChange('{{ url_for('.bg_change') }}')" {% endif %}
+             class="row rounded mx-0"
+             style="height: 10rem;
+                     background: url('{{ url_for('static', filename='img_bg/'+user_obj.bg_image) }}') no-repeat center;
+                     background-size: cover;">
             <div class="h-100 w-100 rounded" style="background: rgba(0,0,0,0.4);">
                 <div class="row h-100 align-items-center text-white">
                     <div class="col m-2">
@@ -138,16 +142,21 @@
 {% endblock %}
 
 {% block script %}
+    {% include "_change_bg.html" %}
+
     <script type="text/javascript">
         $(function () {
             new LazyLoad({  // 初始化懒加载
                 elements_selector: ".lazy",
                 load_delay: 800
             });
+
+            // 个人二维码位置提示
             $('[data-toggle="tooltip"]').tooltip('show');
             setTimeout(function () {
                 $('[data-toggle="tooltip"]').tooltip('dispose');
-            }, 3000)
+            }, 3000);
+
         });
     </script>
 {% endblock %}

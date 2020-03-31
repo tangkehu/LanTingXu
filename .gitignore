@@ -2,6 +2,7 @@
 .idea/
 nohup.out
 app/static/img_goods/
+app/static/img_bg/
 migrations/
 .flaskenv
 logs/

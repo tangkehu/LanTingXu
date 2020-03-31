@@ -1,10 +1,11 @@
 
-from flask import render_template, request, flash, redirect, url_for
+from flask import render_template, request, flash, redirect, url_for, current_app
 from flask_login import current_user, login_required
 
 from app.models import User, Goods, PvCount
 from app.manage.forms import UserForm
 from app.utils import goods_order_map as _order
+from app.utils import resize_img, random_filename
 from . import user_bp
 
 
@@ -45,3 +46,15 @@ def account():
         return redirect(url_for('.account'))
 
     return render_template('user/account.html', form=form)
+
+
+@user_bp.route('/bg_change', methods=['POST'])
+@login_required
+def bg_change():
+    # 背景图上传
+    new_image = request.files.get('file')
+    new_image_name = resize_img(current_app.config['BG_IMG_PATH'], random_filename(new_image.filename),
+                                1080, new_image, True)
+    user_obj = current_user._get_current_object()
+    user_obj.change_bg_image(new_image_name)
+    return 'success'
