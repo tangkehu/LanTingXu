@@ -112,7 +112,8 @@ class User(UserMixin, db.Model):
 
     def change_bg_image(self, image_name):
         try:
-            os.remove(os.path.join(current_app.config['BG_IMG_PATH'], self.bg_image))
+            if self.bg_image != '../img/bg-masthead.jpg':
+                os.remove(os.path.join(current_app.config['BG_IMG_PATH'], self.bg_image))
         except Exception as e:
             current_app.logger.info(e)
         self.bg_image = image_name
