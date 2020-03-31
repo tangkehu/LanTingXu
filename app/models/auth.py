@@ -47,7 +47,7 @@ class User(UserMixin, db.Model):
     wei_number = db.Column(db.String(32))
     qq_number = db.Column(db.String(16))
     resume = db.Column(db.Text)
-    bg_image = db.Column(db.String(128), default='bg-masthead.jpg')
+    bg_image = db.Column(db.String(128), default='../img/bg-masthead.jpg')
     create_time = db.Column(db.DateTime, default=datetime.now)
 
     goods = db.relationship('Goods', backref='user', lazy='dynamic')
@@ -73,6 +73,12 @@ class User(UserMixin, db.Model):
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    @staticmethod
+    def admin_user():
+        return User.query.join(
+            relation_user_role, (relation_user_role.c.user_id == User.id)).filter(
+            relation_user_role.c.role_id == Role.query.filter_by(name='超级管理员').first().id).first()
 
     def can(self, permission):
         # 典型的join联表查询
