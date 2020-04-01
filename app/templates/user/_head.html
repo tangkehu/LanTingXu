@@ -1,0 +1,28 @@
+
+    <div class="container mt-3">
+        <!-- 标题部分 -->
+        <div class="row">
+            <div class="col-9 pr-0">
+                <p class="h5 text-truncate font-weight-bolder"
+                   onclick="showMsg('点击右上角即可进行分享<br><br>' +
+                           '或复制以下链接进行分享：<br>' +
+                           '{{ url_for('.index', uid=user_obj.id, _external=True) }}<br><br>' +
+                           '或长按该主页二维码可保存为图片进行分享<br><img class=\'img-fluid\' src=\'http://qr.topscan.com/api.php?text={{ url_for('.index', uid=user_obj.id, _external=True) }}\'>')">
+                    <span {% if user_obj.id == current_user.id %}data-toggle="tooltip" data-placement="bottom" title="点击标题可生成分享二维码"{% endif %}>{% if user_obj.username %}{{ user_obj.username }}{% else %}{{ user_obj.email }}{% endif %}</span>
+                </p>
+            </div>
+            <div class="col-3 pl-0 text-right">
+                <a href="{{ url_for('main_bp.index') }}" class="text-decoration-none text-warning">进入官网</a>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            // 个人二维码位置提示
+            $('[data-toggle="tooltip"]').tooltip('show');
+            setTimeout(function () {
+                $('[data-toggle="tooltip"]').tooltip('dispose');
+            }, 3000);
+        });
+    </script>

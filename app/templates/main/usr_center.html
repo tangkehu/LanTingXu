@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% from '_macro.html' import goods_li_show, back_bar, order_block %}
+
+{% block body %}
+    {{ back_bar(href=url_for('.index')) }}
+
+    <!-- 标头caption部分 -->
+    <div class="container">
+        <div onclick="bgChange('{{ url_for('.bg_change') }}')" {% endif %}
+             class="row rounded mx-0"
+             style="height: 10rem;
+                     background: url('{{ url_for('static', filename='img_bg/'+user_obj.bg_image) }}') no-repeat center;
+                     background-size: cover;">
+            <div class="h-100 w-100 rounded" style="background: rgba(0,0,0,0.4);">
+                <div class="row h-100 align-items-center text-white">
+                    <div class="col m-2">
+                        <p class="h4">
+                            {% if user_obj.resume %}{{ user_obj.resume }}{% else %}{% if user_obj.id == current_user.id %}这里是您的个人空间，可在账号编辑处修改此处展示的文字内容哟.{% else %}还没有编辑个人介绍哟...{% endif %}{% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pb-5"></div>  <!-- 撑底部高度 -->
+{% endblock %}

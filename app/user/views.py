@@ -2,7 +2,7 @@
 from flask import render_template, request, flash, redirect, url_for, current_app
 from flask_login import current_user, login_required
 
-from app.models import User, Goods, PvCount
+from app.models import User, Goods, PvCount, GoodsType
 from app.manage.forms import UserForm
 from app.utils import goods_order_map as _order
 from app.utils import resize_img, random_filename
@@ -11,24 +11,33 @@ from . import user_bp
 
 @user_bp.route('/<int:uid>')
 def index(uid):
-    """
-    tid: 商品类型，当其为0时表示首页
-    order: 排序方式
-    view: 展示方式
-    """
+    """ 个人主页 """
     PvCount.add_home_count()
     user_obj = User.query.get_or_404(uid)
-    args = request.args.to_dict()
-    tid = int(args.get('tid', 0))
-    order_way = args.get('order', 'flow')
-    view_type = {'big': 'small', 'small': 'big'}[args.get('view', 'big')]
+    name_dic = {'date_down': '最新发布', 'flow': '最多浏览', 'price_up': '平价优选', 'price_down': '精品推荐'}
+    tid = GoodsType.query.order_by(GoodsType.sequence.asc()).first().id
 
-    params = [Goods.status == True, ]
-    if tid:
-        params.append(Goods.type_id == tid)
+    def set_data(order):
+        return {
+            'name': name_dic[order],
+            'data': user_obj.goods.filter(Goods.status==True).order_by(_order(order, 0)).limit(5).all(),
+            'href': url_for('.type_show', uid=uid, tid=tid)+'?order='+order
+        }
+
+    return render_template('user/index.html', user_obj=user_obj, goods_data=[set_data(key) for key in name_dic])
+
+
+@user_bp.route('/<int:uid>/<int:tid>')
+def type_show(uid, tid):
+    """ 个人主页商品分类展示 args:: order: 排序方式; view: 展示方式; """
+    user_obj = User.query.get_or_404(uid)
+    args = request.args.to_dict()
+    order_way = args.get('order') if args.get('order') else 'flow'
+    view_type = args.get('view') if args.get('view') else 'big'
+    params = [Goods.status == True, Goods.type_id == tid]
     goods_li = user_obj.goods.filter(*params).order_by(_order(order_way, 0)).all()
-    return render_template('user/index.html', user_obj=user_obj, type_id=tid, order_way=order_way, view_type=view_type,
-                           goods_li=goods_li)
+    return render_template('user/type_show.html', user_obj=user_obj, type_id=tid, order_way=order_way,
+                           view_type=view_type, goods_li=goods_li)
 
 
 @user_bp.route('/account', methods=['GET', 'POST'])

@@ -3,28 +3,47 @@ from flask import render_template, url_for, request, redirect, send_file
 from sqlalchemy import or_
 
 from . import main_bp
-from app.models import Goods, GoodsType, HomePage, PvCount
+from app.models import Goods, GoodsType, HomePage, PvCount, User
 from app.utils import goods_order_map
 
 
 @main_bp.route('/')
 @main_bp.route('/index')
 def index():
-    """
-    tid: 商品类型
-    order: 排序方式
-    view: 展示方式
-    """
     PvCount.add_home_count()
-    body = HomePage.query.first()
+    name_dic = {'date_down': '最新发布', 'flow': '最多浏览', 'price_up': '平价优选', 'price_down': '精品推荐'}
+    goods_data = [{
+        'name': name_dic[key],
+        'data': Goods.query.filter_by(status=True).order_by(goods_order_map(key, 0)).limit(6).all(),
+        'href': url_for('.show_in_order', order=key)
+    } for key in name_dic]
+    return render_template('main/index.html', goods_data=goods_data)
+
+
+@main_bp.route('/show_in_order/<string:order>')
+def show_in_order(order):
+    name_dic = {'date_down': '最新发布', 'flow': '最多浏览', 'price_up': '平价优选', 'price_down': '精品推荐'}
+    name = name_dic[order]
+    goods_data = Goods.query.filter_by(status=True).order_by(goods_order_map(order, 0)).all()
+    return render_template('main/show_in_order.html', name=name, goods_data=goods_data)
+
+
+@main_bp.route('/show_in_type/<int:tid>')
+def show_in_type(tid):
+    """ args:: order: 商品排序方式; view: 商品展现方式 """
+    name = GoodsType.query.get_or_404(tid).name
     args = request.args.to_dict()
-    tid = int(args.get('tid', GoodsType.query.order_by(GoodsType.sequence.asc()).first().id))
-    order_way = args.get('order', 'flow')
-    view_type = {'big': 'small', 'small': 'big'}[args.get('view', 'big')]
-    params = [Goods.status == True, Goods.type_id == tid]
-    goods_li = Goods.query.filter(*params).order_by(goods_order_map(order_way, 0)).all()
-    return render_template('main/index.html', body=body, type_id=tid, order_way=order_way, view_type=view_type,
-                           goods_li=goods_li)
+    order = args.get('order') if args.get('order') else 'flow'
+    view = args.get('view') if args.get('view') else 'big'
+    goods_data = Goods.query.filter_by(status=True, type_id=tid).order_by(goods_order_map(order, 0)).all()
+    return render_template('main/show_in_type.html', name=name, goods_data=goods_data, tid=tid, order=order, view=view)
+
+
+@main_bp.route('/usr_center')
+@main_bp.route('/usr_center/<int:uid>')
+def usr_center(uid=None):
+
+    return render_template('main/usr_center.html')
 
 
 @main_bp.route('/goods_show/<int:goods_id>')

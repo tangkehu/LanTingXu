@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "_macro.html" import goods_li_show, navbar %}
 
 {# 设置footer置底的关键代码 #}
 {% block html_tag %}class="h-100"{% endblock %}
@@ -7,26 +8,11 @@
 {% block body %}
     <main role="main" class="flex-shrink-0">
 
-    <div class="container mt-3">
-        <div class="row">
-            <div class="col-9 pr-0">
-                <p class="h5 text-truncate font-weight-bolder"
-                   onclick="showMsg('点击右上角即可进行分享<br><br>' +
-                           '或复制以下链接进行分享：<br>' +
-                           '{{ url_for('.index', uid=user_obj.id, _external=True) }}<br><br>' +
-                           '或长按该主页二维码可保存为图片进行分享<br><img class=\'img-fluid\' src=\'http://qr.topscan.com/api.php?text={{ url_for('.index', uid=user_obj.id, _external=True) }}\'>')">
-                    <span {% if user_obj.id == current_user.id %}data-toggle="tooltip" data-placement="bottom" title="点击标题可生成分享二维码"{% endif %}>{% if user_obj.username %}{{ user_obj.username }}{% else %}{{ user_obj.email }}{% endif %}</span>
-                </p>
-            </div>
-            <div class="col-3 pl-0 text-right">
-                <a href="{{ url_for('main_bp.index') }}" class="text-decoration-none text-warning">进入官网</a>
-            </div>
-        </div>
-    </div>
+    <!-- 头部 -->
+    {% include 'user/_head.html' %}
 
-    {% if not type_id %}
+    <!-- 标头caption部分 -->
     <div class="container mt-3">
-        <!-- 标头caption部分 -->
         <div {% if user_obj.id == current_user.id %} onclick="bgChange('{{ url_for('.bg_change') }}')" {% endif %}
              class="row rounded mx-0"
              style="height: 10rem;
@@ -43,94 +29,25 @@
             </div>
         </div>
     </div>
-    {% endif %}
 
-    <div class="container pt-2 pb-3 sticky-top bg-white">
-        <!-- 导航条 -->
-        <nav class="nav flex-nowrap text-nowrap overflow-auto nav-scroll-me">
-            <a class="nav-link px-0 pb-0 mr-3 order-0 {% if type_id %}text-black-50{% else %}text-warning  border-bottom border-warning{% endif %}"
-               href="{{ url_for('.index', uid=user_obj.id) }}?tid=0&order={{ order_way }}">首页</a>
-            {% for item in TYPE_LI %}
-            <a class="nav-link px-0 pb-0 mr-3 order-{{ item.sequence }} {% if item.id == type_id %}text-warning  border-bottom border-warning{% else %}text-black-50{% endif %}"
-               href="{{ url_for('.index', uid=user_obj.id) }}?tid={{ item.id }}&order={{ order_way }}">{{ item.name }}</a>
-            {% endfor %}
-        </nav>
-    </div>
+    <!-- 导航条 start -->
+    {{ navbar(uid=user_obj.id, TYPE_LI=TYPE_LI) }}
 
-    <div class="container mb-3">
-        <!-- 排序部分 -->
-        <div class="row">
-            <div class="col">
-                <div class="dropdown small">
-                  <a class="dropdown-toggle text-muted" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ goods_order_map(order_way, 1) }}
-                  </a>
-
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                      {% for one in goods_order_map(li=True) %}
-                        <a class="dropdown-item small text-muted"
-                           href="{{ url_for('.index', uid=user_obj.id) }}?tid={{ type_id }}&order={{ one[0] }}">{{ one[1] }}</a>
-                        <div class="dropdown-divider m-0"></div>
-                      {% endfor %}
-                  </div>
-                </div>
-            </div>
-
-            <!-- 排版部分 -->
-            <div class="col text-right">
-                <a href="{{ url_for('.index', uid=user_obj.id) }}?tid={{ type_id }}&order={{ order_way }}&view={{ view_type }}"
-                   class="text-muted text-decoration-none">
-                    <i class="fas fa-th-list"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
+    <!-- 商品展示部分 start -->
+    {% for one in goods_data %}
     <div class="container">
-        <!-- 商品展示部分 -->
-        <div class="row">
-            {% for item in goods_li %}
-                {% set data_src_m = url_for('static', filename='img_goods/'+item.img.first().filename_m) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
-                {% set data_src_l = url_for('static', filename='img_goods/'+item.img.first().filename_l) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
-
-                {% if view_type == 'small' %}
-                <div class="col-12 col-sm-6 col-lg-4 mb-4">
-                <a href="{{ url_for('main_bp.goods_show', goods_id=item.id) }}" class="text-decoration-none">
-                    <div class="rounded-top img_response_auto lazy" data-src="{{ data_src_l }}"></div>
-                    <div class="shadow rounded-bottom p-2">
-                        <p class="m-0 text-truncate text-dark">{{ item.name }}</p>
-                        <p class="m-0 text-warning">
-                            <small>&yen;</small>{{ item.price }}
-                            <small class="float-right text-muted">No. {{ item.number }}</small>
-                        </p>
-                    </div>
-                </a>
-                </div>
-                {% else %}
-                <div class="col-12 mb-4">
-                    <a href="{{ url_for('main_bp.goods_show', goods_id=item.id) }}" class="text-decoration-none">
-                        <div class="row">
-                            <div class="col-5 col-sm-4 col-lg-3 pr-0">
-                                <div class="rounded shadow img_response_auto lazy" data-src="{{ data_src_m }}"></div>
-                            </div>
-                            <div class="col">
-                                    <p class="m-0 text-dark">{{ item.name }}</p>
-                                    <p class="m-0 text-warning">
-                                        <small>&yen;</small>{{ item.price }}
-                                        <small class="float-right text-muted">No. {{ item.number }}</small>
-                                    </p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                {% endif %}
-            {% else %}
-                <div class="col">
-                    这里暂时是空的哟...
-                </div>
-            {% endfor %}
+    <div class="row">
+        <div class="col-12">
+            <div class="font-weight-bolder">
+                <span>{{ one['name'] }}</span>
+                <a href="{{ one['href'] }}" class="float-right text-warning"><i class="fas fa-angle-double-right"></i></a>
+            </div>
+            <hr class="bg-warning border-0 mt-1" style="height: 0.1rem;">
         </div>
     </div>
+    </div>
+    {{ goods_li_show(goods_li=one['data']) }}
+    {% endfor %}
 
     <div class="pb-5"></div>  <!-- 撑底部高度 -->
 
@@ -142,21 +59,43 @@
 {% endblock %}
 
 {% block script %}
-    {% include "_change_bg.html" %}
-
     <script type="text/javascript">
-        $(function () {
-            new LazyLoad({  // 初始化懒加载
-                elements_selector: ".lazy",
-                load_delay: 800
+
+        // 个人背景图更换入口
+        function bgChange(url) {
+            showMsg(
+                '<button id="bg-change-btn" class="btn btn-info">更换背景图</button>' +
+                '<div id="dropzone">\n' +
+                '        <div id="previewTemplate" style="display: none;">\n' +
+                '          <div class="dz-preview">\n' +
+                '            <small class="mr-4" data-dz-name></small><small data-dz-size></small>\n' +
+                '            <div class="progress mb-3">\n' +
+                '              <div class="progress-bar progress-bar-striped bg-warning progress-bar-animated" role="progressbar" style="width: 0;" aria-valuemin="0" aria-valuemax="100" data-dz-uploadprogress></div>\n' +
+                '            </div>\n' +
+                '          </div>\n' +
+                '        </div>\n' +
+                '    </div>'
+            );
+
+            // 更换背景图的图片上传接口
+            $('#dropzone').dropzone({
+                url: url,
+                previewTemplate: $('#previewTemplate').html(),
+                clickable: '#bg-change-btn',
+                acceptedFiles: 'image/*',
+                maxFiles: 1,
+                parallelUploads: 1,
+                init: function () {
+                    this.on('success', function (file) {
+                        // this.removeFile(file);
+                        location.reload();
+                    });
+                    this.on('error', function (file) {
+                        this.removeFile(file);
+                        $("#bg-change-btn").text('上传失败，点击重试')
+                    })
+                }
             });
-
-            // 个人二维码位置提示
-            $('[data-toggle="tooltip"]').tooltip('show');
-            setTimeout(function () {
-                $('[data-toggle="tooltip"]').tooltip('dispose');
-            }, 3000);
-
-        });
+        }
     </script>
 {% endblock %}
