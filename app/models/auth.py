@@ -18,6 +18,11 @@ class AnonymousUser(AnonymousUserMixin):
     def can(self, permission):
         return False
 
+    # 为匿名用户添加背景图
+    @property
+    def bg_image(self):
+        return '../img/bg-masthead.jpg'
+
 
 # 装载匿名用户
 login_manager.anonymous_user = AnonymousUser

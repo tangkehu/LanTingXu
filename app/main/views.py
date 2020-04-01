@@ -40,8 +40,7 @@ def show_in_type(tid):
 
 
 @main_bp.route('/usr_center')
-@main_bp.route('/usr_center/<int:uid>')
-def usr_center(uid=None):
+def usr_center():
 
     return render_template('main/usr_center.html')
 
