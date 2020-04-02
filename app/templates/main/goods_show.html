@@ -23,7 +23,7 @@
                     {% if goods.quantity %}<br>库存：{{ goods.quantity }}{% endif %}
                 </p>
                 <p>
-                    <a href="{{ url_for('user_bp.index', uid=goods.user_id) }}" class="text-muted">
+                    <a href="{{ url_for('.usr_home', uid=goods.user_id) }}" class="text-muted">
                         查看【{{ goods.user.username }}】的全部汉服
                     </a>
                 </p>

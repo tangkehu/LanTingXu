@@ -39,30 +39,7 @@
 {% endmacro %}
 
 
-{% macro navbar(tid=0, uid=None, order_way='flow', view_type='big', TYPE_LI=TYPE_LI) %}
-    <div class="container pt-2 pb-3 sticky-top bg-white">
-        <!-- 导航条 -->
-        <nav class="nav flex-nowrap text-nowrap overflow-auto nav-scroll-me">
-            <a class="nav-link px-0 pb-0 mr-3 order-0 {% if tid == 0 %}
-            text-warning border-bottom border-warning {% else %}
-            text-black-50 {% endif %}"
-               href="{% if uid %} {{ url_for('.index', uid=uid) }} {% else %} {{ url_for('.index') }} {% endif %}">
-                首页
-            </a>
-            {% for item in TYPE_LI %}
-            {% set href = url_for('.type_show', uid=uid, tid=item.id)+'?order='+order_way+'&view='+view_type if uid else url_for('.type_show', tid=item.id)+'?order='+order_way+'&view='+view_type %}
-            <a class="nav-link px-0 pb-0 mr-3 order-{{ item.sequence }} {% if item.id == tid %}
-            text-warning border-bottom border-warning{% else %}
-            text-black-50 {% endif %}" href="{{ href }}">
-                {{ item.name }}
-            </a>
-            {% endfor %}
-        </nav>
-    </div>
-{% endmacro %}
-
-
-{% macro order_block(tid, uid=None, order_way='flow', view_type='big', point='user_bp.type_show', goods_order_map=goods_order_map) %}
+{% macro order_block(tid, uid=None, order_way='flow', view_type='big', point='main_bp.show_in_type', goods_order_map=goods_order_map) %}
     <div class="container mb-3">
         <!-- 排序部分 -->
         <div class="row">

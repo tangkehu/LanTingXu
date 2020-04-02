@@ -31,10 +31,26 @@
 
     <div class="container mb-4">
     <div class="row text-center">
-        <div class="col"><a href="#" class="text-danger small text-nowrap"><i class="fas fa-store"></i><br>商品管理</a></div>
-        <div class="col"><a href="#" class="text-danger small text-nowrap"><i class="fas fa-user-cog"></i><br>账号管理</a></div>
-        <div class="col"><a href="#" class="text-danger small text-nowrap"><i class="fas fa-home"></i><br>个人主页</a></div>
-        <div class="col"><a href="#" class="text-danger small text-nowrap"><i class="fas fa-qrcode"></i><br>二维码</a></div>
+        <div class="col">
+            <a href="{% if current_user.is_authenticated %}{{ url_for('goods_bp.index') }}{% else %}#{% endif %}"
+               class="text-danger small text-nowrap"><i class="fas fa-store"></i><br>商品管理
+            </a>
+        </div>
+        <div class="col">
+            <a href="{% if current_user.is_authenticated %}{{ url_for('.usr_account') }}{% else %}#{% endif %}"
+               class="text-danger small text-nowrap"><i class="fas fa-user-cog"></i><br>账号管理
+            </a>
+        </div>
+        <div class="col">
+            <a href="{% if current_user.is_authenticated %}{{ url_for('.usr_home', uid=current_user.id) }}{% else %}#{% endif %}"
+               class="text-danger small text-nowrap"><i class="fas fa-home"></i><br>个人主页
+            </a>
+        </div>
+        <div class="col">
+            <a href="{% if current_user.is_authenticated %}{{ url_for('.usr_qrcode', uid=current_user.id) }}{% else %}#{% endif %}"
+               class="text-danger small text-nowrap"><i class="fas fa-qrcode"></i><br>二维码
+            </a>
+        </div>
     </div>
     </div>
 
@@ -94,7 +110,7 @@
 
             // 更换背景图的图片上传接口
             $('#dropzone').dropzone({
-                url: '{{ url_for('user_bp.bg_change') }}',
+                url: '{{ url_for('.usr_bg_change_api') }}',
                 previewTemplate: $('#previewTemplate').html(),
                 clickable: '#bg-change-btn',
                 acceptedFiles: 'image/*',

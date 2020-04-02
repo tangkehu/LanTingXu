@@ -1,11 +1,12 @@
 import os
-from flask import render_template, url_for, request, redirect, send_file
+from flask import render_template, url_for, request, send_file, current_app, flash, redirect
 from sqlalchemy import or_
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 from . import main_bp
-from app.models import Goods, GoodsType, PvCount
-from app.utils import goods_order_map
+from app.models import Goods, GoodsType, PvCount, User
+from app.utils import goods_order_map, resize_img, random_filename
+from app.manage.forms import UserForm
 
 
 @main_bp.route('/')
@@ -22,22 +23,27 @@ def index():
 
 
 @main_bp.route('/show_in_order/<string:order>')
-def show_in_order(order):
+@main_bp.route('/show_in_order/<string:order>/<int:uid>')
+def show_in_order(order, uid=None):
     name_dic = {'date_down': '最新发布', 'flow': '最多浏览', 'price_up': '平价优选', 'price_down': '汉服精品'}
     name = name_dic[order]
-    goods_data = Goods.query.filter_by(status=True).order_by(goods_order_map(order, 0)).all()
+    _query_obj = User.query.get_or_404(uid).goods if uid else Goods.query
+    goods_data = _query_obj.filter_by(status=True).order_by(goods_order_map(order, 0)).all()
     return render_template('main/show_in_order.html', name=name, goods_data=goods_data)
 
 
 @main_bp.route('/show_in_type/<int:tid>')
-def show_in_type(tid):
+@main_bp.route('/show_in_type/<int:tid>/<int:uid>')
+def show_in_type(tid, uid=None):
     """ args:: order: 商品排序方式; view: 商品展现方式 """
     name = GoodsType.query.get_or_404(tid).name
     args = request.args.to_dict()
     order = args.get('order') if args.get('order') else 'flow'
     view = args.get('view') if args.get('view') else 'big'
-    goods_data = Goods.query.filter_by(status=True, type_id=tid).order_by(goods_order_map(order, 0)).all()
-    return render_template('main/show_in_type.html', name=name, goods_data=goods_data, tid=tid, order=order, view=view)
+    _query_obj = User.query.get_or_404(uid).goods if uid else Goods.query
+    goods_data = _query_obj.filter_by(status=True, type_id=tid).order_by(goods_order_map(order, 0)).all()
+    return render_template('main/show_in_type.html', name=name, goods_data=goods_data, goods_order_map=goods_order_map,
+                           tid=tid, order=order, view=view, uid=uid)
 
 
 @main_bp.route('/usr_center')
@@ -49,6 +55,53 @@ def usr_center():
     } for key in name_dic if current_user.is_authenticated]
     goods_stat = current_user.get_goods_stat()
     return render_template('main/usr_center.html', goods_data=goods_data, goods_stat=goods_stat)
+
+
+@main_bp.route('/usr_qrcode/<int:uid>')
+def usr_qrcode(uid):
+    return render_template('main/usr_qrcode.html', uid=uid)
+
+
+@main_bp.route('/usr_account', methods=['GET', 'POST'])
+@login_required
+def usr_account():
+    user_obj = current_user._get_current_object()
+    form = UserForm(user_obj)
+
+    if request.method == 'GET':
+        form.set_data()
+
+    if form.validate_on_submit():
+        user_obj.edit(**form.data)
+        flash('账号信息修改成功！')
+        return redirect(url_for('.usr_account'))
+
+    return render_template('main/usr_account.html', form=form)
+
+
+@main_bp.route('/usr_home/<int:uid>')
+def usr_home(uid):
+    """ 用户个人主页 """
+    PvCount.add_home_count()
+    user_obj = User.query.get_or_404(uid)
+    name_dic = {'date_down': '最新发布', 'flow': '最多浏览', 'price_up': '平价优选', 'price_down': '汉服精品'}
+    goods_data = [{
+        'name': name_dic[key],
+        'data': user_obj.goods.filter_by(status=True).order_by(goods_order_map(key, 0)).limit(6).all(),
+        'href': url_for('.show_in_order', order=key, uid=uid)
+    } for key in name_dic]
+    return render_template('main/usr_home.html', user_obj=user_obj, goods_data=goods_data, type_li=GoodsType.query.all())
+
+
+@main_bp.route('/usr_bg_change_api', methods=['POST'])
+@login_required
+def usr_bg_change_api():
+    # 背景图上传
+    new_image = request.files.get('file')
+    new_image_name = resize_img(current_app.config['BG_IMG_PATH'], random_filename(new_image.filename),
+                                1080, new_image, True)
+    current_user.change_bg_image(new_image_name)
+    return 'success'
 
 
 @main_bp.route('/goods_show/<int:goods_id>')

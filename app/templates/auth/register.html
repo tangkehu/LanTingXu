@@ -71,9 +71,11 @@
 {#        </label>#}
 {#      </div>#}
         {{ form.submit(class="btn btn-lg btn-info btn-block mt-2") }}
-        <p class="mt-2 small">点击这里<a href="{{ url_for('.login') }}">登录</a></p>
+        <p class="mt-2 small">
+            点击这里<a href="{{ url_for('.login') }}">登录</a> <br><br>
+            <a href="/">返回首页</a>
+        </p>
         <p class="mt-5 mb-3 text-muted">&copy; {{ SYS_NAME }}</p>
     </form>
 
-    {% include "_navbar.html" %}
 {% endblock %}

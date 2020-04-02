@@ -2,8 +2,8 @@
 {% from '_macro.html' import goods_li_show, back_bar, order_block %}
 {% block title %}{{ SYS_NAME }}-{{ name }}{% endblock %}
 {% block body %}
-    {{ back_bar(name=name, href=url_for('.index')) }}
-    {{ order_block(tid=tid, order_way=order, view_type=view, point='main_bp.show_in_type', goods_order_map=goods_order_map) }}
+    {{ back_bar(name=name) }}
+    {{ order_block(tid=tid, uid=uid, order_way=order, view_type=view, goods_order_map=goods_order_map) }}
     {{ goods_li_show(goods_li=goods_data, view_type=view) }}
     <div class="pb-5"></div>  <!-- 撑底部高度 -->
 {% endblock %}

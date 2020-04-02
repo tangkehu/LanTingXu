@@ -21,7 +21,8 @@ def index():
     if not current_user.can('system_manage'):
         params.append(Goods.user_id == current_user.id)
     goods_list = Goods.query.filter(*params).order_by(goods_order_map(order_way, 0)).all()
-    return render_template('goods/index.html', goods_list=goods_list, type_id=type_id, order_way=order_way)
+    return render_template('goods/index.html', goods_list=goods_list, type_id=type_id, order_way=order_way,
+                           goods_order_map=goods_order_map, type_li=GoodsType.query.all())
 
 
 @goods_bp.route('/update_goods/<int:type_id>', methods=['GET', 'POST'])
