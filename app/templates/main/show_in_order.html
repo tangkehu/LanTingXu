@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% from '_macro.html' import goods_li_show, back_bar, order_block %}
-
+{% block title %}{{ SYS_NAME }}-{{ name }}{% endblock %}
 {% block body %}
     {{ back_bar(name=name, href=url_for('.index')) }}
     {{ goods_li_show(goods_li=goods_data) }}

@@ -1,25 +1,16 @@
 {% extends 'base.html' %}
+{% from '_macro.html' import back_bar %}
 
 {% block title %}{{ SYS_NAME }}-{{ goods.name }}{% endblock %}
 
 {% block body %}
 <main role="main">
-    <div class="border-bottom shadow-sm py-2 mb-4 fixed-top bg-white">
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <a href="javascript: if (window.history.length === 1) {window.location.href='/'} else {window.history.back();}"
-                       class="text-decoration-none text-secondary lead"><i class="fas fa-chevron-left"></i> </a>
-                    <span class="lead ml-2">详情</span>
-                </div>
-            </div>
-        </div>
-    </div>
+    {{ back_bar(name="商品详情") }}
 
-    <div class="container mb-5 pb-5" style="margin-top: 4rem;">
+    <div class="container mb-5 pb-5">
         <div class="row justify-content-center">
             <div class="col col-md-10 col-xl-8">
-                <p class="h4">{{ goods.name }}</p>
+                <p class="h3">{{ goods.name }}</p>
                 <p>
                     <span class="lead text-danger font-weight-bold">&yen;{{ goods.price }}</span>
                     {% if goods.cash_pledge %}<small class="text-muted font-weight-light">&nbsp;押金&yen;{{ goods.cash_pledge }}</small>{% endif %}
@@ -49,9 +40,6 @@
     <!-- 底部菜单 -->
     <div class="row justify-content-center fixed-bottom mb-2">
         <nav class="nav rounded-pill border" style="background: rgba(255, 255, 255, 0.8);">
-{#            <a class="nav-link text-warning border-right" href="{{ url_for('user_bp.index', uid=goods.user_id) }}">#}
-{#                <i class="fas fa-store"></i> 查看更多#}
-{#            </a>#}
             <a class="nav-link text-info" href="javascript:"
                onclick="showMsg('<b>联系方式</b><br>{{ goods.user.username }}<br>邮箱：{{ goods.user.email }}<br>{% if goods.user.phone_number %}电话：{{ goods.user.phone_number }}&nbsp;&nbsp;<a href=\'tel:{{ goods.user.phone_number }}\' class=\'text-info\'><i class=\'fas fa-phone\'></i>  拨打</a>{% endif %}{% if goods.user.wei_number %}<br>微信：{{ goods.user.wei_number }}{% endif %}{% if goods.user.qq_number %}<br>Q&nbsp;&nbsp;Q：{{ goods.user.qq_number }}{% endif %}')">
                 <i class="fas fa-comments"></i> 我要预定

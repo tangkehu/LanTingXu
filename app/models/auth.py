@@ -3,6 +3,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import AnonymousUserMixin, UserMixin
 from flask import current_app
+from sqlalchemy import func
 
 from app import db, login_manager
 
@@ -17,6 +18,10 @@ class AnonymousUser(AnonymousUserMixin):
     # 重写匿名用户，为其添加权限认证的方法
     def can(self, permission):
         return False
+
+    # 为匿名用户添加商品统计方法
+    def get_goods_stat(self):
+        return {'total': 0, 'out': 0, 'views': 0}
 
     # 为匿名用户添加背景图
     @property
@@ -139,6 +144,14 @@ class User(UserMixin, db.Model):
 
     def exist_role(self, role_id):
         return self.roles.filter(Role.id == role_id).count() > 0
+
+    def get_goods_stat(self):
+        from app.models import Goods
+        return {
+            'total': self.goods.count(),
+            'out': self.goods.filter(Goods.status == False).count(),
+            'views': db.session.query(func.sum(Goods.view_count)).filter(Goods.user_id == self.id).scalar() or 0
+        }
 
     def delete(self):
         for item in self.goods.all():

@@ -127,15 +127,16 @@ def goods_type():
         type_id = request.form.get('type_id', 0) or -1
         type_name = request.form.get('type_name')
         sequence = request.form.get('sequence')
+        icon = request.form.get('icon')
 
         if not type_name or not sequence or GoodsType.query.filter(GoodsType.id != int(type_id),
                                                                    GoodsType.name == type_name).count() > 0:
             return '商品类型名非空且唯一,商品次序非空且>0', 400
 
         if type_id is -1:
-            GoodsType().update(type_name, sequence)
+            GoodsType().update(type_name, sequence, icon)
         else:
-            GoodsType.query.get_or_404(int(type_id)).update(type_name, sequence)
+            GoodsType.query.get_or_404(int(type_id)).update(type_name, sequence, icon)
         return 'successful'
 
     goods_types = GoodsType.query.order_by(GoodsType.id.desc()).all()

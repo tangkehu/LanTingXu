@@ -1,9 +1,10 @@
 import os
 from flask import render_template, url_for, request, redirect, send_file
 from sqlalchemy import or_
+from flask_login import current_user
 
 from . import main_bp
-from app.models import Goods, GoodsType, HomePage, PvCount, User
+from app.models import Goods, GoodsType, PvCount
 from app.utils import goods_order_map
 
 
@@ -11,18 +12,18 @@ from app.utils import goods_order_map
 @main_bp.route('/index')
 def index():
     PvCount.add_home_count()
-    name_dic = {'date_down': '最新发布', 'flow': '最多浏览', 'price_up': '平价优选', 'price_down': '精品推荐'}
+    name_dic = {'date_down': '最新发布', 'flow': '最多浏览', 'price_up': '平价优选', 'price_down': '汉服精品'}
     goods_data = [{
         'name': name_dic[key],
         'data': Goods.query.filter_by(status=True).order_by(goods_order_map(key, 0)).limit(6).all(),
         'href': url_for('.show_in_order', order=key)
     } for key in name_dic]
-    return render_template('main/index.html', goods_data=goods_data)
+    return render_template('main/index.html', goods_data=goods_data, type_li=GoodsType.query.all())
 
 
 @main_bp.route('/show_in_order/<string:order>')
 def show_in_order(order):
-    name_dic = {'date_down': '最新发布', 'flow': '最多浏览', 'price_up': '平价优选', 'price_down': '精品推荐'}
+    name_dic = {'date_down': '最新发布', 'flow': '最多浏览', 'price_up': '平价优选', 'price_down': '汉服精品'}
     name = name_dic[order]
     goods_data = Goods.query.filter_by(status=True).order_by(goods_order_map(order, 0)).all()
     return render_template('main/show_in_order.html', name=name, goods_data=goods_data)
@@ -41,8 +42,13 @@ def show_in_type(tid):
 
 @main_bp.route('/usr_center')
 def usr_center():
-
-    return render_template('main/usr_center.html')
+    name_dic = {'flow': '我的最受欢迎', 'date_down': '我的最新发布'}
+    goods_data = [{
+        'name': name_dic[key],
+        'data': current_user.goods.filter(Goods.status==True).order_by(goods_order_map(key, 0)).limit(10).all(),
+    } for key in name_dic if current_user.is_authenticated]
+    goods_stat = current_user.get_goods_stat()
+    return render_template('main/usr_center.html', goods_data=goods_data, goods_stat=goods_stat)
 
 
 @main_bp.route('/goods_show/<int:goods_id>')
@@ -59,7 +65,7 @@ def search():
     order: 排序方式
     """
     word = request.args.get('word', '')
-    order_way = request.args.get('order', 'flow')
+    order_way = request.args.get('order') if request.args.get('order') else 'flow'
     params = [Goods.status == True]
     if word:
         params.append(or_(Goods.name.like('%{}%'.format(word)), Goods.number.like('%{}%'.format(word))))
@@ -67,11 +73,6 @@ def search():
         params.append(Goods.id == 0)
     goods = Goods.query.filter(*params).order_by(goods_order_map(order_way, 0)).all()
     return render_template('main/search.html', goods=goods, word=word, order_way=order_way)
-
-
-@main_bp.route('/index_new')
-def index_new():
-    return redirect(url_for('.index'))
 
 
 @main_bp.route('/robots.txt')

@@ -1,20 +1,41 @@
 
 
-{% macro back_bar(name=None, href=None) %}
+{% macro back_bar(name=None, href=None, share=True, color='text-dark') %}
     {% set href = href if href else "javascript: if (window.history.length === 1) {window.location.href='/'} else {window.history.back();}" %}
-    <div class="container my-4">
+    <div class="container py-4">
         <!-- 返回包括标题 -->
-        <div class="row">
-            <div class="col">
-                <a href="{{ href }}" class="text-decoration-none text-secondary h4">
-                    <i class="fas fa-arrow-left text-muted"></i>
+        <div class="row justify-content-between">
+            <div class="col text-nowrap">
+                <a href="{{ href }}" class="text-decoration-none h4 {{color}}">
+                    <i class="fas fa-arrow-left"></i>
                 </a>
-                <span class="ml-2 h4">
+                <span class="ml-2 h4 {{color}}">
                     {% if name %} {{ name }} {% endif %}
                 </span>
             </div>
+            {% if share %}
+            <div class="col text-right">
+                <a id="clipboard-trigger" href="javascript: void (0); " class="text-decoration-none {{color}}">
+                    <i class="fas fa-share-square"></i>
+                </a>
+            </div>
+            {% endif %}
         </div>
     </div>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#clipboard-trigger").attr('data-clipboard-text', document.title+'\n'+location.href);
+            var clipboard = new ClipboardJS('#clipboard-trigger');
+            clipboard.on('success', function(e) {
+                showMsg('已成功复制当前页面至剪贴板，请到微信或QQ粘贴来分享内容。');
+                e.clearSelection();
+            });
+            clipboard.on('error', function(e) {
+                showMsg('请复制以下内容供粘贴分享：\n'+document.title+'\n'+location.href);
+            });
+        });
+    </script>
 {% endmacro %}
 
 
