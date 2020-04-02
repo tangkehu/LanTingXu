@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from '_macro.html' import goods_li_show %}
 
 {# 设置footer置底的关键代码 #}
 {% block html_tag %}class="h-100"{% endblock %}
@@ -21,7 +22,7 @@
                    class="text-decoration-none text-secondary rounded-pill pr-5 pl-2 mr-2 border align-middle">
                     <i class="fas fa-search small"></i>
                 </a>
-                <a href="{{ url_for('goods_bp.index') }}"
+                <a href="{{ url_for('main_bp.usr_center') }}"
                    class="text-decoration-none align-middle font-weight-bold text-dark" style="line-height: 2.5rem;">
                     <i class="fas fa-user"></i>
                 </a>
@@ -30,113 +31,37 @@
     </div>
     </div>
 
-    <!-- 主体上半部分 -->
-    <div class="container mt-4">
-        <!-- 标头caption部分 -->
-        <div class="row rounded mx-0" style="height: 10rem; background: url('{{ url_for('static', filename='img_bg/'+admin_user.bg_image) }}') no-repeat center; background-size: cover;">
-            <div class="h-100 w-100 rounded" style="background: rgba(0,0,0,0.4);">
-                <div class="row h-100 align-items-center text-white">
-                    <div id="self-animate" class="col m-2">
-                        <p class="h4">{{ body.caption }}</p>
-                        <p>{{ body.subhead }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- 二级导航 -->
+    <div class="container my-4">
+    <div class="row text-center">
+        {% for item in type_li %}
+        <div class="col order-{{ item.sequence }} mx-0 px-0 my-2">
+            <a href="{{ url_for('.show_in_type', tid=item.id) }}" class="text-danger small text-nowrap p-0 m-0">
+                <i class="fas fa-{{item.icon}} h4"></i><br>{{ item.name }}</a></div>
+        {% endfor %}
+    </div>
     </div>
 
-    <div class="container sticky-top bg-white">
-        <!-- 导航条 -->
-        <ul class="nav pt-2 pb-3 flex-nowrap text-nowrap overflow-auto nav-scroll-me">
-            {% for item in TYPE_LI %}
-                <li class="nav-item order-{{ item.sequence }}">
-                    <a class="nav-link pb-0 px-0 mr-3 {% if item.id == type_id %}text-warning  border-bottom border-warning{% else %}text-black-50{% endif %}"
-                       href="{{ url_for('.index') }}?tid={{ item.id }}&order={{ order_way }}">{{ item.name }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
-
-    <div class="container mb-3">
-        <!-- 排序部分 -->
-        <div class="row">
-            <div class="col">
-                <div class="dropdown small">
-                  <a class="dropdown-toggle text-muted" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ goods_order_map(order_way, 1) }}
-                  </a>
-
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                      {% for one in goods_order_map(li=True) %}
-                        <a class="dropdown-item small text-muted"
-                           href="{{ url_for('.index') }}?tid={{ type_id }}&order={{ one[0] }}">{{ one[1] }}</a>
-                        <div class="dropdown-divider m-0"></div>
-                      {% endfor %}
-                  </div>
-                </div>
-            </div>
-
-            <!-- 排版部分 -->
-            <div class="col text-right">
-                <a href="{{ url_for('.index') }}?tid={{ type_id }}&order={{ order_way }}&view={{ view_type }}"
-                   class="text-muted text-decoration-none">
-                    <i class="fas fa-th-list"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
+    <!-- 商品展示部分 start -->
+    {% for one in goods_data %}
     <div class="container">
-        <!-- 商品展示部分 -->
-        <div class="row">
-            {% for item in goods_li %}
-                {% set data_src_m = url_for('static', filename='img_goods/'+item.img.first().filename_m) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
-                {% set data_src_l = url_for('static', filename='img_goods/'+item.img.first().filename_l) if item.img.first() else url_for('static', filename='img/no-image.jpg') %}
-
-                {% if view_type == 'small' %}
-                <div class="col-12 col-sm-6 col-lg-4 mb-4">
-                    <a href="{{ url_for('main_bp.goods_show', goods_id=item.id) }}" class="text-decoration-none">
-                        <div class="rounded-top img_response_auto lazy" data-src="{{ data_src_l }}"></div>
-                        <div class="shadow rounded-bottom p-2">
-                            <p class="m-0 text-truncate text-dark">{{ item.name }}</p>
-                            <p class="m-0 text-warning">
-                                <small>&yen;</small>{{ item.price }}
-                                <small class="float-right text-muted">No. {{ item.number }}</small>
-                            </p>
-                        </div>
-                    </a>
-                </div>
-                {% else %}
-                <div class="col-12 mb-4">
-                    <a href="{{ url_for('main_bp.goods_show', goods_id=item.id) }}" class="text-decoration-none">
-                        <div class="row">
-                            <div class="col-5 col-sm-4 col-lg-3 pr-0">
-                                <div class="rounded shadow img_response_auto lazy" data-src="{{ data_src_m }}"></div>
-                            </div>
-                            <div class="col">
-                                    <p class="m-0 text-dark">{{ item.name }}</p>
-                                    <p class="m-0 text-warning">
-                                        <small>&yen;</small>{{ item.price }}
-                                        <small class="float-right text-muted">No. {{ item.number }}</small>
-                                    </p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                {% endif %}
-
-            {% else %}
-                <div class="col">
-                    这里暂时是空的哟...
-                </div>
-            {% endfor %}
+    <div class="row">
+        <div class="col-12">
+            <div class="font-weight-bolder">
+                <span>{{ one['name'] }}</span>
+                <a href="{{ one['href'] }}" class="float-right text-danger"><i class="fas fa-angle-double-right"></i></a>
+            </div>
+            <hr class="bg-danger border-0 mt-1" style="height: 0.1rem;">
         </div>
     </div>
+    </div>
+    {{ goods_li_show(goods_li=one['data']) }}
+    {% endfor %}
 
     <!-- 底部菜单 -->
     <div class="row justify-content-end fixed-bottom mb-5">
         <div class="col text-right">
-            <a class="text-warning mr-3 h3" href="javascript:"
+            <a class="text-danger mr-3 h3" href="javascript:"
                onclick="showMsg('长按识别以下二维码关注官方微信公众号【汉服租赁网】联系我们。<br>公众号有最新资讯、近期上新、最近活动、优惠信息等更多内容。<br><img class=\'img-fluid\' src=\'{{ url_for('static', filename='img/mp_weixin.jpg') }}\'>')">
                 <i class="fas fa-comments"></i>
             </a>
@@ -150,17 +75,4 @@
     <!-- footer部分 -->
     {% include '_footer.html' %}
 
-{% endblock %}
-
-{% block script %}
-    <script type="text/javascript">
-        new LazyLoad({  // 初始化懒加载
-            elements_selector: ".lazy",
-            load_delay: 800
-        });
-
-        setInterval(function () {
-            $('#self-animate').fadeOut(2000).fadeIn(2000);
-        }, 10000);
-    </script>
 {% endblock %}

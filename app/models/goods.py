@@ -80,12 +80,15 @@ class GoodsType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     sequence = db.Column(db.Integer, default=1)
+    icon = db.Column(db.String(32), default='tshirt')
 
     goods = db.relationship('Goods', backref='type', lazy='dynamic')
 
-    def update(self, name, sequence):
+    def update(self, name, sequence, icon):
         self.name = name
         self.sequence = sequence
+        if icon:
+            self.icon = icon
         db.session.add(self)
         db.session.commit()
 

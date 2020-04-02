@@ -24,7 +24,7 @@
                 删除 <i class="fas fa-trash"></i>
             </a>
             <a href="javascript: void(0);" class="text-info float-right mr-2"
-               data-toggle="modal" data-target="#typeModal" data-typeid="{{ item.id }}" data-typename="{{ item.name }}" data-sequence="{{ item.sequence }}">
+               data-toggle="modal" data-target="#typeModal" data-typeid="{{ item.id }}" data-typename="{{ item.name }}" data-sequence="{{ item.sequence }}" data-typeicon="{{ item.icon }}">
                 修改 <i class="fas fa-edit"></i>
             </a>
             <hr>
@@ -55,7 +55,11 @@
                 </div>
                 <div class="form-group">
                     <label>次序</label>
-                    <input class="form-control" type="number" name="sequence" placeholder="请输入商品次序" min="1">
+                    <input class="form-control" type="number" name="sequence" placeholder="请输入商品类型次序" min="1">
+                </div>
+                <div class="form-group">
+                    <label>图标</label>
+                    <input class="form-control" type="text" name="icon" placeholder="请输入商品类型图标">
                 </div>
             </form>
           </div>
@@ -101,9 +105,11 @@
             let type_id = $(event.relatedTarget).data('typeid');
             let type_name = $(event.relatedTarget).data('typename');
             let sequence = $(event.relatedTarget).data('sequence');
+            let typeicon = $(event.relatedTarget).data('typeicon');
             $(this).find("input[name='type_id']").val(type_id);
             $(this).find("input[name='type_name']").val(type_name);
             $(this).find("input[name='sequence']").val(sequence);
+            $(this).find("input[name='icon']").val(typeicon);
         }).find(".modal-footer").find(".btn-info").on("click", function () {
             $.ajax({
                 url: "{{ url_for('.goods_type') }}",

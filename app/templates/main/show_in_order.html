@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% from '_macro.html' import goods_li_show, back_bar %}
+{% block title %}{{ SYS_NAME }}-{{ name }}{% endblock %}
+{% block body %}
+    {{ back_bar(name=name)}}
+    {{ goods_li_show(goods_li=goods_data) }}
+    <div class="pb-5"></div>  <!-- 撑底部高度 -->
+{% endblock %}

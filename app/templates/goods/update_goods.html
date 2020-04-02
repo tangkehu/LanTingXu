@@ -1,18 +1,20 @@
 {% extends 'base.html' %}
+{% from '_macro.html' import back_bar %}
 
 {% block body %}
-    <div class="border-bottom shadow-sm mb-4">
-        <div class="container py-2">
-          <div class="row">
-            <div class="col-4">
-                <a href="javascript: history.go(-1);" class="text-decoration-none text-secondary"><i class="fas fa-chevron-left"></i> </a>
-            </div>
-            <div class="col-4 text-center">
-                {% if goods %}商品编辑{% else %}商品添加{% endif %}
-            </div>
-          </div>
-        </div>
-    </div>
+    {{ back_bar(name='商品编辑' if goods else '商品添加', href="javascript: history.go(-1);", share=False) }}
+{#    <div class="border-bottom shadow-sm mb-4">#}
+{#        <div class="container py-2">#}
+{#          <div class="row">#}
+{#            <div class="col-4">#}
+{#                <a href="javascript: history.go(-1);" class="text-decoration-none text-secondary"><i class="fas fa-chevron-left"></i> </a>#}
+{#            </div>#}
+{#            <div class="col-4 text-center">#}
+{#                {% if goods %}商品编辑{% else %}商品添加{% endif %}#}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
+{#    </div>#}
 
     <div class="container mb-5 pb-5">
 

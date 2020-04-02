@@ -46,10 +46,10 @@ def register_click(app):
         # from .models import Permission
         # Permission.update_permissions()  # 系统初始化时开启，或在有新权限的时候开启
 
-        from .models import User
+        from .models import GoodsType
 
-        for one in User.query.all():
-            one.bg_image = '../img/bg-masthead.jpg'
+        for one in GoodsType.query.all():
+            one.icon = 'tshirt'
             db.session.add(one)
         db.session.commit()
 
@@ -75,9 +75,6 @@ def register_blueprints(app):
     from .sales import sales_bp
     app.register_blueprint(sales_bp, url_prefix='/sales')
 
-    from .user import user_bp
-    app.register_blueprint(user_bp, url_prefix='/user')
-
 
 def register_errors(app):
     @app.errorhandler(403)
@@ -98,15 +95,9 @@ def register_template_context(app):
 
     @app.context_processor
     def inject_context():
-        from .models import GoodsType, User
-
         return dict(
             BOOT_CDN=app.config['BOOT_CDN'],   # 是否启用boot cdn
             SYS_NAME=app.config['SYS_NAME'],  # 系统名称
-            TYPE_LI=GoodsType.query.all(),  # 商品类型列表
-            goods_img_ratio=goods_img_ratio,  # 商品比例计算方法
-            goods_order_map=goods_order_map,  # 商品排序MAP
-            admin_user=User.admin_user(),  # 超级管理员用户对象
         )
 
 
