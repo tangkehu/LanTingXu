@@ -125,7 +125,8 @@ def search():
     else:
         params.append(Goods.id == 0)
     goods = Goods.query.filter(*params).order_by(goods_order_map(order_way, 0)).all()
-    return render_template('main/search.html', goods=goods, word=word, order_way=order_way)
+    return render_template('main/search.html', goods=goods, word=word, order_way=order_way,
+                           goods_order_map=goods_order_map)
 
 
 @main_bp.route('/robots.txt')
