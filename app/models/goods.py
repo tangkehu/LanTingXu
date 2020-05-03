@@ -67,6 +67,7 @@ class Goods(db.Model):
     def update_status(self):
         """ 商品的上下架 """
         self.status = False if self.status else True
+        self.updata_time = datetime.now()
         db.session.add(self)
         db.session.commit()
 
@@ -74,6 +75,16 @@ class Goods(db.Model):
         self.view_count += 1
         db.session.add(self)
         db.session.commit()
+
+    @staticmethod
+    def search_for_carousel():
+        """ 查询每个商品类别中最新的那个商品 """
+        # TODO: 子查询案例
+        from sqlalchemy import func
+        subquery = db.session.query(Goods.type_id.label('tid'), func.max(Goods.updata_time).label('max_time')).\
+            filter_by(status=True).group_by(Goods.type_id).subquery()
+        return Goods.query.filter(Goods.type_id == subquery.c.tid, Goods.updata_time == subquery.c.max_time).\
+            order_by(Goods.type_id.asc()).all()
 
 
 class GoodsType(db.Model):

@@ -161,6 +161,24 @@ class User(UserMixin, db.Model):
         db.session.delete(self)
         db.session.commit()
 
+    @staticmethod
+    def query_for_homepage():
+        """ 查询用户基本信息和用户访问量最多的三个商品，按照用户最近更新的时间排序 """
+        from app.models import Goods
+        subquery = db.session.query(Goods.user_id.label('uid'), func.max(Goods.updata_time).label('max_time')).\
+            filter(Goods.status == True).group_by(Goods.user_id).subquery()
+        _user_li = User.query.filter(User.id == subquery.c.uid).order_by(subquery.c.max_time.desc()).all()
+        data = []
+        for _user in _user_li:
+            _goods = _user.goods.filter(Goods.status == True).order_by(Goods.view_count.desc()).limit(3).all()
+            data.append({
+                'uid': _user.id,
+                'name': _user.username,
+                'resume': _user.resume,
+                'goods': [one.img.first().filename_s if one.img.first() else '' for one in _goods]
+            })
+        return data
+
 
 class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)

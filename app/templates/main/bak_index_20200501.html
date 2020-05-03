@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% from '_macro.html' import goods_li_show %}
+
+{# 设置footer置底的关键代码 #}
+{% block html_tag %}class="h-100"{% endblock %}
+{% block body_tag %}class="d-flex flex-column h-100"{% endblock %}
+
+{% block body %}
+    <main role="main" class="flex-shrink-0">
+
+    <!-- logo部分 -->
+    <div class="border-bottom shadow-sm">
+    <div class="container">
+        <div class="row my-3">
+            <div class="col-7 pr-0">
+                <a href="{{ url_for('.index') }}" class="text-decoration-none">
+                <img alt="{{ SYS_NAME }}" src="{{ url_for('static', filename='img/lantinglogo.gif') }}" width="40rem" height="40rem"><span class="ml-2 align-middle font-weight-bold text-dark">{{ SYS_NAME }}</span>
+                </a>
+            </div>
+            <div class="col-5 pl-0 text-right">
+                <a href="{{ url_for('main_bp.search') }}"
+                   class="text-decoration-none text-secondary rounded-pill pr-5 pl-2 mr-2 border align-middle">
+                    <i class="fas fa-search small"></i>
+                </a>
+                <a href="{{ url_for('main_bp.usr_center') }}"
+                   class="text-decoration-none align-middle font-weight-bold text-dark" style="line-height: 2.5rem;">
+                    <i class="fas fa-user"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- 二级导航 -->
+    <div class="container my-4">
+    <div class="row text-center">
+        {% for item in type_li %}
+        <div class="col order-{{ item.sequence }} mx-0 px-0 my-2">
+            <a href="{{ url_for('.show_in_type', tid=item.id) }}" class="text-danger small text-nowrap p-0 m-0">
+                <i class="fas fa-{{item.icon}} h4"></i><br>{{ item.name }}</a></div>
+        {% endfor %}
+    </div>
+    </div>
+
+    <!-- 商品展示部分 start -->
+    {% for one in goods_data %}
+    <div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="font-weight-bolder">
+                <span>{{ one['name'] }}</span>
+                <a href="{{ one['href'] }}" class="float-right text-danger"><i class="fas fa-angle-double-right"></i></a>
+            </div>
+            <hr class="bg-danger border-0 mt-1" style="height: 0.1rem;">
+        </div>
+    </div>
+    </div>
+    {{ goods_li_show(goods_li=one['data']) }}
+    {% endfor %}
+
+    <!-- 底部菜单 -->
+    <div class="row justify-content-end fixed-bottom mb-5">
+        <div class="col text-right">
+            <a class="text-danger mr-3 h3" href="javascript:"
+               onclick="showMsg('长按识别以下二维码关注官方微信公众号【汉服租赁网】联系我们。<br>公众号有最新资讯、近期上新、最近活动、优惠信息等更多内容。<br><img class=\'img-fluid\' src=\'{{ url_for('static', filename='img/mp_weixin.jpg') }}\'>')">
+                <i class="fas fa-comments"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="pb-5"></div>  <!-- 撑底部高度 -->
+
+    </main>
+
+    <!-- footer部分 -->
+    {% include '_footer.html' %}
+
+{% endblock %}

@@ -13,13 +13,11 @@ from app.manage.forms import UserForm
 @main_bp.route('/index')
 def index():
     PvCount.add_home_count()
-    name_dic = {'date_down': '最新发布', 'flow': '最多浏览', 'price_up': '平价优选', 'price_down': '汉服精品'}
-    goods_data = [{
-        'name': name_dic[key],
-        'data': Goods.query.filter_by(status=True).order_by(goods_order_map(key, 0)).limit(6).all(),
-        'href': url_for('.show_in_order', order=key)
-    } for key in name_dic]
-    return render_template('main/index.html', goods_data=goods_data, type_li=GoodsType.query.all())
+    data_carousel = Goods.search_for_carousel()
+    data_user = User.query_for_homepage()
+    data_recommend = Goods.query.filter(Goods.status == True).order_by(Goods.view_count.asc()).limit(10).all()
+    return render_template('main/index.html', data_carousel=data_carousel, data_user=data_user,
+                           data_recommend=data_recommend)
 
 
 @main_bp.route('/show_in_order/<string:order>')

@@ -8,64 +8,106 @@
 {% block body %}
     <main role="main" class="flex-shrink-0">
 
-    <!-- logo部分 -->
-    <div class="border-bottom shadow-sm">
-    <div class="container">
-        <div class="row my-3">
-            <div class="col-7 pr-0">
-                <a href="{{ url_for('.index') }}" class="text-decoration-none">
-                <img alt="{{ SYS_NAME }}" src="{{ url_for('static', filename='img/lantinglogo.gif') }}" width="40rem" height="40rem"><span class="ml-2 align-middle font-weight-bold text-dark">{{ SYS_NAME }}</span>
+    <!-- 搜索框 -->
+    <div class="bg-white sticky-top">
+    <div class="container py-3">
+        <div class="row">
+            <div class="col pr-0">
+                <a href="{{ url_for('main_bp.search') }}" class="text-dark text-decoration-none">
+                    <div class="rounded-pill border">
+                    <i class="fas fa-search h5 p-0 m-0 py-2 ml-2"></i> 齐胸襦裙
+                    </div>
                 </a>
             </div>
-            <div class="col-5 pl-0 text-right">
-                <a href="{{ url_for('main_bp.search') }}"
-                   class="text-decoration-none text-secondary rounded-pill pr-5 pl-2 mr-2 border align-middle">
-                    <i class="fas fa-search small"></i>
-                </a>
-                <a href="{{ url_for('main_bp.usr_center') }}"
-                   class="text-decoration-none align-middle font-weight-bold text-dark" style="line-height: 2.5rem;">
-                    <i class="fas fa-user"></i>
+            <div class="col-2 col-md-1 text-right pl-0">
+                <a href="{{ url_for('main_bp.usr_center') }}" class="text-dark text-decoration-none">
+                    <i class="fas fa-user h3 p-0 m-0 py-2"></i>
                 </a>
             </div>
         </div>
     </div>
     </div>
 
-    <!-- 二级导航 -->
-    <div class="container my-4">
-    <div class="row text-center">
-        {% for item in type_li %}
-        <div class="col order-{{ item.sequence }} mx-0 px-0 my-2">
-            <a href="{{ url_for('.show_in_type', tid=item.id) }}" class="text-danger small text-nowrap p-0 m-0">
-                <i class="fas fa-{{item.icon}} h4"></i><br>{{ item.name }}</a></div>
+    <!-- 轮播图 -->
+    <div id="carouselIndicators" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            {% for one in data_carousel %}
+            <li data-target="#carouselIndicators" data-slide-to="{{ loop.index0 }}" {% if loop.first %}class="active"{% endif %}></li>
+            {% endfor %}
+        </ol>
+        <div class="carousel-inner">
+            {% for one in data_carousel %}
+            {% set imgurl = url_for('static', filename='img_goods/'+one.img.first().filename_l) if one.img.first() else url_for('static', filename='img/no-image.jpg') %}
+            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                <a href="{{ url_for('main_bp.goods_show', goods_id=one.id) }}">
+                <div style="height: 0; padding-bottom: 56%; background: url('{{ imgurl }}') no-repeat center #6c757d; background-size: cover;">
+                    <div style="height: 0; padding-bottom: 56% ; background: rgba(0, 0, 0, 0.2)"></div>
+                </div>
+                <div class="carousel-caption d-block rounded">
+                    <h5>{{ one.name }}</h5>
+                </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- 商家入口 -->
+    <div class="container">
+        {% for one in data_user %}
+        <a href="{{ url_for('main_bp.usr_home', uid=one['uid']) }}" class="text-decoration-none text-dark">
+        <div class="row mt-4 shadow py-2 pr-3">
+            <div class="col-12 col-md-3 pr-0">
+                <h5>{{ one['name'] }}</h5>
+                <p>{{ one['resume'] }}</p>
+            </div>
+            {% for item in one['goods'] %}
+            <div class="col-4 col-md-3 pr-0">
+                <div style="height: 0; padding-bottom: 100%;
+                        background: url('{{ url_for('static', filename='img_goods/'+item) }}')
+                        no-repeat center #6c757d;
+                        background-size: cover;"></div>
+            </div>
+            {% endfor %}
+        </div>
+        </a>
         {% endfor %}
     </div>
-    </div>
 
-    <!-- 商品展示部分 start -->
-    {% for one in goods_data %}
-    <div class="container">
+    <!-- 商品推荐 -->
+    <div class="container mt-5">
     <div class="row">
         <div class="col-12">
-            <div class="font-weight-bolder">
-                <span>{{ one['name'] }}</span>
-                <a href="{{ one['href'] }}" class="float-right text-danger"><i class="fas fa-angle-double-right"></i></a>
+            <p class="lead pl-2" style="border-left: 3px solid red">为您推荐</p>
+        </div>
+    </div>
+    </div>
+    {{ goods_li_show(data_recommend) }}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <p class="text-right">
+                    <a href="#" class="text-danger text-decoration-none">
+                        更多推荐 <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </p>
             </div>
-            <hr class="bg-danger border-0 mt-1" style="height: 0.1rem;">
         </div>
     </div>
-    </div>
-    {{ goods_li_show(goods_li=one['data']) }}
-    {% endfor %}
 
-    <!-- 底部菜单 -->
-    <div class="row justify-content-end fixed-bottom mb-5">
-        <div class="col text-right">
-            <a class="text-danger mr-3 h3" href="javascript:"
-               onclick="showMsg('长按识别以下二维码关注官方微信公众号【汉服租赁网】联系我们。<br>公众号有最新资讯、近期上新、最近活动、优惠信息等更多内容。<br><img class=\'img-fluid\' src=\'{{ url_for('static', filename='img/mp_weixin.jpg') }}\'>')">
-                <i class="fas fa-comments"></i>
-            </a>
+    <!-- 联系平台 -->
+    <div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <p class="lead pl-2" style="border-left: 3px solid red">支持我们</p>
         </div>
+        <div class="col-12">
+            <p>汉服租赁网感谢您的访问，我们期待能得到您的反馈和建议，同时也期待您的加入。</p>
+            <p>长按识别以下二维码关注官方微信公众号【汉服租赁网】联系我们。</p>
+            <p>公众号有最新资讯、近期上新、最近活动、优惠信息等更多内容。</p>
+            <p class="text-center"><img class="img-fluid" src="{{ url_for('static', filename='img/mp_weixin.jpg') }}"></p>
+        </div>
+    </div>
     </div>
 
     <div class="pb-5"></div>  <!-- 撑底部高度 -->
