@@ -27,25 +27,25 @@
     <div id="content-start" class="sticky-top bg-white py-2">
     <div class="container">
         <div class="row flex-nowrap text-nowrap overflow-auto">
+            <div class="col">
             {% for item in type_li %}
-            <div class="col order-{{ item.sequence }}">
                 <a href="{{ url_for('main_bp.usr_home', uid=uid, tid=item.id, order=order) }}#content-start"
-                   class="{% if item.id == tid %}text-danger{% else %}text-secondary{% endif %} lead">
+                   class="{% if item.id == tid %}text-danger{% else %}text-secondary{% endif %} lead mr-3">
                     {{ item.name }}
                 </a>
-            </div>
             {% endfor %}
+            </div>
         </div>
 
         <div class="row flex-nowrap text-nowrap overflow-auto">
-            {% for one in goods_order_map(li=True) %}
             <div class="col mt-2">
+            {% for one in goods_order_map(li=True) %}
                 <a href="{{ url_for('main_bp.usr_home', uid=uid, tid=tid, order=one[0]) }}#content-start"
-                   class="{% if one[0] == order %}text-warning{% else %}text-secondary{% endif %} small">
+                   class="{% if one[0] == order %}text-warning{% else %}text-secondary{% endif %} small mr-3">
                     {{ one[1] }}
                 </a>
-            </div>
             {% endfor %}
+            </div>
         </div>
     </div>
     </div>

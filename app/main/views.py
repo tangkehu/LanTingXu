@@ -70,7 +70,8 @@ def usr_home(uid, tid=None, order='flow'):
     data_goods = user_obj.goods.filter(Goods.status == True, Goods.type_id == tid).\
         order_by(goods_order_map(order, 0)).all()
     return render_template('main/usr_home.html', user_obj=user_obj, goods=data_goods, uid=uid, tid=tid, order=order,
-                           type_li=GoodsType.query.all(), goods_order_map=goods_order_map)
+                           type_li=GoodsType.query.order_by(GoodsType.sequence.asc()).all(),
+                           goods_order_map=goods_order_map)
 
 
 @main_bp.route('/usr_bg_change_api', methods=['POST'])
