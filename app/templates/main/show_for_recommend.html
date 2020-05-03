@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% from '_macro.html' import goods_li_show, back_bar %}
+{% block title %}{{ SYS_NAME }}-为您推荐{% endblock %}
+{% block body %}
+    {{ back_bar(name='为您推荐')}}
+    {{ goods_li_show(goods_li=data_goods) }}
+    <div class="pb-5"></div>  <!-- 撑底部高度 -->
+    <!-- footer部分 -->
+    {% include '_footer.html' %}
+{% endblock %}

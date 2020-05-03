@@ -20,6 +20,12 @@ def index():
                            data_recommend=data_recommend)
 
 
+@main_bp.route('/show_for_recommend')
+def show_for_recommend():
+    data_goods = Goods.query.filter_by(status=True).order_by(Goods.view_count.asc()).all()
+    return render_template('main/show_for_recommend.html', data_goods=data_goods)
+
+
 @main_bp.route('/show_in_order/<string:order>')
 @main_bp.route('/show_in_order/<string:order>/<int:uid>')
 def show_in_order(order, uid=None):
