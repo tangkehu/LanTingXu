@@ -84,17 +84,16 @@ def usr_account():
 
 
 @main_bp.route('/usr_home/<int:uid>')
-def usr_home(uid):
+@main_bp.route('/usr_home/<int:uid>/<int:tid>/<string:order>')
+def usr_home(uid, tid=None, order='flow'):
     """ 用户个人主页 """
     PvCount.add_home_count()
+    tid = tid if tid else GoodsType.query.order_by(GoodsType.sequence.asc()).first().id
     user_obj = User.query.get_or_404(uid)
-    name_dic = {'date_down': '最新发布', 'flow': '最多浏览', 'price_up': '平价优选', 'price_down': '汉服精品'}
-    goods_data = [{
-        'name': name_dic[key],
-        'data': user_obj.goods.filter_by(status=True).order_by(goods_order_map(key, 0)).limit(6).all(),
-        'href': url_for('.show_in_order', order=key, uid=uid)
-    } for key in name_dic]
-    return render_template('main/usr_home.html', user_obj=user_obj, goods_data=goods_data, type_li=GoodsType.query.all())
+    data_goods = user_obj.goods.filter(Goods.status == True, Goods.type_id == tid).\
+        order_by(goods_order_map(order, 0)).all()
+    return render_template('main/usr_home.html', user_obj=user_obj, goods=data_goods, uid=uid, tid=tid, order=order,
+                           type_li=GoodsType.query.all(), goods_order_map=goods_order_map)
 
 
 @main_bp.route('/usr_bg_change_api', methods=['POST'])
