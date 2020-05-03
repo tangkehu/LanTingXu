@@ -58,8 +58,8 @@
         <a href="{{ url_for('main_bp.usr_home', uid=one['uid']) }}" class="text-decoration-none text-dark">
         <div class="row mt-4 shadow py-2 pr-3">
             <div class="col-12 col-md-3 pr-0">
-                <h5>{{ one['name'] }}</h5>
-                <p>{{ one['resume'] }}</p>
+                <h5>{% if one['name'] %}{{ one['name'] }}{% else %}汉服租赁网的一员{% endif %}</h5>
+                <p>{% if one['resume'] %}{{ one['resume'] }}{% else %}欢迎来店选购。{% endif %}</p>
             </div>
             {% for item in one['goods'] %}
             <div class="col-4 col-md-3 pr-0">
