@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <meta name="description" content="汉服租赁网，提供全品类商家正版汉服租赁服务，成都汉服租赁出租网平台联盟。">
+    <meta name="description" content="汉服租赁网，提供全品类商家正版汉服租赁服务，汉服租赁出租网平台联盟。">
     <meta name="keywords" content="汉服，汉服出租，汉服租赁，化妆造型，文创产品，古风摄影，传统文化，汉婚，文化活动">
 
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
@@ -64,7 +64,7 @@
 
     {% block css %}{% endblock %}
 
-    <title>{% block title %}{{ SYS_NAME }}-成都全品类正版汉服租赁出租平台联盟{% endblock %}</title>
+    <title>{% block title %}{{ SYS_NAME }}-全品类正版汉服租赁出租平台联盟{% endblock %}</title>
 </head>
 <body {% block body_tag %}{% endblock %}>
 
@@ -133,6 +133,7 @@
     }
 
     // LazyLoading 图片懒加载自定义 》》》此处代码封存，以供以后参考。这一块使用vanilla-lazyload lazyload.js
+    // TODO: 自己封装的懒加载代码，备以后参考
     let lazy_load_clock_me;  // 记录定时任务ID
     function lazyLoadingMe(event) {
         // 结束上次还未执行的任务

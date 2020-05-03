@@ -1,6 +1,9 @@
 User-agent: *
 Allow: /
-Allow: /user/
-Allow: /user/1
+Allow: /usr_home/
+Allow: /usr_home/11
 Allow: /goods_show/
+Allow: /goods_show/436
 Allow: /index
+Allow: /show_for_recommend
+

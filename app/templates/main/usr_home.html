@@ -14,7 +14,7 @@
                  background-size: cover;">
     <div class="h-100 w-100" style="background: rgba(0,0,0,0.4);">
         <!-- 返回条 -->
-        {{ back_bar(color='text-white') }}
+        {{ back_bar(color='text-white', href='/') }}
         <!-- 用户信息-->
         <div class="container pb-5">
             <p class="h4 text-white">{% if user_obj.username %}{{ user_obj.username }}{% else %}欢迎光临{% endif %}</p>
