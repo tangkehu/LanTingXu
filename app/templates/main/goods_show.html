@@ -8,16 +8,42 @@
     {{ back_bar(name="商品详情") }}
     {% set imgs = goods.img.all() %}
 
-    <div class="d-md-none">
-    <!-- 大小为md时不显示此处 -->
-        {% include "main/goods_show_carousel_.html" %}
+    <div id="carouselIndicatorsGoods" class="carousel slide d-md-none" data-ride="carousel">
+    <!-- 大小为md时隐藏此处轮播图 -->
+        <ol class="carousel-indicators">
+            {% for one in imgs %}
+            <li data-target="#carouselIndicatorsGoods" data-slide-to="{{ loop.index0 }}" {% if loop.first %}class="active"{% endif %}></li>
+            {% endfor %}
+        </ol>
+        <div class="carousel-inner">
+            {% for one in imgs %}
+            {% set imgurl = url_for('static', filename='img_goods/'+one.filename_l) %}
+            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                <div style="height: 0; padding-bottom: 100%; background: rgba(0,0,0,0.05) url('{{ imgurl }}') no-repeat center; background-size: contain;"></div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 
     <div class="container my-4">
         <div class="row flex-nowrap">
             <div class="col-md-6 d-none d-md-block">
             <!-- 大小为md时开始显示此处 -->
-                {% include "main/goods_show_carousel_.html" %}
+                <div id="carouselIndicatorsGoodsMd" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        {% for one in imgs %}
+                        <li data-target="#carouselIndicatorsGoodsMd" data-slide-to="{{ loop.index0 }}" {% if loop.first %}class="active"{% endif %}></li>
+                        {% endfor %}
+                    </ol>
+                    <div class="carousel-inner">
+                        {% for one in imgs %}
+                        {% set imgurl = url_for('static', filename='img_goods/'+one.filename_l) %}
+                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                            <div style="height: 0; padding-bottom: 100%; background: rgba(0,0,0,0.05) url('{{ imgurl }}') no-repeat center; background-size: contain;"></div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
             <div class="col">
                 <p class="h4">{{ goods.name }}</p>
