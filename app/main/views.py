@@ -22,32 +22,9 @@ def index():
 
 @main_bp.route('/show_for_recommend')
 def show_for_recommend():
+    """ 商品推荐页 """
     data_goods = Goods.query.filter_by(status=True).order_by(Goods.view_count.asc()).all()
     return render_template('main/show_for_recommend.html', data_goods=data_goods)
-
-
-@main_bp.route('/show_in_order/<string:order>')
-@main_bp.route('/show_in_order/<string:order>/<int:uid>')
-def show_in_order(order, uid=None):
-    name_dic = {'date_down': '最新发布', 'flow': '最多浏览', 'price_up': '平价优选', 'price_down': '汉服精品'}
-    name = name_dic[order]
-    _query_obj = User.query.get_or_404(uid).goods if uid else Goods.query
-    goods_data = _query_obj.filter_by(status=True).order_by(goods_order_map(order, 0)).all()
-    return render_template('main/show_in_order.html', name=name, goods_data=goods_data)
-
-
-@main_bp.route('/show_in_type/<int:tid>')
-@main_bp.route('/show_in_type/<int:tid>/<int:uid>')
-def show_in_type(tid, uid=None):
-    """ args:: order: 商品排序方式; view: 商品展现方式 """
-    name = GoodsType.query.get_or_404(tid).name
-    args = request.args.to_dict()
-    order = args.get('order') if args.get('order') else 'flow'
-    view = args.get('view') if args.get('view') else 'big'
-    _query_obj = User.query.get_or_404(uid).goods if uid else Goods.query
-    goods_data = _query_obj.filter_by(status=True, type_id=tid).order_by(goods_order_map(order, 0)).all()
-    return render_template('main/show_in_type.html', name=name, goods_data=goods_data, goods_order_map=goods_order_map,
-                           tid=tid, order=order, view=view, uid=uid)
 
 
 @main_bp.route('/usr_center')
