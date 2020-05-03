@@ -12,6 +12,13 @@
     <div class="bg-white sticky-top">
     <div class="container py-3">
         <div class="row">
+            <div class="col-6 d-none d-md-block pr-0">
+                <!--- md大小的时候才显示logo图 -->
+                <a href="{{ url_for('.index') }}" class="text-decoration-none">
+                    <img alt="{{ SYS_NAME }}" src="{{ url_for('static', filename='img/lantinglogo.gif') }}" width="40rem" height="40rem">
+                    <span class="ml-2 align-middle font-weight-bold text-dark">{{ SYS_NAME }}</span>
+                </a>
+            </div>
             <div class="col pr-0">
                 <a href="{{ url_for('main_bp.search') }}" class="text-dark text-decoration-none">
                     <div class="rounded-pill border">
@@ -40,8 +47,8 @@
             {% set imgurl = url_for('static', filename='img_goods/'+one.img.first().filename_l) if one.img.first() else url_for('static', filename='img/no-image.jpg') %}
             <div class="carousel-item {% if loop.first %}active{% endif %}">
                 <a href="{{ url_for('main_bp.goods_show', goods_id=one.id) }}">
-                <div style="height: 0; padding-bottom: 56%; background: url('{{ imgurl }}') no-repeat center #6c757d; background-size: cover;">
-                    <div style="height: 0; padding-bottom: 56% ; background: rgba(0, 0, 0, 0.2)"></div>
+                <div style="height: 0; padding-bottom: 42%; background: url('{{ imgurl }}') no-repeat center #6c757d; background-size: cover;">
+                    <div style="height: 0; padding-bottom: 42% ; background: rgba(0, 0, 0, 0.2)"></div>
                 </div>
                 <div class="carousel-caption d-block rounded">
                     <h5>{{ one.name }}</h5>
