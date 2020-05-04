@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
 {% from '_macro.html' import goods_li_show, back_bar %}
-{% block title %}{{ SYS_NAME }}-为您推荐{% endblock %}
+{% block title %}{{ SYS_NAME }}-全部商品{% endblock %}
+
+{# 设置footer置底的关键代码 #}
+{% block html_tag %}class="h-100"{% endblock %}
+{% block body_tag %}class="d-flex flex-column h-100"{% endblock %}
+
 {% block body %}
-    {{ back_bar(name='所有商品', href='/')}}
+    <main role="main" class="flex-shrink-0">
+    {{ back_bar(name='全部商品', href='/')}}
     <div id="content-start" class="sticky-top bg-white py-2">
     <div class="container">
         <div class="row flex-nowrap text-nowrap overflow-auto">
@@ -31,5 +37,8 @@
     {{ goods_li_show(goods_li=data_goods) }}
     <div class="pb-5"></div>  <!-- 撑底部高度 -->
     <!-- footer部分 -->
+    </main>
+
     {% include '_footer.html' %}
+
 {% endblock %}
