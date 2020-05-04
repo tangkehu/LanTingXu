@@ -15,16 +15,21 @@ def index():
     PvCount.add_home_count()
     data_carousel = Goods.search_for_carousel()
     data_user = User.query_for_homepage()
-    data_recommend = Goods.query.filter(Goods.status == True).order_by(Goods.view_count.asc()).limit(10).all()
+    data_recommend = Goods.query.filter(Goods.status == True).order_by(Goods.view_count.asc()).limit(5).all()
     return render_template('main/index.html', data_carousel=data_carousel, data_user=data_user,
                            data_recommend=data_recommend)
 
 
-@main_bp.route('/show_for_recommend')
-def show_for_recommend():
-    """ 商品推荐页 """
-    data_goods = Goods.query.filter_by(status=True).order_by(Goods.view_count.asc()).all()
-    return render_template('main/show_for_recommend.html', data_goods=data_goods)
+@main_bp.route('/all_goods')
+@main_bp.route('/all_goods/<int:tid>/<string:order>')
+def all_goods(tid=None, order='flow'):
+    """ 所有商品分类展示 """
+    tid = tid if tid else GoodsType.query.order_by(GoodsType.sequence.asc()).first().id
+    data_goods = Goods.query.filter(Goods.status == True, Goods.type_id == tid).\
+        order_by(goods_order_map(order, 0)).all()
+    return render_template('main/all_goods.html', data_goods=data_goods, tid=tid, order=order,
+                           type_li=GoodsType.query.order_by(GoodsType.sequence.asc()).all(),
+                           goods_order_map=goods_order_map)
 
 
 @main_bp.route('/usr_center')
@@ -118,29 +123,6 @@ def robots():
 @main_bp.route('/favicon.ico')
 def favicon():
     return send_file(os.path.join(os.getcwd(), 'favicon.ico'))
-
-
-# @main_bp.route('/index_new')
-# @main_bp.route('/index_new/<int:type_id>')
-# def index_new(type_id=None):
-#     """ 备用首页 """
-#     PvCount.add_home_count()
-#     body = HomePage.query.first()
-#     type_id = type_id if type_id else GoodsType.query.filter_by(sequence=1).first().id
-#     type_list = GoodsType.query.all()
-#     return render_template('main/index.html', body=body, type_id=type_id, type_list=type_list)
-
-
-# 分页展示部分代码——备用
-# @main_bp.route('/goods_list/<int:tid>/<int:page>')
-# def goods_list(tid=0, page=1):
-#     # 获取商品分页展示数据
-#     filters = [Goods.type_id == tid, Goods.status == True] if tid is not 0 else [Goods.status == True]
-#     pagination = db.session.query(Goods.id, Goods.name, GoodsImg.filename_m, Goods.number).join(
-#         GoodsImg, GoodsImg.goods_id == Goods.id).filter(*filters).group_by(Goods.id).order_by(
-#         Goods.price.asc()).paginate(page, current_app.config['PER_PAGE'], False)
-#     return jsonify({'items': [render_template('main/masonry_item.html', item=item) for item in pagination.items],
-#                     'next': url_for('.goods_list', tid=tid, page=pagination.next_num) if pagination.next_num else None})
 
 
 # @main_bp.route('/')

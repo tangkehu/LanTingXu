@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% from '_macro.html' import goods_li_show, back_bar %}
+{% block title %}{{ SYS_NAME }}-为您推荐{% endblock %}
+{% block body %}
+    {{ back_bar(name='所有商品', href='/')}}
+    <div id="content-start" class="sticky-top bg-white py-2">
+    <div class="container">
+        <div class="row flex-nowrap text-nowrap overflow-auto">
+            <div class="col">
+            {% for item in type_li %}
+                <a href="{{ url_for('main_bp.all_goods', tid=item.id, order=order) }}#content-start"
+                   class="{% if item.id == tid %}text-danger{% else %}text-secondary{% endif %} lead mr-3">
+                    {{ item.name }}
+                </a>
+            {% endfor %}
+            </div>
+        </div>
+
+        <div class="row flex-nowrap text-nowrap overflow-auto">
+            <div class="col mt-2">
+            {% for one in goods_order_map(li=True) %}
+                <a href="{{ url_for('main_bp.all_goods', tid=tid, order=one[0]) }}#content-start"
+                   class="{% if one[0] == order %}text-warning{% else %}text-secondary{% endif %} small mr-3">
+                    {{ one[1] }}
+                </a>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+    </div>
+    {{ goods_li_show(goods_li=data_goods) }}
+    <div class="pb-5"></div>  <!-- 撑底部高度 -->
+    <!-- footer部分 -->
+    {% include '_footer.html' %}
+{% endblock %}
