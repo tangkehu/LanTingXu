@@ -57,12 +57,13 @@ def goods_order_map(way='flow', index=1, li=False):
     from .models import Goods
     order_dic = {
         'flow': (Goods.view_count.desc(), '综合排序'),
-        'date_up': (Goods.updata_time.asc(), '时间升序'),
-        'date_down': (Goods.updata_time.desc(), '时间降序'),
         'price_up': (Goods.price.asc(), '价格升序'),
-        'price_down': (Goods.price.desc(), '价格降序')
+        'price_down': (Goods.price.desc(), '价格降序'),
+        'date_down': (Goods.updata_time.desc(), '最新发布'),
+        'date_up': (Goods.updata_time.asc(), '时间升序')
     }
-    return order_dic[way][index] if li is False else [(one, order_dic[one][1]) for one in order_dic]
+    return order_dic.get(way, (Goods.view_count.desc(), '综合排序'))[index] if li is False \
+        else [(one, order_dic[one][1]) for one in order_dic]
 
 
 # Provide a class to allow SSL (Not TLS) connection for mail handlers by overloading the emit() method

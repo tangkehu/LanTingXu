@@ -17,7 +17,7 @@
     <div class="container mb-5 pb-5">
 
         <!-- 导航条 -->
-        <ul class="nav pt-2 pb-3 sticky-top bg-white flex-nowrap text-nowrap overflow-auto nav-scroll-me">
+        <ul class="nav pt-2 pb-3 sticky-top bg-white flex-nowrap text-nowrap overflow-auto">
             {% for item in type_li %}
                 <li class="nav-item order-{{ item.sequence }}">
                     <a class="nav-link px-0 pb-0 mr-3 {% if item.id == type_id %}text-info  border-bottom border-info{% else %}text-black-50{% endif %}"

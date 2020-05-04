@@ -9,47 +9,49 @@
     <main role="main" class="flex-shrink-0">
 
     <!-- head头部 -->
-    <div class="shadow mb-3"
+    <div class="mb-3"
          style="background: url('{{ url_for('static', filename='img_bg/'+user_obj.bg_image) }}') no-repeat center;
                  background-size: cover;">
     <div class="h-100 w-100" style="background: rgba(0,0,0,0.4);">
         <!-- 返回条 -->
-        {{ back_bar(color='text-white') }}
+        {{ back_bar(color='text-white', href='/') }}
         <!-- 用户信息-->
         <div class="container pb-5">
-            <p class="h4 text-white">{{ user_obj.username }}</p>
-            <p class="small text-white">{{ user_obj.resume }}</p>
+            <p class="h4 text-white">{% if user_obj.username %}{{ user_obj.username }}{% else %}欢迎光临{% endif %}</p>
+            <p class="small text-white">{% if user_obj.resume %}{{ user_obj.resume }}{% endif %}</p>
         </div>
     </div>
     </div>
 
-    <!-- 二级导航 -->
-    <div class="container my-4">
-    <div class="row text-center">
-        {% for item in type_li %}
-        <div class="col order-{{ item.sequence }} mx-0 px-0 my-2">
-            <a href="{{ url_for('.show_in_type', tid=item.id, uid=user_obj.id) }}"
-               class="text-danger small text-nowrap p-0 m-0">
-                <i class="fas fa-{{item.icon}} h4"></i><br>{{ item.name }}</a></div>
-        {% endfor %}
+    <!-- 二级导航加排序 -->
+    <div id="content-start" class="sticky-top bg-white py-2">
+    <div class="container">
+        <div class="row flex-nowrap text-nowrap overflow-auto">
+            <div class="col">
+            {% for item in type_li %}
+                <a href="{{ url_for('main_bp.usr_home', uid=uid, tid=item.id, order=order) }}#content-start"
+                   class="{% if item.id == tid %}text-danger{% else %}text-secondary{% endif %} lead mr-3">
+                    {{ item.name }}
+                </a>
+            {% endfor %}
+            </div>
+        </div>
+
+        <div class="row flex-nowrap text-nowrap overflow-auto">
+            <div class="col mt-2">
+            {% for one in goods_order_map(li=True) %}
+                <a href="{{ url_for('main_bp.usr_home', uid=uid, tid=tid, order=one[0]) }}#content-start"
+                   class="{% if one[0] == order %}text-warning{% else %}text-secondary{% endif %} small mr-3">
+                    {{ one[1] }}
+                </a>
+            {% endfor %}
+            </div>
+        </div>
     </div>
     </div>
 
     <!-- 商品展示部分 start -->
-    {% for one in goods_data %}
-    <div class="container">
-    <div class="row">
-        <div class="col-12">
-            <div class="font-weight-bolder">
-                <span>{{ one['name'] }}</span>
-                <a href="{{ one['href'] }}" class="float-right text-danger"><i class="fas fa-angle-double-right"></i></a>
-            </div>
-            <hr class="bg-danger border-0 mt-1" style="height: 0.1rem;">
-        </div>
-    </div>
-    </div>
-    {{ goods_li_show(goods_li=one['data']) }}
-    {% endfor %}
+    {{ goods_li_show(goods) }}
 
     <div class="pb-5"></div>  <!-- 撑底部高度 -->
 

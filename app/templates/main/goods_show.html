@@ -6,11 +6,47 @@
 {% block body %}
 <main role="main">
     {{ back_bar(name="商品详情") }}
+    {% set imgs = goods.img.all() %}
 
-    <div class="container mb-5 pb-5">
-        <div class="row justify-content-center">
-            <div class="col col-md-10 col-xl-8">
-                <p class="h3">{{ goods.name }}</p>
+    <div id="carouselIndicatorsGoods" class="carousel slide d-md-none" data-ride="carousel">
+    <!-- 大小为md时隐藏此处轮播图 -->
+        <ol class="carousel-indicators">
+            {% for one in imgs %}
+            <li data-target="#carouselIndicatorsGoods" data-slide-to="{{ loop.index0 }}" {% if loop.first %}class="active"{% endif %}></li>
+            {% endfor %}
+        </ol>
+        <div class="carousel-inner">
+            {% for one in imgs %}
+            {% set imgurl = url_for('static', filename='img_goods/'+one.filename_l) %}
+            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                <div style="height: 0; padding-bottom: 100%; background: rgba(0,0,0,0.05) url('{{ imgurl }}') no-repeat center; background-size: contain;"></div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="container my-4">
+        <div class="row flex-nowrap">
+            <div class="col-md-6 d-none d-md-block">
+            <!-- 大小为md时开始显示此处 -->
+                <div id="carouselIndicatorsGoodsMd" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        {% for one in imgs %}
+                        <li data-target="#carouselIndicatorsGoodsMd" data-slide-to="{{ loop.index0 }}" {% if loop.first %}class="active"{% endif %}></li>
+                        {% endfor %}
+                    </ol>
+                    <div class="carousel-inner">
+                        {% for one in imgs %}
+                        {% set imgurl = url_for('static', filename='img_goods/'+one.filename_l) %}
+                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                            <div style="height: 0; padding-bottom: 100%; background: rgba(0,0,0,0.05) url('{{ imgurl }}') no-repeat center; background-size: contain;"></div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <p class="h4">{{ goods.name }}</p>
                 <p>
                     <span class="lead text-danger font-weight-bold">&yen;{{ goods.price }}</span>
                     {% if goods.cash_pledge %}<small class="text-muted font-weight-light">&nbsp;押金&yen;{{ goods.cash_pledge }}</small>{% endif %}
@@ -23,19 +59,30 @@
                     {% if goods.quantity %}<br>库存：{{ goods.quantity }}{% endif %}
                 </p>
                 <p>
-                    <a href="{{ url_for('.usr_home', uid=goods.user_id) }}" class="text-muted">
+                    <a href="{{ url_for('.usr_home', uid=goods.user_id) }}" class="text-info">
                         查看【{{ goods.user.username }}】的全部汉服
                     </a>
                 </p>
-                <hr>
-                {% for item in goods.img.all() %}
-                    <img src="{{ url_for('static', filename='img_goods/'+item.filename_l) }}" width="100%" class="img-fluid rounded mb-2">
-                {% endfor %}
-                <hr>
-                <p>{% if goods.details %}{{ goods.details }}{% endif %}</p>
+                <p>
+                    {% if goods.details %}
+                        {{ goods.details|replace("<", "&lt;")|replace(">", "&gt;")|replace("\n", "<br>")|replace(" ", "&nbsp;")|safe }}
+                    {% endif %}
+                </p>
             </div>
         </div>
+        <div class="row"><div class="col mt-5 lead">图片展示</div> </div>
     </div>
+
+    {% for item in imgs %}
+        <div class="d-md-none">
+        <img src="{{ url_for('static', filename='img_goods/'+item.filename_l) }}" width="100%" class="img-fluid mb-2">
+        </div>
+        <div class="container d-none d-md-block">
+        <img src="{{ url_for('static', filename='img_goods/'+item.filename_l) }}" width="100%" class="img-fluid mb-2">
+        </div>
+    {% endfor %}
+
+    <div class="pb-5"></div>
 
     <!-- 底部菜单 -->
     <div class="row justify-content-center fixed-bottom mb-2">
