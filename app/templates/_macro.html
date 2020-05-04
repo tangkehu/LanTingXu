@@ -39,41 +39,6 @@
 {% endmacro %}
 
 
-{% macro order_block(tid, uid=None, order_way='flow', view_type='big', point='main_bp.show_in_type', goods_order_map=goods_order_map) %}
-    <div class="container mb-3">
-        <!-- 排序部分 -->
-        <div class="row">
-            <div class="col">
-                <div class="dropdown small">
-                  <a class="dropdown-toggle text-muted" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ goods_order_map(order_way, 1) }}
-                  </a>
-
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                  {% for one in goods_order_map(li=True) %}
-                    {% set href = url_for(point, uid=uid, tid=tid)+'?order='+one[0]+'&view='+view_type if uid else url_for(point, tid=tid)+'?order='+one[0]+'&view='+view_type %}
-                    <a class="dropdown-item small text-muted"
-                       href="{{ href }}">{{ one[1] }}</a>
-                    <div class="dropdown-divider m-0"></div>
-                  {% endfor %}
-                  </div>
-                </div>
-            </div>
-
-            <!-- 排版部分 -->
-            <div class="col text-right">
-            {% set view_type_new = 'small' if view_type == 'big' else 'big' %}
-            {% set href = url_for(point, uid=uid, tid=tid)+'?order='+order_way+'&view='+view_type_new if uid else url_for(point, tid=tid)+'?order='+order_way+'&view='+view_type_new %}
-                <a href="{{ href }}"
-                   class="text-muted text-decoration-none">
-                    <i class="fas fa-th-list"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-{% endmacro %}
-
-
 {% macro goods_li_show(goods_li, view_type='big') %}
     {# 商品列表展示 #}
     <div class="container">
