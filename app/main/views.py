@@ -4,7 +4,7 @@ from sqlalchemy import or_
 from flask_login import current_user, login_required
 
 from . import main_bp
-from app.models import Goods, GoodsType, PvCount, User
+from app.models import Goods, GoodsType, PvCount, User, WordCloud
 from app.utils import goods_order_map, resize_img, random_filename
 from app.manage.forms import UserForm
 
@@ -16,8 +16,9 @@ def index():
     data_carousel = Goods.search_for_carousel()
     data_user = User.query_for_homepage()
     data_recommend = Goods.query.filter(Goods.status == True).order_by(Goods.view_count.asc()).limit(5).all()
+    data_hot_word = WordCloud.query_for_max_on_window(90, 1)
     return render_template('main/index.html', data_carousel=data_carousel, data_user=data_user,
-                           data_recommend=data_recommend)
+                           data_hot_word=data_hot_word, data_recommend=data_recommend)
 
 
 @main_bp.route('/all_goods')
@@ -107,11 +108,13 @@ def search():
     order_way = request.args.get('order') if request.args.get('order') else 'flow'
     params = [Goods.status == True]
     if word:
+        WordCloud.upsert(word)
         params.append(or_(Goods.name.like('%{}%'.format(word)), Goods.number.like('%{}%'.format(word))))
     else:
         params.append(Goods.id == 0)
     goods = Goods.query.filter(*params).order_by(goods_order_map(order_way, 0)).all()
-    return render_template('main/search.html', goods=goods, word=word, order_way=order_way,
+    word_cloud = WordCloud.query_for_max_on_window(90)
+    return render_template('main/search.html', goods=goods, word=word, order_way=order_way, word_cloud=word_cloud,
                            goods_order_map=goods_order_map)
 
 

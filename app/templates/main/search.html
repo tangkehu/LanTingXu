@@ -25,6 +25,17 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <p>热门搜索：
+                {% for one in word_cloud %}
+                    <a class="text-info"
+                       href="{{ url_for('main_bp.search') }}?word={{ one.word }}">
+                        {{ one.word }}
+                    </a>
+                    &nbsp;&nbsp;
+                {% endfor %}
+            </p>
+        </div>
     </div>
 
     <div class="container mb-3">
