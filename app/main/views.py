@@ -15,7 +15,7 @@ def index():
     PvCount.add_home_count()
     data_carousel = Goods.search_for_carousel()
     data_user = User.query_for_homepage()
-    data_recommend = Goods.query.filter(Goods.status == True).order_by(Goods.view_count.asc()).limit(5).all()
+    data_recommend = Goods.query.filter(Goods.status == True).order_by(Goods.view_count.asc()).limit(6).all()
     data_hot_word = WordCloud.query_for_max_on_window(90, 1)
     return render_template('main/index.html', data_carousel=data_carousel, data_user=data_user,
                            data_hot_word=data_hot_word, data_recommend=data_recommend)

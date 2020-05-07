@@ -22,7 +22,7 @@
             <div class="col pr-0">
                 <a href="{{ url_for('main_bp.search') }}" class="text-dark text-decoration-none">
                     <div class="rounded-pill border">
-                    <i class="fas fa-search h5 p-0 m-0 py-2 ml-2"></i> {{ data_hot_word.word }}
+                    <i class="fas fa-search h5 p-0 m-0 py-2 ml-2"></i> {% if data_hot_word %}{{ data_hot_word[0].word }}{% endif %}
                     </div>
                 </a>
             </div>

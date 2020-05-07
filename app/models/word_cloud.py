@@ -7,7 +7,7 @@ class WordCloud(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     word = db.Column(db.String(128))
     count = db.Column(db.Integer, default=1)
-    update_time = db.Column(db.Date, default=datetime.datetime.now)
+    update_time = db.Column(db.DateTime, default=datetime.datetime.now)
 
     @staticmethod
     def upsert(word):
@@ -16,7 +16,7 @@ class WordCloud(db.Model):
         :param word: 搜索词
         :return:
         """
-        _word_obj = WordCloud.query.filter_by(word=word).firt()
+        _word_obj = WordCloud.query.filter_by(word=word).first()
         if _word_obj:
             _word_obj.count += 1
             _word_obj.update_time = datetime.datetime.now()
