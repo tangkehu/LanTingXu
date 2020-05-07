@@ -56,13 +56,16 @@
         <img class="mb-4" src="{{ url_for('static', filename='img/lantinglogo.gif') }}" alt="" width="72" height="72">
 {#      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>#}
         {{ form.csrf_token() }}
-        {{ form.email.label(class="sr-only") }}
-        {{ form.email(class='form-control', placeholder="请输入邮箱账号") }}
+        {{ form.username.label(class="sr-only") }}
+        {{ form.username(class='form-control', placeholder="请设置您的用户名") }}
+        {{ form.phone_number.label(class="sr-only") }}
+        {{ form.phone_number(class='form-control', placeholder="请输入您的手机号码") }}
         {{ form.password.label(class="sr-only") }}
-        {{ form.password(class="form-control", placeholder="请输入登陆密码") }}
+        {{ form.password(class="form-control", placeholder="请设置您的登陆密码") }}
         {{ form.password_check.label(class="sr-only") }}
         {{ form.password_check(class="form-control", placeholder="请再次输入登陆密码") }}
-        {% for error in form.email.errors %}<small class="text-danger float-left">{{ error }}</small><br>{% endfor %}
+        {% for error in form.username.errors %}<small class="text-danger float-left">{{ error }}</small><br>{% endfor %}
+        {% for error in form.phone_number.errors %}<small class="text-danger float-left">{{ error }}</small><br>{% endfor %}
         {% for error in form.password.errors %}<small class="text-danger float-left">{{ error }}</small><br>{% endfor %}
         {% for error in form.password_check.errors %}<small class="text-danger float-left">{{ error }}</small><br>{% endfor %}
 {#      <div class="checkbox mb-3">#}

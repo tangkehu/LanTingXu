@@ -25,6 +25,9 @@
                        class="text-white">登录/注册</a>
                 {% endif %}
             </p>
+            {% if current_user.is_authenticated %}
+            <p class="float-right text-white small">更换背景图</p>
+            {% endif %}
         </div>
     </div>
     </div>

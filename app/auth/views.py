@@ -24,7 +24,7 @@ def register():
         return redirect(url_for('main_bp.index'))
     form = RegisterForm()
     if form.validate_on_submit():
-        User.add(form.email.data, form.password.data)
+        User.add(form.username.data, form.password.data, form.phone_number.data)
         flash('注册成功，请登录。')
         return redirect(url_for('.login'))
     return render_template('auth/register.html', form=form)

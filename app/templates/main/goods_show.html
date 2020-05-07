@@ -58,6 +58,11 @@
                     {% if goods.size %}<br>尺码：{{ goods.size }}{% endif %}
                     {% if goods.quantity %}<br>库存：{{ goods.quantity }}{% endif %}
                 </p>
+                {% if current_user.can('system_manage') or (goods.user.id == current_user.id and current_user.can('goods_manage')) %}
+                <p>
+                    <a href="{{ url_for('goods_bp.update_goods', type_id=goods.type_id, goods_id=goods.id) }}" class="text-warning">编辑</a>
+                </p>
+                {% endif %}
                 <p>
                     <a href="{{ url_for('.usr_home', uid=goods.user_id) }}" class="text-info">
                         查看【{{ goods.user.username }}】的全部汉服
@@ -88,7 +93,7 @@
     <div class="row justify-content-center fixed-bottom mb-2">
         <nav class="nav rounded-pill border" style="background: rgba(255, 255, 255, 0.8);">
             <a class="nav-link text-info" href="javascript:"
-               onclick="showMsg('<b>联系方式</b><br>{{ goods.user.username }}<br>邮箱：{{ goods.user.email }}<br>{% if goods.user.phone_number %}电话：{{ goods.user.phone_number }}&nbsp;&nbsp;<a href=\'tel:{{ goods.user.phone_number }}\' class=\'text-info\'><i class=\'fas fa-phone\'></i>  拨打</a>{% endif %}{% if goods.user.wei_number %}<br>微信：{{ goods.user.wei_number }}{% endif %}{% if goods.user.qq_number %}<br>Q&nbsp;&nbsp;Q：{{ goods.user.qq_number }}{% endif %}')">
+               onclick="showMsg('<b>联系方式</b><br>{{ goods.user.username }}{% if goods.user.email %}<br>邮箱：{{ goods.user.email }}{% endif %}{% if goods.user.phone_number %}<br>电话：{{ goods.user.phone_number }}&nbsp;&nbsp;<a href=\'tel:{{ goods.user.phone_number }}\' class=\'text-info\'><i class=\'fas fa-phone\'></i>  拨打</a>{% endif %}{% if goods.user.wei_number %}<br>微信：{{ goods.user.wei_number }}{% endif %}{% if goods.user.qq_number %}<br>Q&nbsp;&nbsp;Q：{{ goods.user.qq_number }}{% endif %}')">
                 <i class="fas fa-comments"></i> 我要预定
             </a>
         </nav>

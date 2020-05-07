@@ -3,6 +3,7 @@
 {% block body %}
     {{ back_bar(name='我的二维码', share=False) }}
     <div class="container text-center">
+        <p class="h5">{{ current_user.username }}</p>
         <img class='img-fluid'
              src='http://qr.topscan.com/api.php?text={{ url_for('.usr_home', uid=uid, _external=True) }}'>
         <p class="small text-muted">长按该二维码进行保存或分享</p>

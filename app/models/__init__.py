@@ -4,3 +4,4 @@ from .sales import SalesOrder, RelationOrderGoods
 from .homepage import HomePage
 from .weixin import WxUser
 from .pv_count import PvCount
+from .word_cloud import WordCloud

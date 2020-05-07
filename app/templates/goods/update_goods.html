@@ -35,7 +35,7 @@
             <div class="form-group row">
                 {{ form.name.label(class="col-3 col-form-label") }}
                 <div class="col">
-                {{ form.name(class="form-control") }}
+                {{ form.name(class="form-control", placeholder="必填项") }}
                 {% for item in form.name.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
                 </div>
             </div>
@@ -56,7 +56,7 @@
             <div class="form-group row">
                 {{ form.price.label(class="col-3 col-form-label") }}
                 <div class="col">
-                {{ form.price(class="form-control", type="number") }}
+                {{ form.price(class="form-control", type="number", placeholder="必填项") }}
                 {% for item in form.price.errors %}<small class="text-danger">{{ item }}</small><br>{% endfor %}
                 </div>
             </div>
