@@ -10,14 +10,14 @@
 
     {{ back_bar(name='商品搜索', href='/', share=False) }}
 
-    <div class="container my-5">
+    <div class="container my-3">
         <!-- 搜索框部分 -->
         <div class="row">
             <div class="col">
                 <div class="input-group">
                   <input type="text" class="form-control border-warning" value="{{ word }}">
                   <div class="input-group-append">
-                    <button class="btn btn-warning text-white" type="button"
+                    <button class="btn btn-warning text-white px-3 px-md-4 px-xl-5" type="button"
                             onclick="location.href='{{ url_for('main_bp.search') }}?word='+$('input').val()">
                         <i class="fas fa-search"></i>
                     </button>
@@ -40,23 +40,16 @@
         </div>
     </div>
 
-    <div class="container mb-3">
+    <div id="content-start" class="container mb-3 sticky-top bg-white py-2">
         <!-- 排序部分 -->
-        <div class="row">
+        <div class="row flex-nowrap text-nowrap overflow-auto">
             <div class="col">
-                <div class="dropdown small">
-                  <a class="dropdown-toggle text-muted" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ goods_order_map(order_way, 1) }}
-                  </a>
-
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                      {% for one in goods_order_map(li=True) %}
-                        <a class="dropdown-item small text-muted"
-                           href="{{ url_for('main_bp.search') }}?word={{ word }}&order={{ one[0] }}">{{ one[1] }}</a>
-                        <div class="dropdown-divider m-0"></div>
-                      {% endfor %}
-                  </div>
-                </div>
+            {% for one in goods_order_map(li=True) %}
+                <a href="{{ url_for('main_bp.search') }}?word={{ word }}&order={{ one[0] }}#content-start"
+                   class="{% if one[0] == order_way %}text-warning{% else %}text-secondary{% endif %} small mr-3">
+                    {{ one[1] }}
+                </a>
+            {% endfor %}
             </div>
         </div>
     </div>
