@@ -58,6 +58,11 @@
                     {% if goods.size %}<br>尺码：{{ goods.size }}{% endif %}
                     {% if goods.quantity %}<br>库存：{{ goods.quantity }}{% endif %}
                 </p>
+                {% if current_user.can('system_manage') or (goods.user.id == current_user.id and current_user.can('goods_manage')) %}
+                <p>
+                    <a href="{{ url_for('goods_bp.update_goods', type_id=goods.type_id, goods_id=goods.id) }}" class="text-warning">编辑</a>
+                </p>
+                {% endif %}
                 <p>
                     <a href="{{ url_for('.usr_home', uid=goods.user_id) }}" class="text-info">
                         查看【{{ goods.user.username }}】的全部汉服
