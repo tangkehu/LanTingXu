@@ -2,7 +2,7 @@
 {% from '_macro.html' import back_bar %}
 
 {% block body %}
-    {{ back_bar(name='我的账号', share=False)}}
+    {{ back_bar(name='我的账号', share=False, href=url_for('main_bp.usr_center'))}}
 
     <div class="container mb-5 pb-5">
         <div class="row">

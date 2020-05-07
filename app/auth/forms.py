@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired, Email, EqualTo
+from wtforms.validators import DataRequired, EqualTo, Length, Regexp
 from wtforms import ValidationError
 
 from app.models import User
@@ -32,11 +32,24 @@ class LoginForm(FlaskForm):
 
 
 class RegisterForm(FlaskForm):
-    email = StringField('邮箱', validators=[DataRequired('请输入正确的邮箱地址'), Email('请输入正确的邮箱地址')])
+    username = StringField('用户名', validators=[DataRequired('请设置您的用户名'), Length(1, 16, '用户名不超过16个字符')])
+    phone_number = StringField(
+        '手机号码',
+        validators=[
+            DataRequired('请输入您的手机号码'),
+            Length(11, message='手机号码不超过11个字符'),
+            Regexp(r'^\d*?$', message='请输入正确的手机号码')
+        ]
+    )
     password = PasswordField('密码', validators=[DataRequired('请输入密码')])
-    password_check = PasswordField('再次输入密码', validators=[DataRequired('请再次输入密码'), EqualTo('password', '两次密码输入不一致')])
+    password_check = PasswordField(
+        '再次输入密码', validators=[DataRequired('请再次输入密码'), EqualTo('password', '两次密码输入不一致')])
     submit = SubmitField('注册')
 
-    def validate_email(self, field):
-        if User.query.filter_by(email=field.data).count() > 0:
-            raise ValidationError('该邮箱账号已被注册')
+    def validate_username(self, field):
+        if User.query.filter_by(username=field.data).count() > 0:
+            raise ValidationError('该用户名已被注册')
+
+    def validate_phone_number(self, field):
+        if User.query.filter_by(phone_number=field.data).count() > 0:
+            raise ValidationError('该手机号码已被使用')

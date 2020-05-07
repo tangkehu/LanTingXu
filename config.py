@@ -13,7 +13,6 @@ class Config:
     GOODS_IMG_PATH = os.path.join(os.getcwd(), 'app'+os.sep+'static'+os.sep+'img_goods')
     BG_IMG_PATH = os.path.join(os.getcwd(), 'app'+os.sep+'static'+os.sep+'img_bg')
     PER_PAGE = 20  # 分页查询的每页数据量设置
-    ADMINS = ['lantingxuapplet@163.com']
     BOOT_CDN = True  # 是否使用免费快速的bootcdn服务
     PERMISSIONS = [['goods_manage', '管理商品的能力'],
                    ['system_manage', '管理系统的能力'],

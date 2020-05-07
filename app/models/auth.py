@@ -51,7 +51,7 @@ relation_role_permission = db.Table(
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), unique=True)
-    email = db.Column(db.String(64), unique=True, nullable=False)
+    email = db.Column(db.String(64), unique=True)
     password_hash = db.Column(db.String(128))
     phone_number = db.Column(db.String(14))
     wei_number = db.Column(db.String(32))
@@ -66,11 +66,6 @@ class User(UserMixin, db.Model):
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)
-        if not self.roles.all():
-            if self.email in current_app.config['ADMINS']:
-                self.roles.append(Role.query.filter_by(name='超级管理员').first_or_404())
-            else:
-                self.roles.append(Role.query.filter_by(name='普通用户').first_or_404())
 
     # 密码处理
     @property    # 为方法添加只读属性（使方法可以像类属性一样读取）装饰器
@@ -99,8 +94,13 @@ class User(UserMixin, db.Model):
             relation_user_role.c.user_id == self.id, Permission.name == permission).count() > 0
 
     @staticmethod
-    def add(email, password):
-        db.session.add(User(email=email, password=password))
+    def add(username, password, phone_number):
+        db.session.add(
+            User(username=username,
+                 password=password,
+                 phone_number=phone_number,
+                 roles=[Role.query.filter_by(name='普通用户').first_or_404(), ])
+        )
         db.session.commit()
 
     def edit(self, **kwargs):
