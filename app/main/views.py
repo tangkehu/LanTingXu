@@ -9,16 +9,16 @@ from app.utils import goods_order_map, resize_img, random_filename
 from app.manage.forms import UserForm
 
 
-# @main_bp.route('/')
-# @main_bp.route('/index')
-# def index():
-#     PvCount.add_home_count()
-#     data_carousel = Goods.search_for_carousel()
-#     data_user = User.query_for_homepage()
-#     data_recommend = Goods.query.filter(Goods.status == True).order_by(Goods.view_count.asc()).limit(6).all()
-#     data_hot_word = WordCloud.query_for_max_on_window(90, 1)
-#     return render_template('main/index.html', data_carousel=data_carousel, data_user=data_user,
-#                            data_hot_word=data_hot_word, data_recommend=data_recommend)
+@main_bp.route('/')
+@main_bp.route('/index')
+def index():
+    PvCount.add_home_count()
+    data_carousel = Goods.search_for_carousel()
+    data_user = User.query_for_homepage()
+    data_recommend = Goods.query.filter(Goods.status == True).order_by(Goods.view_count.asc()).limit(6).all()
+    data_hot_word = WordCloud.query_for_max_on_window(90, 1)
+    return render_template('main/index.html', data_carousel=data_carousel, data_user=data_user,
+                           data_hot_word=data_hot_word, data_recommend=data_recommend)
 
 
 @main_bp.route('/all_goods')
@@ -128,18 +128,18 @@ def favicon():
     return send_file(os.path.join(os.getcwd(), 'favicon.ico'))
 
 
-@main_bp.route('/')
-@main_bp.route('/<int:goods_id>')
-@main_bp.route('/index')
-@main_bp.route('/index/<int:goods_id>')
-def resist_regulation(goods_id=None):
-    """ 该路由在网站备案时开启，并将真实主页关闭 """
-    if goods_id:
-        goods = Goods.query.get_or_404(goods_id)
-        return jsonify({'name': goods.name,
-                        'cash_pledge': goods.cash_pledge,
-                        'size': goods.size,
-                        'quantity': goods.quantity,
-                        'images': [item.filename_l for item in goods.img.all()]})
-    goods_li = Goods.query.order_by(Goods.create_time.desc()).all()
-    return render_template('main/resist_regulation.html', goods_list=goods_li)
+# @main_bp.route('/')
+# @main_bp.route('/<int:goods_id>')
+# @main_bp.route('/index')
+# @main_bp.route('/index/<int:goods_id>')
+# def resist_regulation(goods_id=None):
+#     """ 该路由在网站备案时开启，并将真实主页关闭 """
+#     if goods_id:
+#         goods = Goods.query.get_or_404(goods_id)
+#         return jsonify({'name': goods.name,
+#                         'cash_pledge': goods.cash_pledge,
+#                         'size': goods.size,
+#                         'quantity': goods.quantity,
+#                         'images': [item.filename_l for item in goods.img.all()]})
+#     goods_li = Goods.query.order_by(Goods.create_time.desc()).all()
+#     return render_template('main/resist_regulation.html', goods_list=goods_li)
